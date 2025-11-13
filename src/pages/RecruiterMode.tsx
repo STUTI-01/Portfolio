@@ -1,94 +1,184 @@
-import { motion } from "framer-motion";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import AnimatedCounter from "@/components/AnimatedCounter";
 import { experiences, education, skillCategories, projects, honors } from "@/data/portfolioData";
-import { Briefcase, GraduationCap, Wrench, FolderOpen, Award } from "lucide-react";
+import {
+  Briefcase, GraduationCap, Wrench, FolderOpen, Award,
+  ChevronDown, ExternalLink, Github
+} from "lucide-react";
 
-const fadeInUp = {
-  initial: { opacity: 0, y: 30 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true, margin: "-50px" },
-  transition: { duration: 0.6 },
-};
+const PROJECTS_PER_PAGE = 6;
+
+const allSkillTags = Array.from(
+  new Set(skillCategories.flatMap((c) => c.skills))
+);
 
 const RecruiterMode = () => {
+  const [expandedExp, setExpandedExp] = useState<string | null>(null);
+  const [activeFilters, setActiveFilters] = useState<string[]>([]);
+  const [projectPage, setProjectPage] = useState(0);
+
+  const toggleFilter = (skill: string) => {
+    setActiveFilters((prev) =>
+      prev.includes(skill) ? prev.filter((s) => s !== skill) : [...prev, skill]
+    );
+    setProjectPage(0);
+  };
+
+  const clearFilters = () => {
+    setActiveFilters([]);
+    setProjectPage(0);
+  };
+
+  const filteredProjects =
+    activeFilters.length === 0
+      ? projects
+      : projects.filter((p) =>
+          p.techStack.some((t) => activeFilters.includes(t))
+        );
+
+  const totalPages = Math.ceil(filteredProjects.length / PROJECTS_PER_PAGE);
+  const paginatedProjects = filteredProjects.slice(
+    projectPage * PROJECTS_PER_PAGE,
+    (projectPage + 1) * PROJECTS_PER_PAGE
+  );
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <div className="max-w-5xl mx-auto px-6 pt-24 pb-20 space-y-24">
-        {/* About */}
-        <motion.section {...fadeInUp}>
-          <h2 className="section-heading mb-6">About</h2>
-          <p className="text-muted-foreground text-lg leading-relaxed max-w-3xl">
-            Software Engineer with experience at Akamai Technologies, specializing in distributed C++ backend systems,
-            AI architectures, and reliability engineering. Passionate about building systems that scale and perform under pressure.
-          </p>
+      <div className="max-w-5xl mx-auto px-6 pt-24 pb-20 space-y-28">
+
+        {/* ── ABOUT ── */}
+        <motion.section
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7 }}
+        >
+          <motion.h2
+            className="section-heading mb-8"
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            About
+          </motion.h2>
+          <div className="glass-card p-8 space-y-4">
+            <p className="text-foreground text-lg leading-relaxed">
+              I'm a <span className="text-primary font-semibold">Software Engineer</span> who thrives at the intersection of
+              distributed systems, AI, and high-performance computing. At{" "}
+              <span className="text-accent font-semibold">Akamai Technologies</span>, I built backend infrastructure that
+              serves millions of requests per second — optimizing latency, throughput, and reliability at CDN scale.
+            </p>
+            <p className="text-muted-foreground leading-relaxed">
+              My work spans from writing lock-free C++ data structures to designing ML pipelines that predict system failures
+              before they happen. I believe great engineering is invisible — users should only feel the speed, never the complexity.
+              When I'm not shipping code, I'm mentoring the next generation of developers, contributing to open source, and exploring
+              the cosmos through poetry and birding.
+            </p>
+          </div>
         </motion.section>
 
-        {/* Experience Roadmap */}
-        <motion.section {...fadeInUp}>
+        {/* ── EXPERIENCE ── */}
+        <motion.section
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.6 }}
+        >
           <div className="flex items-center gap-3 mb-10">
             <Briefcase className="w-7 h-7 text-primary" />
             <h2 className="section-heading">Professional Experience</h2>
           </div>
-          <div className="relative pl-10">
-            <div className="timeline-line" />
-            {experiences.map((exp, i) => (
-              <motion.div
-                key={exp.id}
-                className="relative mb-14 last:mb-0"
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.2 }}
-              >
-                <div className="absolute -left-10 top-1">
-                  <div className={i === 0 ? "timeline-dot-filled" : "timeline-dot"}>
-                    <div className="w-2 h-2 rounded-full bg-primary" />
-                  </div>
-                </div>
-                <p className="text-primary font-mono text-sm mb-1">{exp.timeline}</p>
-                <h3 className="text-xl font-display font-bold">{exp.role}</h3>
-                <p className="text-muted-foreground mb-3">{exp.company}</p>
-                <p className="text-muted-foreground text-sm mb-4 leading-relaxed">{exp.description}</p>
 
-                {exp.metrics.length > 0 && (
-                  <div className="flex flex-wrap gap-3 mb-4">
-                    {exp.metrics.map((metric) => (
-                      <div key={metric} className="glass-card px-4 py-2 text-sm text-primary">
-                        → {metric}
+          <div className="space-y-5">
+            {experiences.map((exp, i) => {
+              const isOpen = expandedExp === exp.id;
+              return (
+                <motion.div
+                  key={exp.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.4, delay: i * 0.05 }}
+                  className="relative"
+                >
+                  {/* Timeline dot */}
+                  <div className="absolute -left-5 top-7 z-10">
+                    <div className={`w-4 h-4 rounded-full border-2 border-current ${exp.typeColor}`}>
+                      <div className="w-2 h-2 rounded-full bg-current m-auto mt-[2px]" />
+                    </div>
+                  </div>
+
+                  <div
+                    className="glass-card ml-3 cursor-pointer transition-all duration-300 hover:border-primary/30"
+                    onClick={() => setExpandedExp(isOpen ? null : exp.id)}
+                  >
+                    {/* Header */}
+                    <div className="flex items-start justify-between p-6">
+                      <div className="space-y-1.5">
+                        <div className="flex items-center gap-3">
+                          <span className={`text-xs font-mono font-semibold ${exp.typeColor}`}>
+                            {exp.type}
+                          </span>
+                          <span className="text-xs text-muted-foreground font-mono">{exp.timeline}</span>
+                        </div>
+                        <h3 className="text-lg font-display font-bold tracking-wide uppercase">{exp.role}</h3>
+                        <p className={`text-sm font-medium ${exp.typeColor}`}>{exp.company}</p>
                       </div>
-                    ))}
-                  </div>
-                )}
+                      <motion.div
+                        animate={{ rotate: isOpen ? 180 : 0 }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        <ChevronDown className="w-5 h-5 text-muted-foreground" />
+                      </motion.div>
+                    </div>
 
-                <div className="flex flex-wrap gap-2">
-                  {exp.techStack.map((tech) => (
-                    <span key={tech} className="badge-tech">{tech}</span>
-                  ))}
-                </div>
-              </motion.div>
-            ))}
+                    {/* Stats row (always visible) */}
+                    <div className="flex flex-wrap gap-8 px-6 pb-5">
+                      {exp.stats.map((stat) => (
+                        <div key={stat.label} className="text-center">
+                          <AnimatedCounter end={stat.value} suffix={stat.suffix} />
+                          <p className="text-[11px] text-muted-foreground mt-1">{stat.label}</p>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Expandable content */}
+                    <AnimatePresence>
+                      {isOpen && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.3 }}
+                          className="overflow-hidden"
+                        >
+                          <div className="px-6 pb-6 pt-2 border-t border-border/30 space-y-4">
+                            <p className="text-sm text-muted-foreground leading-relaxed">{exp.description}</p>
+                            <div className="flex flex-wrap gap-2">
+                              {exp.techStack.map((tech) => (
+                                <span key={tech} className="badge-tech">{tech}</span>
+                              ))}
+                            </div>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                </motion.div>
+              );
+            })}
           </div>
         </motion.section>
 
-        {/* Animated Counters */}
-        <motion.section {...fadeInUp} className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          {[
-            { end: 40, suffix: "%", label: "Throughput Improvement" },
-            { end: 500, suffix: "+", label: "Members Impacted" },
-            { end: 3, suffix: "x", label: "Latency Reduction" },
-            { end: 99, suffix: "%", label: "Uptime SLA" },
-          ].map((stat) => (
-            <div key={stat.label} className="glass-card p-5 text-center space-y-2">
-              <AnimatedCounter end={stat.end} suffix={stat.suffix} />
-              <p className="text-xs text-muted-foreground">{stat.label}</p>
-            </div>
-          ))}
-        </motion.section>
-
-        {/* Education */}
-        <motion.section {...fadeInUp}>
+        {/* ── EDUCATION ── */}
+        <motion.section
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.6 }}
+        >
           <div className="flex items-center gap-3 mb-8">
             <GraduationCap className="w-7 h-7 text-accent" />
             <h2 className="section-heading">Academic Milestones</h2>
@@ -112,8 +202,13 @@ const RecruiterMode = () => {
           </div>
         </motion.section>
 
-        {/* Technical Arsenal */}
-        <motion.section {...fadeInUp}>
+        {/* ── TECHNICAL ARSENAL ── */}
+        <motion.section
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.6 }}
+        >
           <div className="flex items-center gap-3 mb-8">
             <Wrench className="w-7 h-7 text-secondary" />
             <h2 className="section-heading">Technical Arsenal</h2>
@@ -123,53 +218,183 @@ const RecruiterMode = () => {
               <motion.div
                 key={cat.category}
                 className="glass-card p-5 space-y-3"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.08 }}
               >
                 <h3 className="font-display font-semibold text-sm text-foreground">{cat.category}</h3>
                 <div className="flex flex-wrap gap-2">
-                  {cat.skills.map((skill) => (
-                    <span key={skill} className="badge-tech">{skill}</span>
-                  ))}
+                  {cat.skills.map((skill) => {
+                    const isActive = activeFilters.includes(skill);
+                    return (
+                      <button
+                        key={skill}
+                        onClick={() => toggleFilter(skill)}
+                        className={`badge-tech cursor-pointer transition-all duration-200 ${
+                          isActive
+                            ? "!bg-primary/20 !border-primary/50 !text-primary"
+                            : "hover:border-primary/30 hover:text-foreground"
+                        }`}
+                      >
+                        {skill}
+                      </button>
+                    );
+                  })}
                 </div>
               </motion.div>
             ))}
           </div>
+          {activeFilters.length > 0 && (
+            <motion.div
+              className="mt-4 flex items-center gap-3"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+            >
+              <span className="text-xs text-muted-foreground">
+                Filtering by: {activeFilters.join(", ")}
+              </span>
+              <button
+                onClick={clearFilters}
+                className="text-xs text-primary hover:underline"
+              >
+                Clear all
+              </button>
+            </motion.div>
+          )}
         </motion.section>
 
-        {/* Projects */}
-        <motion.section {...fadeInUp}>
-          <div className="flex items-center gap-3 mb-8">
+        {/* ── PROJECTS ── */}
+        <motion.section
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.6 }}
+        >
+          <div className="flex items-center gap-3 mb-4">
             <FolderOpen className="w-7 h-7 text-primary" />
             <h2 className="section-heading">Projects</h2>
           </div>
-          <div className="grid gap-4 md:grid-cols-2">
-            {projects.map((project, i) => (
-              <motion.div
-                key={project.id}
-                className="glass-card-hover p-6 space-y-3"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.08 }}
+
+          {/* Skill rail filter */}
+          <div className="mb-8 overflow-x-auto pb-2">
+            <div className="flex gap-2 min-w-max">
+              <button
+                onClick={clearFilters}
+                className={`px-4 py-1.5 rounded-full text-xs font-medium border transition-all duration-200 ${
+                  activeFilters.length === 0
+                    ? "bg-primary/20 border-primary/50 text-primary"
+                    : "border-border text-muted-foreground hover:text-foreground hover:border-primary/30"
+                }`}
               >
-                <h3 className="font-display font-bold text-lg">{project.title}</h3>
-                <p className="text-muted-foreground text-sm leading-relaxed">{project.summary}</p>
-                <p className="text-primary text-sm font-medium">{project.metrics}</p>
-                <div className="flex flex-wrap gap-2 pt-1">
-                  {project.techStack.map((tech) => (
-                    <span key={tech} className="badge-tech">{tech}</span>
-                  ))}
-                </div>
-              </motion.div>
-            ))}
+                All
+              </button>
+              {allSkillTags.map((skill) => {
+                const isActive = activeFilters.includes(skill);
+                return (
+                  <button
+                    key={skill}
+                    onClick={() => toggleFilter(skill)}
+                    className={`px-4 py-1.5 rounded-full text-xs font-medium border transition-all duration-200 whitespace-nowrap ${
+                      isActive
+                        ? "bg-primary/20 border-primary/50 text-primary"
+                        : "border-border text-muted-foreground hover:text-foreground hover:border-primary/30"
+                    }`}
+                  >
+                    {skill}
+                  </button>
+                );
+              })}
+            </div>
           </div>
+
+          {/* Project grid */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={`${activeFilters.join(",")}-${projectPage}`}
+              className="grid gap-4 md:grid-cols-2"
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -15 }}
+              transition={{ duration: 0.3 }}
+            >
+              {paginatedProjects.map((project, i) => (
+                <motion.div
+                  key={project.id}
+                  className="glass-card-hover p-6 space-y-3 flex flex-col"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.06 }}
+                >
+                  <h3 className="font-display font-bold text-lg">{project.title}</h3>
+                  <p className="text-muted-foreground text-sm leading-relaxed flex-1">{project.summary}</p>
+                  <p className="text-primary text-sm font-medium">{project.metrics}</p>
+                  <div className="flex flex-wrap gap-2">
+                    {project.techStack.map((tech) => (
+                      <span key={tech} className="badge-tech">{tech}</span>
+                    ))}
+                  </div>
+                  <div className="flex gap-3 pt-2">
+                    <a
+                      href={project.demoUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-1.5 text-xs font-medium text-primary hover:underline transition-colors"
+                    >
+                      <ExternalLink className="w-3.5 h-3.5" />
+                      View Demo
+                    </a>
+                    <a
+                      href={project.githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      <Github className="w-3.5 h-3.5" />
+                      GitHub
+                    </a>
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
+          </AnimatePresence>
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-center gap-3 mt-8">
+              {Array.from({ length: totalPages }).map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setProjectPage(i)}
+                  className={`w-9 h-9 rounded-full text-sm font-display font-medium transition-all duration-200 ${
+                    projectPage === i
+                      ? "bg-primary text-primary-foreground"
+                      : "glass-card text-muted-foreground hover:text-foreground hover:border-primary/30"
+                  }`}
+                >
+                  {i + 1}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {filteredProjects.length === 0 && (
+            <p className="text-center text-muted-foreground py-12">
+              No projects match the selected skills.{" "}
+              <button onClick={clearFilters} className="text-primary hover:underline">
+                Clear filters
+              </button>
+            </p>
+          )}
         </motion.section>
 
-        {/* Honors */}
-        <motion.section {...fadeInUp}>
+        {/* ── HONORS ── */}
+        <motion.section
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.6 }}
+        >
           <div className="flex items-center gap-3 mb-8">
             <Award className="w-7 h-7 text-accent" />
             <h2 className="section-heading">Honors & Certifications</h2>
@@ -179,10 +404,10 @@ const RecruiterMode = () => {
               <motion.div
                 key={i}
                 className="glass-card px-5 py-3 text-sm text-foreground/90"
-                initial={{ opacity: 0, x: -10 }}
+                initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.05 }}
+                transition={{ delay: i * 0.06 }}
               >
                 {honor}
               </motion.div>
