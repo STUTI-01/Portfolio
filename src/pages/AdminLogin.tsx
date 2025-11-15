@@ -1,79 +1,26 @@
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { Lock, ArrowLeft, Loader2, Mail, Send } from "lucide-react";
+import { Lock, ArrowLeft, Loader2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
 
-const ADMIN_EMAIL = "stutimohanty01@gmail.com";
+const PASSCODE = "282108";
 
 const AdminLogin = () => {
-  const [sent, setSent] = useState(false);
-  const [sending, setSending] = useState(false);
+  const [code, setCode] = useState("");
   const [error, setError] = useState("");
-  const hasSent = useRef(false);
+  const [shake, setShake] = useState(false);
   const navigate = useNavigate();
 
-  // Poll for session — magic link may be opened on another device/tab
-  useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (session) navigate("/admin");
-    });
-
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) navigate("/admin");
-    });
-
-    // Poll every 3s to detect login from another device
-    const interval = setInterval(async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session) navigate("/admin");
-    }, 3000);
-
-    // Also check when tab regains focus
-    const onFocus = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session) navigate("/admin");
-    };
-    window.addEventListener("focus", onFocus);
-    document.addEventListener("visibilitychange", onFocus);
-
-    return () => {
-      subscription.unsubscribe();
-      clearInterval(interval);
-      window.removeEventListener("focus", onFocus);
-      document.removeEventListener("visibilitychange", onFocus);
-    };
-  }, [navigate]);
-
-  const sendMagicLink = async () => {
-    if (hasSent.current) return;
-    hasSent.current = true;
-    setSending(true);
-    setError("");
-
-    const { error: authError } = await supabase.auth.signInWithOtp({
-      email: ADMIN_EMAIL,
-      options: {
-        emailRedirectTo: `${window.location.origin}/admin`,
-      },
-    });
-
-    setSending(false);
-    if (authError) {
-      setError("Failed to send login link. Try again.");
-      hasSent.current = false;
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (code === PASSCODE) {
+      sessionStorage.setItem("admin_auth", "true");
+      navigate("/admin");
     } else {
-      setSent(true);
+      setError("Incorrect passcode");
+      setShake(true);
+      setTimeout(() => setShake(false), 500);
     }
-  };
-
-  useEffect(() => {
-    sendMagicLink();
-  }, []);
-
-  const handleResend = async () => {
-    hasSent.current = false;
-    await sendMagicLink();
   };
 
   return (
@@ -86,37 +33,35 @@ const AdminLogin = () => {
       >
         <div className="flex flex-col items-center gap-3">
           <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center">
-            <Mail className="w-7 h-7 text-primary" />
+            <Lock className="w-7 h-7 text-primary" />
           </div>
-          <h1 className="font-display font-bold text-2xl">Check Your Email</h1>
-          <p className="text-sm text-muted-foreground">
-            {sending
-              ? "Sending login link…"
-              : sent
-              ? <>We sent a login link to <span className="text-foreground font-medium">{ADMIN_EMAIL}</span>. Click it to access the dashboard.</>
-              : "Preparing…"}
-          </p>
+          <h1 className="font-display font-bold text-2xl">Enter Passcode</h1>
+          <p className="text-sm text-muted-foreground">Enter your admin passcode to continue</p>
         </div>
 
-        {error && <p className="text-destructive text-sm">{error}</p>}
-
-        {sent && (
-          <div className="space-y-4">
-            <div className="flex items-center gap-2 justify-center text-xs text-muted-foreground">
-              <Loader2 className="w-3 h-3 animate-spin" />
-              Waiting for you to click the link…
-            </div>
-            <button
-              type="button"
-              onClick={handleResend}
-              disabled={sending}
-              className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50"
-            >
-              <Send className="w-3 h-3" />
-              Resend link
-            </button>
-          </div>
-        )}
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <motion.input
+            type="password"
+            value={code}
+            onChange={(e) => {
+              setCode(e.target.value.replace(/\D/g, "").slice(0, 6));
+              setError("");
+            }}
+            placeholder="••••••"
+            maxLength={6}
+            className="w-full bg-muted border border-border rounded-lg px-4 py-3 text-center text-2xl tracking-[0.4em] font-mono text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/50 transition-colors"
+            animate={shake ? { x: [-8, 8, -6, 6, -3, 3, 0] } : {}}
+            transition={{ duration: 0.4 }}
+            autoFocus
+          />
+          {error && <p className="text-destructive text-sm">{error}</p>}
+          <button
+            type="submit"
+            className="w-full py-3 rounded-lg bg-primary text-primary-foreground font-display font-semibold transition-all hover:brightness-110"
+          >
+            Enter
+          </button>
+        </form>
 
         <Link
           to="/"

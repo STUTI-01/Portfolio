@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { supabase } from "@/integrations/supabase/client";
 import Navbar from "@/components/Navbar";
 import { LogOut, FolderOpen, FileText, Bird, Camera, Gem, PenTool } from "lucide-react";
 
@@ -16,29 +15,15 @@ const adminSections = [
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
-  const [userEmail, setUserEmail] = useState<string | null>(null);
 
   useEffect(() => {
-    const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        navigate("/admin-login");
-        return;
-      }
-      setUserEmail(session.user.email ?? null);
-    };
-    checkAuth();
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (!session) navigate("/admin-login");
-      else setUserEmail(session.user.email ?? null);
-    });
-
-    return () => subscription.unsubscribe();
+    if (sessionStorage.getItem("admin_auth") !== "true") {
+      navigate("/admin-login");
+    }
   }, [navigate]);
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
+  const handleLogout = () => {
+    sessionStorage.removeItem("admin_auth");
     navigate("/");
   };
 
@@ -47,20 +32,13 @@ const AdminDashboard = () => {
       <Navbar />
       <div className="max-w-5xl mx-auto px-6 pt-24 pb-20">
         <div className="flex items-center justify-between mb-12">
-          <div>
-            <motion.h1
-              className="section-heading"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-            >
-              Admin Dashboard
-            </motion.h1>
-            {userEmail && (
-              <p className="text-sm text-muted-foreground mt-1">
-                Logged in as <span className="text-primary">{userEmail}</span>
-              </p>
-            )}
-          </div>
+          <motion.h1
+            className="section-heading"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            Admin Dashboard
+          </motion.h1>
           <button
             onClick={handleLogout}
             className="flex items-center gap-2 px-4 py-2 glass-card text-sm text-muted-foreground hover:text-destructive transition-colors"
