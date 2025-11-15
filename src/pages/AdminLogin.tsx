@@ -13,18 +13,36 @@ const AdminLogin = () => {
   const hasSent = useRef(false);
   const navigate = useNavigate();
 
-  // Listen for auth state — when magic link is clicked, user gets logged in
+  // Poll for session — magic link may be opened on another device/tab
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (session) {
-        navigate("/admin");
-      }
+      if (session) navigate("/admin");
     });
-    // Check if already logged in
+
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) navigate("/admin");
     });
-    return () => subscription.unsubscribe();
+
+    // Poll every 3s to detect login from another device
+    const interval = setInterval(async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) navigate("/admin");
+    }, 3000);
+
+    // Also check when tab regains focus
+    const onFocus = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) navigate("/admin");
+    };
+    window.addEventListener("focus", onFocus);
+    document.addEventListener("visibilitychange", onFocus);
+
+    return () => {
+      subscription.unsubscribe();
+      clearInterval(interval);
+      window.removeEventListener("focus", onFocus);
+      document.removeEventListener("visibilitychange", onFocus);
+    };
   }, [navigate]);
 
   const sendMagicLink = async () => {
