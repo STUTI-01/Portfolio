@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import RecruiterMode from "./pages/RecruiterMode";
 import WandererMode from "./pages/WandererMode";
 import AdminLogin from "./pages/AdminLogin";
+import AdminDashboard from "./pages/AdminDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -22,6 +23,7 @@ const App = () => (
           <Route path="/recruiter" element={<RecruiterMode />} />
           <Route path="/wanderer" element={<WandererMode />} />
           <Route path="/admin-login" element={<AdminLogin />} />
+          <Route path="/admin" element={<AdminDashboard />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
