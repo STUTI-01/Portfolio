@@ -1,18 +1,19 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import { Mail, Lock, ArrowLeft, Loader2 } from "lucide-react";
+import { Lock, ArrowLeft, Loader2, Send } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 
-type Step = "email" | "otp";
+const ADMIN_EMAIL = "stutimohanty01@gmail.com";
 
 const AdminLogin = () => {
-  const [step, setStep] = useState<Step>("email");
-  const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [otpSent, setOtpSent] = useState(false);
   const [shake, setShake] = useState(false);
+  const hasSent = useRef(false);
   const navigate = useNavigate();
 
   const triggerShake = () => {
@@ -20,27 +21,31 @@ const AdminLogin = () => {
     setTimeout(() => setShake(false), 500);
   };
 
-  const handleSendOtp = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email.trim()) {
-      setError("Please enter your email");
-      triggerShake();
-      return;
-    }
-    setLoading(true);
-    setError("");
-
+  const sendOtp = async () => {
+    if (hasSent.current) return;
+    hasSent.current = true;
+    setSending(true);
     const { error: authError } = await supabase.auth.signInWithOtp({
-      email: email.trim(),
+      email: ADMIN_EMAIL,
     });
-
-    setLoading(false);
+    setSending(false);
     if (authError) {
-      setError(authError.message);
-      triggerShake();
+      setError("Failed to send OTP. Try again.");
+      hasSent.current = false;
     } else {
-      setStep("otp");
+      setOtpSent(true);
     }
+  };
+
+  useEffect(() => {
+    sendOtp();
+  }, []);
+
+  const handleResend = async () => {
+    hasSent.current = false;
+    setError("");
+    setOtp("");
+    await sendOtp();
   };
 
   const handleVerifyOtp = async (e: React.FormEvent) => {
@@ -54,7 +59,7 @@ const AdminLogin = () => {
     setError("");
 
     const { error: authError } = await supabase.auth.verifyOtp({
-      email: email.trim(),
+      email: ADMIN_EMAIL,
       token: otp.trim(),
       type: "email",
     });
@@ -78,84 +83,52 @@ const AdminLogin = () => {
       >
         <div className="flex flex-col items-center gap-3">
           <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center">
-            {step === "email" ? (
-              <Mail className="w-7 h-7 text-muted-foreground" />
-            ) : (
-              <Lock className="w-7 h-7 text-primary" />
-            )}
+            <Lock className="w-7 h-7 text-primary" />
           </div>
-          <h1 className="font-display font-bold text-2xl">
-            {step === "email" ? "Admin Access" : "Enter OTP"}
-          </h1>
+          <h1 className="font-display font-bold text-2xl">Enter OTP</h1>
           <p className="text-sm text-muted-foreground">
-            {step === "email"
-              ? "Enter your admin email to receive a one-time code"
-              : `We sent a code to ${email}`}
+            {sending
+              ? "Sending code…"
+              : otpSent
+              ? `We sent a code to ${ADMIN_EMAIL}`
+              : "Preparing to send code…"}
           </p>
         </div>
 
-        {step === "email" ? (
-          <form onSubmit={handleSendOtp} className="space-y-4">
-            <motion.input
-              type="email"
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-                setError("");
-              }}
-              placeholder="admin@example.com"
-              className="w-full bg-muted border border-border rounded-lg px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/50 transition-colors"
-              animate={shake ? { x: [-8, 8, -6, 6, -3, 3, 0] } : {}}
-              transition={{ duration: 0.4 }}
-            />
-            {error && <p className="text-destructive text-sm">{error}</p>}
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full py-3 rounded-lg bg-primary text-primary-foreground font-display font-semibold transition-all hover:brightness-110 disabled:opacity-50 flex items-center justify-center gap-2"
-            >
-              {loading && <Loader2 className="w-4 h-4 animate-spin" />}
-              Send OTP
-            </button>
-          </form>
-        ) : (
-          <form onSubmit={handleVerifyOtp} className="space-y-4">
-            <motion.input
-              type="text"
-              value={otp}
-              onChange={(e) => {
-                setOtp(e.target.value.replace(/\D/g, "").slice(0, 6));
-                setError("");
-              }}
-              placeholder="••••••"
-              maxLength={6}
-              className="w-full bg-muted border border-border rounded-lg px-4 py-3 text-center text-2xl tracking-[0.4em] font-mono text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/50 transition-colors"
-              animate={shake ? { x: [-8, 8, -6, 6, -3, 3, 0] } : {}}
-              transition={{ duration: 0.4 }}
-              autoFocus
-            />
-            {error && <p className="text-destructive text-sm">{error}</p>}
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full py-3 rounded-lg bg-primary text-primary-foreground font-display font-semibold transition-all hover:brightness-110 disabled:opacity-50 flex items-center justify-center gap-2"
-            >
-              {loading && <Loader2 className="w-4 h-4 animate-spin" />}
-              Verify & Enter
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setStep("email");
-                setOtp("");
-                setError("");
-              }}
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Use a different email
-            </button>
-          </form>
-        )}
+        <form onSubmit={handleVerifyOtp} className="space-y-4">
+          <motion.input
+            type="text"
+            value={otp}
+            onChange={(e) => {
+              setOtp(e.target.value.replace(/\D/g, "").slice(0, 6));
+              setError("");
+            }}
+            placeholder="••••••"
+            maxLength={6}
+            className="w-full bg-muted border border-border rounded-lg px-4 py-3 text-center text-2xl tracking-[0.4em] font-mono text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/50 transition-colors"
+            animate={shake ? { x: [-8, 8, -6, 6, -3, 3, 0] } : {}}
+            transition={{ duration: 0.4 }}
+            autoFocus
+          />
+          {error && <p className="text-destructive text-sm">{error}</p>}
+          <button
+            type="submit"
+            disabled={loading || sending}
+            className="w-full py-3 rounded-lg bg-primary text-primary-foreground font-display font-semibold transition-all hover:brightness-110 disabled:opacity-50 flex items-center justify-center gap-2"
+          >
+            {loading && <Loader2 className="w-4 h-4 animate-spin" />}
+            Verify & Enter
+          </button>
+          <button
+            type="button"
+            onClick={handleResend}
+            disabled={sending}
+            className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50"
+          >
+            <Send className="w-3 h-3" />
+            Resend code
+          </button>
+        </form>
 
         <Link
           to="/"
