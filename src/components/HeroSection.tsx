@@ -44,33 +44,29 @@ const socialLinks = [
     icon: Github,
     href: "https://github.com/STUTI-01",
     label: "GitHub",
-    color: "hover:bg-[#333] hover:border-[#333]",
-    iconColor: "group-hover:text-white",
-    baseColor: "text-[#6e7681]",
+    bg: "bg-[#24292e]",
+    hoverBg: "hover:bg-[#1a1e22]",
   },
   {
     icon: Linkedin,
     href: "https://www.linkedin.com/in/stuti-mohanty-817a231aa/",
     label: "LinkedIn",
-    color: "hover:bg-[#0A66C2] hover:border-[#0A66C2]",
-    iconColor: "group-hover:text-white",
-    baseColor: "text-[#0A66C2]",
+    bg: "bg-[#0A66C2]",
+    hoverBg: "hover:bg-[#084e96]",
   },
   {
     icon: Mail,
     href: "mailto:stutimohanty01@gmail.com",
     label: "Email",
-    color: "hover:bg-[#EA4335] hover:border-[#EA4335]",
-    iconColor: "group-hover:text-white",
-    baseColor: "text-[#EA4335]",
+    bg: "bg-[#EA4335]",
+    hoverBg: "hover:bg-[#c5362a]",
   },
   {
     icon: Phone,
     href: "tel:+919019158174",
     label: "Phone",
-    color: "hover:bg-[#25D366] hover:border-[#25D366]",
-    iconColor: "group-hover:text-white",
-    baseColor: "text-[#25D366]",
+    bg: "bg-[#25D366]",
+    hoverBg: "hover:bg-[#1da851]",
   },
 ];
 
@@ -271,9 +267,9 @@ const HeroSection = () => {
                 target={link.href.startsWith("http") ? "_blank" : undefined}
                 rel="noopener noreferrer"
                 aria-label={link.label}
-                className={`group relative w-10 h-10 rounded-lg border border-border bg-muted/50 flex items-center justify-center transition-all duration-300 hover:scale-110 ${link.color}`}
+                className={`group relative w-10 h-10 rounded-lg border-0 flex items-center justify-center transition-all duration-300 hover:scale-110 ${link.bg} ${link.hoverBg}`}
               >
-                <link.icon className={`w-4 h-4 transition-colors ${link.baseColor} ${link.iconColor}`} />
+                <link.icon className="w-4 h-4 text-white font-bold" />
                 <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-[10px] text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                   {link.label}
                 </div>
