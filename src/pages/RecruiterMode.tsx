@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useSearchParams } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import AnimatedCounter from "@/components/AnimatedCounter";
 import { experiences, education, skillCategories, projects, honors } from "@/data/portfolioData";
@@ -15,9 +16,18 @@ const allSkillTags = Array.from(
 );
 
 const RecruiterMode = () => {
+  const [searchParams] = useSearchParams();
   const [expandedExp, setExpandedExp] = useState<string | null>(null);
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const [projectPage, setProjectPage] = useState(0);
+
+  // Read skill filters from URL on mount
+  useEffect(() => {
+    const skills = searchParams.get("skills");
+    if (skills) {
+      setActiveFilters(skills.split(","));
+    }
+  }, [searchParams]);
 
   const toggleFilter = (skill: string) => {
     setActiveFilters((prev) =>

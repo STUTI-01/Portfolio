@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import TypewriterText from "./TypewriterText";
 import profilePhoto from "@/assets/profile-photo.jpg";
 import { Cpu, Shield, Code, Cloud, Github, Linkedin, Mail, Phone } from "lucide-react";
@@ -16,29 +17,61 @@ const skillCards = [
     icon: Cpu,
     title: "Distributed Systems & Performance",
     description: "Building high-throughput, fault-tolerant distributed systems at scale.",
+    filterSkills: ["Distributed Systems", "C++"],
   },
   {
     icon: Shield,
     title: "C++ Concurrency & Systems Programming",
     description: "Low-level systems optimization with multi-threaded architectures.",
+    filterSkills: ["C++"],
   },
   {
     icon: Code,
     title: "AI & Machine Learning",
     description: "Designing intelligent systems that automate and enhance decisions.",
+    filterSkills: ["PyTorch", "TensorFlow", "NLP"],
   },
   {
     icon: Cloud,
     title: "Cloud & Backend Architecture",
     description: "Scalable cloud-native backend solutions with modern tooling.",
+    filterSkills: ["AWS", "Docker", "Kubernetes"],
   },
 ];
 
 const socialLinks = [
-  { icon: Github, href: "https://github.com/stutimohanty", label: "GitHub" },
-  { icon: Linkedin, href: "https://linkedin.com/in/stutimohanty", label: "LinkedIn" },
-  { icon: Mail, href: "mailto:stutimohanty01@gmail.com", label: "Email" },
-  { icon: Phone, href: "tel:+1234567890", label: "Phone" },
+  {
+    icon: Github,
+    href: "https://github.com/STUTI-01",
+    label: "GitHub",
+    color: "hover:bg-[#333] hover:border-[#333]",
+    iconColor: "group-hover:text-white",
+    baseColor: "text-[#6e7681]",
+  },
+  {
+    icon: Linkedin,
+    href: "https://www.linkedin.com/in/stuti-mohanty-817a231aa/",
+    label: "LinkedIn",
+    color: "hover:bg-[#0A66C2] hover:border-[#0A66C2]",
+    iconColor: "group-hover:text-white",
+    baseColor: "text-[#0A66C2]",
+  },
+  {
+    icon: Mail,
+    href: "mailto:stutimohanty01@gmail.com",
+    label: "Email",
+    color: "hover:bg-[#EA4335] hover:border-[#EA4335]",
+    iconColor: "group-hover:text-white",
+    baseColor: "text-[#EA4335]",
+  },
+  {
+    icon: Phone,
+    href: "tel:+919019158174",
+    label: "Phone",
+    color: "hover:bg-[#25D366] hover:border-[#25D366]",
+    iconColor: "group-hover:text-white",
+    baseColor: "text-[#25D366]",
+  },
 ];
 
 // Circuit board animated background
@@ -63,7 +96,6 @@ const CircuitBackground = () => {
     resize();
     window.addEventListener("resize", resize);
 
-    // Create nodes
     const w = canvas.offsetWidth;
     const h = canvas.offsetHeight;
     const nodeCount = Math.floor((w * h) / 18000);
@@ -79,7 +111,6 @@ const CircuitBackground = () => {
       });
     }
 
-    // Create circuit lines between nearby nodes
     const createLines = () => {
       lines.length = 0;
       for (let i = 0; i < nodes.length; i++) {
@@ -104,13 +135,10 @@ const CircuitBackground = () => {
     const animate = () => {
       ctx.clearRect(0, 0, w, h);
 
-      // Draw lines
       for (const line of lines) {
         ctx.beginPath();
         ctx.strokeStyle = `hsla(217, 91%, 60%, ${line.active ? 0.12 : 0.04})`;
         ctx.lineWidth = 0.5;
-
-        // Circuit-style right-angle lines
         const midX = (line.x1 + line.x2) / 2;
         ctx.moveTo(line.x1, line.y1);
         ctx.lineTo(midX, line.y1);
@@ -118,7 +146,6 @@ const CircuitBackground = () => {
         ctx.lineTo(line.x2, line.y2);
         ctx.stroke();
 
-        // Traveling pulse on active lines
         if (line.active) {
           line.progress += line.speed;
           if (line.progress > 1) {
@@ -150,18 +177,15 @@ const CircuitBackground = () => {
         }
       }
 
-      // Draw and update nodes
       for (const node of nodes) {
         node.x += node.vx;
         node.y += node.vy;
         if (node.x < 0 || node.x > w) node.vx *= -1;
         if (node.y < 0 || node.y > h) node.vy *= -1;
         node.pulse += node.pulseSpeed;
-
         const glowIntensity = 0.3 + Math.sin(node.pulse) * 0.3;
         const r = node.radius + Math.sin(node.pulse) * 0.3;
 
-        // Glow
         ctx.beginPath();
         const glow = ctx.createRadialGradient(node.x, node.y, 0, node.x, node.y, r * 6);
         glow.addColorStop(0, `hsla(217, 91%, 60%, ${glowIntensity * 0.3})`);
@@ -170,7 +194,6 @@ const CircuitBackground = () => {
         ctx.arc(node.x, node.y, r * 6, 0, Math.PI * 2);
         ctx.fill();
 
-        // Core dot
         ctx.beginPath();
         ctx.fillStyle = `hsla(217, 91%, 70%, ${glowIntensity + 0.2})`;
         ctx.arc(node.x, node.y, r, 0, Math.PI * 2);
@@ -197,12 +220,18 @@ const CircuitBackground = () => {
 };
 
 const HeroSection = () => {
+  const navigate = useNavigate();
+
+  const handleSkillCardClick = (filterSkills: string[]) => {
+    const params = new URLSearchParams();
+    params.set("skills", filterSkills.join(","));
+    navigate(`/recruiter?${params.toString()}`);
+  };
+
   return (
     <section className="min-h-screen flex flex-col justify-center relative overflow-hidden px-6 md:px-16 lg:px-24 py-20">
-      {/* Circuit board animated background */}
       <CircuitBackground />
 
-      {/* Subtle radial gradient overlay */}
       <div className="absolute inset-0 pointer-events-none" style={{
         background: "radial-gradient(ellipse at 70% 30%, hsla(217, 91%, 60%, 0.06) 0%, transparent 60%), radial-gradient(ellipse at 20% 80%, hsla(142, 71%, 45%, 0.04) 0%, transparent 50%)",
       }} />
@@ -228,7 +257,7 @@ const HeroSection = () => {
             </p>
           </div>
 
-          {/* Social links */}
+          {/* Social links — colored */}
           <motion.div
             className="flex items-center gap-3 pt-2"
             initial={{ opacity: 0, y: 10 }}
@@ -242,9 +271,9 @@ const HeroSection = () => {
                 target={link.href.startsWith("http") ? "_blank" : undefined}
                 rel="noopener noreferrer"
                 aria-label={link.label}
-                className="group relative w-10 h-10 rounded-lg border border-border bg-muted/50 flex items-center justify-center transition-all duration-300 hover:border-secondary/50 hover:bg-secondary/10 hover:scale-110"
+                className={`group relative w-10 h-10 rounded-lg border border-border bg-muted/50 flex items-center justify-center transition-all duration-300 hover:scale-110 ${link.color}`}
               >
-                <link.icon className="w-4 h-4 text-muted-foreground transition-colors group-hover:text-secondary" />
+                <link.icon className={`w-4 h-4 transition-colors ${link.baseColor} ${link.iconColor}`} />
                 <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-[10px] text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                   {link.label}
                 </div>
@@ -253,7 +282,7 @@ const HeroSection = () => {
           </motion.div>
         </motion.div>
 
-        {/* Right: Photo with refined treatment */}
+        {/* Right: Photo */}
         <motion.div
           className="relative"
           initial={{ opacity: 0, scale: 0.9 }}
@@ -261,7 +290,6 @@ const HeroSection = () => {
           transition={{ duration: 0.8, delay: 0.4 }}
         >
           <div className="relative w-64 h-64 md:w-80 md:h-80">
-            {/* Outer decorative ring */}
             <motion.div
               className="absolute -inset-3 rounded-full border border-secondary/20"
               animate={{ rotate: 360 }}
@@ -270,11 +298,7 @@ const HeroSection = () => {
               <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-secondary/60" />
               <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-1.5 h-1.5 rounded-full bg-secondary/40" />
             </motion.div>
-
-            {/* Soft blue ambient glow */}
             <div className="absolute inset-0 rounded-full blur-[50px] bg-secondary/15 animate-glow-pulse" />
-
-            {/* Photo */}
             <img
               src={profilePhoto}
               alt="Stuti Mohanty"
@@ -284,8 +308,6 @@ const HeroSection = () => {
                 boxShadow: "0 0 40px hsla(217, 91%, 60%, 0.1), inset 0 0 30px hsla(220, 44%, 8%, 0.5)",
               }}
             />
-
-            {/* Subtle light reflection arc */}
             <div
               className="absolute inset-0 rounded-full z-20 pointer-events-none"
               style={{
@@ -296,7 +318,7 @@ const HeroSection = () => {
         </motion.div>
       </div>
 
-      {/* Skill Cards */}
+      {/* Skill Cards — clickable, navigate to projects */}
       <motion.div
         className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-16 max-w-7xl mx-auto w-full relative z-10"
         initial={{ opacity: 0, y: 30 }}
@@ -306,14 +328,18 @@ const HeroSection = () => {
         {skillCards.map((card, i) => (
           <motion.div
             key={card.title}
-            className="glass-card-hover p-5 space-y-3"
+            className="glass-card-hover p-5 space-y-3 cursor-pointer"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 1 + i * 0.1 }}
+            onClick={() => handleSkillCardClick(card.filterSkills)}
           >
             <card.icon className="w-8 h-8 text-secondary" />
             <h3 className="font-display font-semibold text-sm">{card.title}</h3>
             <p className="text-xs text-muted-foreground leading-relaxed">{card.description}</p>
+            <span className="inline-flex items-center text-[10px] text-secondary/70 font-mono mt-1">
+              View projects →
+            </span>
           </motion.div>
         ))}
       </motion.div>
