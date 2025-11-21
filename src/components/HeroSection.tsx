@@ -1,7 +1,8 @@
 import { motion } from "framer-motion";
+import { useEffect, useRef } from "react";
 import TypewriterText from "./TypewriterText";
 import profilePhoto from "@/assets/profile-photo.jpg";
-import { Cpu, Shield, Code, Cloud } from "lucide-react";
+import { Cpu, Shield, Code, Cloud, Github, Linkedin, Mail, Phone } from "lucide-react";
 
 const rotatingPhrases = [
   "I turn chaos into systems.",
@@ -15,39 +16,196 @@ const skillCards = [
     icon: Cpu,
     title: "Distributed Systems & Performance",
     description: "Building high-throughput, fault-tolerant distributed systems at scale.",
-    color: "primary" as const,
   },
   {
     icon: Shield,
     title: "C++ Concurrency & Systems Programming",
     description: "Low-level systems optimization with multi-threaded architectures.",
-    color: "secondary" as const,
   },
   {
     icon: Code,
     title: "AI & Machine Learning",
     description: "Designing intelligent systems that automate and enhance decisions.",
-    color: "accent" as const,
   },
   {
     icon: Cloud,
     title: "Cloud & Backend Architecture",
     description: "Scalable cloud-native backend solutions with modern tooling.",
-    color: "secondary" as const,
   },
 ];
+
+const socialLinks = [
+  { icon: Github, href: "https://github.com/stutimohanty", label: "GitHub" },
+  { icon: Linkedin, href: "https://linkedin.com/in/stutimohanty", label: "LinkedIn" },
+  { icon: Mail, href: "mailto:stutimohanty01@gmail.com", label: "Email" },
+  { icon: Phone, href: "tel:+1234567890", label: "Phone" },
+];
+
+// Circuit board animated background
+const CircuitBackground = () => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    let animationId: number;
+    const nodes: { x: number; y: number; vx: number; vy: number; radius: number; pulse: number; pulseSpeed: number }[] = [];
+    const lines: { x1: number; y1: number; x2: number; y2: number; progress: number; speed: number; active: boolean }[] = [];
+
+    const resize = () => {
+      canvas.width = canvas.offsetWidth * window.devicePixelRatio;
+      canvas.height = canvas.offsetHeight * window.devicePixelRatio;
+      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+    };
+    resize();
+    window.addEventListener("resize", resize);
+
+    // Create nodes
+    const w = canvas.offsetWidth;
+    const h = canvas.offsetHeight;
+    const nodeCount = Math.floor((w * h) / 18000);
+    for (let i = 0; i < nodeCount; i++) {
+      nodes.push({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        vx: (Math.random() - 0.5) * 0.15,
+        vy: (Math.random() - 0.5) * 0.15,
+        radius: Math.random() * 1.5 + 0.5,
+        pulse: Math.random() * Math.PI * 2,
+        pulseSpeed: 0.01 + Math.random() * 0.02,
+      });
+    }
+
+    // Create circuit lines between nearby nodes
+    const createLines = () => {
+      lines.length = 0;
+      for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+          const dx = nodes[i].x - nodes[j].x;
+          const dy = nodes[i].y - nodes[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 120 && Math.random() > 0.6) {
+            lines.push({
+              x1: nodes[i].x, y1: nodes[i].y,
+              x2: nodes[j].x, y2: nodes[j].y,
+              progress: 0,
+              speed: 0.002 + Math.random() * 0.004,
+              active: Math.random() > 0.7,
+            });
+          }
+        }
+      }
+    };
+    createLines();
+
+    const animate = () => {
+      ctx.clearRect(0, 0, w, h);
+
+      // Draw lines
+      for (const line of lines) {
+        ctx.beginPath();
+        ctx.strokeStyle = `hsla(217, 91%, 60%, ${line.active ? 0.12 : 0.04})`;
+        ctx.lineWidth = 0.5;
+
+        // Circuit-style right-angle lines
+        const midX = (line.x1 + line.x2) / 2;
+        ctx.moveTo(line.x1, line.y1);
+        ctx.lineTo(midX, line.y1);
+        ctx.lineTo(midX, line.y2);
+        ctx.lineTo(line.x2, line.y2);
+        ctx.stroke();
+
+        // Traveling pulse on active lines
+        if (line.active) {
+          line.progress += line.speed;
+          if (line.progress > 1) {
+            line.progress = 0;
+            line.active = Math.random() > 0.5;
+          }
+          const t = line.progress;
+          let px: number, py: number;
+          if (t < 0.33) {
+            const lt = t / 0.33;
+            px = line.x1 + (midX - line.x1) * lt;
+            py = line.y1;
+          } else if (t < 0.66) {
+            const lt = (t - 0.33) / 0.33;
+            px = midX;
+            py = line.y1 + (line.y2 - line.y1) * lt;
+          } else {
+            const lt = (t - 0.66) / 0.34;
+            px = midX + (line.x2 - midX) * lt;
+            py = line.y2;
+          }
+          ctx.beginPath();
+          const gradient = ctx.createRadialGradient(px, py, 0, px, py, 8);
+          gradient.addColorStop(0, "hsla(217, 91%, 60%, 0.6)");
+          gradient.addColorStop(1, "hsla(217, 91%, 60%, 0)");
+          ctx.fillStyle = gradient;
+          ctx.arc(px, py, 8, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      // Draw and update nodes
+      for (const node of nodes) {
+        node.x += node.vx;
+        node.y += node.vy;
+        if (node.x < 0 || node.x > w) node.vx *= -1;
+        if (node.y < 0 || node.y > h) node.vy *= -1;
+        node.pulse += node.pulseSpeed;
+
+        const glowIntensity = 0.3 + Math.sin(node.pulse) * 0.3;
+        const r = node.radius + Math.sin(node.pulse) * 0.3;
+
+        // Glow
+        ctx.beginPath();
+        const glow = ctx.createRadialGradient(node.x, node.y, 0, node.x, node.y, r * 6);
+        glow.addColorStop(0, `hsla(217, 91%, 60%, ${glowIntensity * 0.3})`);
+        glow.addColorStop(1, "hsla(217, 91%, 60%, 0)");
+        ctx.fillStyle = glow;
+        ctx.arc(node.x, node.y, r * 6, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Core dot
+        ctx.beginPath();
+        ctx.fillStyle = `hsla(217, 91%, 70%, ${glowIntensity + 0.2})`;
+        ctx.arc(node.x, node.y, r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      animationId = requestAnimationFrame(animate);
+    };
+    animate();
+
+    return () => {
+      cancelAnimationFrame(animationId);
+      window.removeEventListener("resize", resize);
+    };
+  }, []);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      className="absolute inset-0 w-full h-full pointer-events-none"
+      style={{ opacity: 0.6 }}
+    />
+  );
+};
 
 const HeroSection = () => {
   return (
     <section className="min-h-screen flex flex-col justify-center relative overflow-hidden px-6 md:px-16 lg:px-24 py-20">
-      {/* Hexagonal grid background */}
-      <div className="absolute inset-0 opacity-[0.03]" style={{
-        backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='70' viewBox='0 0 60 70' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l30 17.32v34.64L30 69.28 0 51.96V17.32z' fill='none' stroke='%23ffffff' stroke-width='1'/%3E%3C/svg%3E")`,
-        backgroundSize: "60px 70px",
-      }} />
+      {/* Circuit board animated background */}
+      <CircuitBackground />
 
-      {/* Ambient glow */}
-      <div className="absolute top-1/4 right-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] pointer-events-none" />
+      {/* Subtle radial gradient overlay */}
+      <div className="absolute inset-0 pointer-events-none" style={{
+        background: "radial-gradient(ellipse at 70% 30%, hsla(217, 91%, 60%, 0.06) 0%, transparent 60%), radial-gradient(ellipse at 20% 80%, hsla(142, 71%, 45%, 0.04) 0%, transparent 50%)",
+      }} />
 
       <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20 max-w-7xl mx-auto w-full relative z-10">
         {/* Left: Text */}
@@ -69,9 +227,33 @@ const HeroSection = () => {
               <TypewriterText phrases={rotatingPhrases} />
             </p>
           </div>
+
+          {/* Social links */}
+          <motion.div
+            className="flex items-center gap-3 pt-2"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+          >
+            {socialLinks.map((link) => (
+              <a
+                key={link.label}
+                href={link.href}
+                target={link.href.startsWith("http") ? "_blank" : undefined}
+                rel="noopener noreferrer"
+                aria-label={link.label}
+                className="group relative w-10 h-10 rounded-lg border border-border bg-muted/50 flex items-center justify-center transition-all duration-300 hover:border-secondary/50 hover:bg-secondary/10 hover:scale-110"
+              >
+                <link.icon className="w-4 h-4 text-muted-foreground transition-colors group-hover:text-secondary" />
+                <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-[10px] text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                  {link.label}
+                </div>
+              </a>
+            ))}
+          </motion.div>
         </motion.div>
 
-        {/* Right: Photo */}
+        {/* Right: Photo with refined treatment */}
         <motion.div
           className="relative"
           initial={{ opacity: 0, scale: 0.9 }}
@@ -79,11 +261,36 @@ const HeroSection = () => {
           transition={{ duration: 0.8, delay: 0.4 }}
         >
           <div className="relative w-64 h-64 md:w-80 md:h-80">
-            <div className="absolute inset-0 rounded-full bg-primary/20 blur-[60px] animate-glow-pulse" />
+            {/* Outer decorative ring */}
+            <motion.div
+              className="absolute -inset-3 rounded-full border border-secondary/20"
+              animate={{ rotate: 360 }}
+              transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+            >
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-secondary/60" />
+              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-1.5 h-1.5 rounded-full bg-secondary/40" />
+            </motion.div>
+
+            {/* Soft blue ambient glow */}
+            <div className="absolute inset-0 rounded-full blur-[50px] bg-secondary/15 animate-glow-pulse" />
+
+            {/* Photo */}
             <img
               src={profilePhoto}
               alt="Stuti Mohanty"
-              className="w-full h-full object-cover rounded-full border-2 border-primary/30 relative z-10"
+              className="w-full h-full object-cover rounded-full relative z-10 shadow-2xl"
+              style={{
+                border: "2px solid hsla(217, 91%, 60%, 0.25)",
+                boxShadow: "0 0 40px hsla(217, 91%, 60%, 0.1), inset 0 0 30px hsla(220, 44%, 8%, 0.5)",
+              }}
+            />
+
+            {/* Subtle light reflection arc */}
+            <div
+              className="absolute inset-0 rounded-full z-20 pointer-events-none"
+              style={{
+                background: "linear-gradient(135deg, hsla(0, 0%, 100%, 0.06) 0%, transparent 50%)",
+              }}
             />
           </div>
         </motion.div>
@@ -104,7 +311,7 @@ const HeroSection = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 1 + i * 0.1 }}
           >
-            <card.icon className="w-8 h-8 text-primary" />
+            <card.icon className="w-8 h-8 text-secondary" />
             <h3 className="font-display font-semibold text-sm">{card.title}</h3>
             <p className="text-xs text-muted-foreground leading-relaxed">{card.description}</p>
           </motion.div>
