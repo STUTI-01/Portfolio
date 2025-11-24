@@ -44,29 +44,25 @@ const socialLinks = [
     icon: Github,
     href: "https://github.com/STUTI-01",
     label: "GitHub",
-    bg: "bg-[#24292e]",
-    hoverBg: "hover:bg-[#1a1e22]",
+    iconColor: "text-[#f0f0f0]",
   },
   {
     icon: Linkedin,
     href: "https://www.linkedin.com/in/stuti-mohanty-817a231aa/",
     label: "LinkedIn",
-    bg: "bg-[#0A66C2]",
-    hoverBg: "hover:bg-[#084e96]",
+    iconColor: "text-[#0A66C2]",
   },
   {
     icon: Mail,
     href: "mailto:stutimohanty01@gmail.com",
     label: "Email",
-    bg: "bg-[#EA4335]",
-    hoverBg: "hover:bg-[#c5362a]",
+    iconColor: "text-[#EA4335]",
   },
   {
     icon: Phone,
     href: "tel:+919019158174",
     label: "Phone",
-    bg: "bg-[#25D366]",
-    hoverBg: "hover:bg-[#1da851]",
+    iconColor: "text-[#25D366]",
   },
 ];
 
@@ -81,6 +77,8 @@ const CircuitBackground = () => {
     if (!ctx) return;
 
     let animationId: number;
+    const nodes: { x: number; y: number; vx: number; vy: number; radius: number; pulse: number; pulseSpeed: number }[] = [];
+    const lines: { x1: number; y1: number; x2: number; y2: number; progress: number; speed: number; active: boolean }[] = [];
 
     const resize = () => {
       canvas.width = canvas.offsetWidth * window.devicePixelRatio;
@@ -92,176 +90,104 @@ const CircuitBackground = () => {
 
     const w = canvas.offsetWidth;
     const h = canvas.offsetHeight;
-
-    // ── Hexagonal grid ──
-    const hexSize = 50;
-    const hexW = hexSize * 2;
-    const hexH = Math.sqrt(3) * hexSize;
-    const hexCenters: { x: number; y: number }[] = [];
-
-    for (let row = -1; row < h / hexH + 2; row++) {
-      for (let col = -1; col < w / hexW + 2; col++) {
-        const x = col * hexW * 0.75;
-        const y = row * hexH + (col % 2 === 0 ? 0 : hexH / 2);
-        hexCenters.push({ x, y });
-      }
+    const nodeCount = Math.floor((w * h) / 18000);
+    for (let i = 0; i < nodeCount; i++) {
+      nodes.push({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        vx: (Math.random() - 0.5) * 0.15,
+        vy: (Math.random() - 0.5) * 0.15,
+        radius: Math.random() * 1.5 + 0.5,
+        pulse: Math.random() * Math.PI * 2,
+        pulseSpeed: 0.01 + Math.random() * 0.02,
+      });
     }
 
-    const drawHex = (cx: number, cy: number, size: number) => {
-      ctx.beginPath();
-      for (let i = 0; i < 6; i++) {
-        const angle = (Math.PI / 3) * i - Math.PI / 6;
-        const px = cx + size * Math.cos(angle);
-        const py = cy + size * Math.sin(angle);
-        if (i === 0) ctx.moveTo(px, py);
-        else ctx.lineTo(px, py);
-      }
-      ctx.closePath();
-    };
-
-    // ── Circuit nodes at hex intersections ──
-    type CircuitNode = { x: number; y: number; pulse: number; pulseSpeed: number; radius: number };
-    const circuitNodes: CircuitNode[] = [];
-    // Place nodes at a subset of hex centers
-    for (const hc of hexCenters) {
-      if (Math.random() > 0.65) {
-        circuitNodes.push({
-          x: hc.x,
-          y: hc.y,
-          pulse: Math.random() * Math.PI * 2,
-          pulseSpeed: 0.015 + Math.random() * 0.02,
-          radius: 1.5 + Math.random() * 1.5,
-        });
-      }
-    }
-
-    // ── Circuit traces (wires) connecting nearby nodes ──
-    type Wire = {
-      from: CircuitNode; to: CircuitNode;
-      progress: number; speed: number; active: boolean;
-      nextActivation: number;
-    };
-    const wires: Wire[] = [];
-    for (let i = 0; i < circuitNodes.length; i++) {
-      for (let j = i + 1; j < circuitNodes.length; j++) {
-        const dx = circuitNodes[i].x - circuitNodes[j].x;
-        const dy = circuitNodes[i].y - circuitNodes[j].y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < hexSize * 2.5 && Math.random() > 0.5) {
-          wires.push({
-            from: circuitNodes[i],
-            to: circuitNodes[j],
-            progress: 0,
-            speed: 0.003 + Math.random() * 0.006,
-            active: Math.random() > 0.6,
-            nextActivation: Math.random() * 300,
-          });
+    const createLines = () => {
+      lines.length = 0;
+      for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+          const dx = nodes[i].x - nodes[j].x;
+          const dy = nodes[i].y - nodes[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 120 && Math.random() > 0.6) {
+            lines.push({
+              x1: nodes[i].x, y1: nodes[i].y,
+              x2: nodes[j].x, y2: nodes[j].y,
+              progress: 0,
+              speed: 0.002 + Math.random() * 0.004,
+              active: Math.random() > 0.7,
+            });
+          }
         }
       }
-    }
-
-    let frame = 0;
+    };
+    createLines();
 
     const animate = () => {
       ctx.clearRect(0, 0, w, h);
-      frame++;
 
-      // ── Draw hexagonal grid ──
-      for (const hc of hexCenters) {
-        drawHex(hc.x, hc.y, hexSize);
-        ctx.strokeStyle = "hsla(217, 91%, 60%, 0.04)";
-        ctx.lineWidth = 0.5;
-        ctx.stroke();
-      }
-
-      // ── Draw wires (circuit traces) ──
-      for (const wire of wires) {
-        const { from, to } = wire;
-        // Right-angle circuit path
-        const midX = (from.x + to.x) / 2;
-
+      for (const line of lines) {
         ctx.beginPath();
-        ctx.moveTo(from.x, from.y);
-        ctx.lineTo(midX, from.y);
-        ctx.lineTo(midX, to.y);
-        ctx.lineTo(to.x, to.y);
-        ctx.strokeStyle = wire.active
-          ? "hsla(217, 91%, 60%, 0.15)"
-          : "hsla(217, 91%, 60%, 0.05)";
-        ctx.lineWidth = wire.active ? 1 : 0.5;
+        ctx.strokeStyle = `hsla(217, 91%, 60%, ${line.active ? 0.12 : 0.04})`;
+        ctx.lineWidth = 0.5;
+        const midX = (line.x1 + line.x2) / 2;
+        ctx.moveTo(line.x1, line.y1);
+        ctx.lineTo(midX, line.y1);
+        ctx.lineTo(midX, line.y2);
+        ctx.lineTo(line.x2, line.y2);
         ctx.stroke();
 
-        // Electricity pulse traveling along wire
-        if (wire.active) {
-          wire.progress += wire.speed;
-          if (wire.progress > 1) {
-            wire.progress = 0;
-            wire.active = false;
-            wire.nextActivation = frame + 60 + Math.random() * 200;
+        if (line.active) {
+          line.progress += line.speed;
+          if (line.progress > 1) {
+            line.progress = 0;
+            line.active = Math.random() > 0.5;
           }
-
-          // Calculate position along the L-shaped path
-          const t = wire.progress;
+          const t = line.progress;
           let px: number, py: number;
-          const seg1 = Math.abs(midX - from.x);
-          const seg2 = Math.abs(to.y - from.y);
-          const seg3 = Math.abs(to.x - midX);
-          const total = seg1 + seg2 + seg3;
-          const d = t * total;
-
-          if (d <= seg1) {
-            const lt = d / seg1;
-            px = from.x + (midX - from.x) * lt;
-            py = from.y;
-          } else if (d <= seg1 + seg2) {
-            const lt = (d - seg1) / seg2;
+          if (t < 0.33) {
+            const lt = t / 0.33;
+            px = line.x1 + (midX - line.x1) * lt;
+            py = line.y1;
+          } else if (t < 0.66) {
+            const lt = (t - 0.33) / 0.33;
             px = midX;
-            py = from.y + (to.y - from.y) * lt;
+            py = line.y1 + (line.y2 - line.y1) * lt;
           } else {
-            const lt = (d - seg1 - seg2) / seg3;
-            px = midX + (to.x - midX) * lt;
-            py = to.y;
+            const lt = (t - 0.66) / 0.34;
+            px = midX + (line.x2 - midX) * lt;
+            py = line.y2;
           }
-
-          // Electric glow particle
-          const grad = ctx.createRadialGradient(px, py, 0, px, py, 12);
-          grad.addColorStop(0, "hsla(217, 91%, 70%, 0.8)");
-          grad.addColorStop(0.3, "hsla(217, 91%, 60%, 0.4)");
-          grad.addColorStop(1, "hsla(217, 91%, 60%, 0)");
           ctx.beginPath();
-          ctx.fillStyle = grad;
-          ctx.arc(px, py, 12, 0, Math.PI * 2);
+          const gradient = ctx.createRadialGradient(px, py, 0, px, py, 8);
+          gradient.addColorStop(0, "hsla(217, 91%, 60%, 0.6)");
+          gradient.addColorStop(1, "hsla(217, 91%, 60%, 0)");
+          ctx.fillStyle = gradient;
+          ctx.arc(px, py, 8, 0, Math.PI * 2);
           ctx.fill();
-
-          // Bright core
-          ctx.beginPath();
-          ctx.fillStyle = "hsla(210, 100%, 85%, 0.9)";
-          ctx.arc(px, py, 2, 0, Math.PI * 2);
-          ctx.fill();
-        } else if (frame > wire.nextActivation) {
-          wire.active = true;
-          wire.progress = 0;
         }
       }
 
-      // ── Draw circuit nodes (junction dots) ──
-      for (const node of circuitNodes) {
+      for (const node of nodes) {
+        node.x += node.vx;
+        node.y += node.vy;
+        if (node.x < 0 || node.x > w) node.vx *= -1;
+        if (node.y < 0 || node.y > h) node.vy *= -1;
         node.pulse += node.pulseSpeed;
-        const intensity = 0.4 + Math.sin(node.pulse) * 0.4;
-        const r = node.radius + Math.sin(node.pulse) * 0.5;
+        const glowIntensity = 0.3 + Math.sin(node.pulse) * 0.3;
+        const r = node.radius + Math.sin(node.pulse) * 0.3;
 
-        // Outer glow
-        const glow = ctx.createRadialGradient(node.x, node.y, 0, node.x, node.y, r * 5);
-        glow.addColorStop(0, `hsla(217, 91%, 60%, ${intensity * 0.35})`);
-        glow.addColorStop(1, "hsla(217, 91%, 60%, 0)");
         ctx.beginPath();
+        const glow = ctx.createRadialGradient(node.x, node.y, 0, node.x, node.y, r * 6);
+        glow.addColorStop(0, `hsla(217, 91%, 60%, ${glowIntensity * 0.3})`);
+        glow.addColorStop(1, "hsla(217, 91%, 60%, 0)");
         ctx.fillStyle = glow;
-        ctx.arc(node.x, node.y, r * 5, 0, Math.PI * 2);
+        ctx.arc(node.x, node.y, r * 6, 0, Math.PI * 2);
         ctx.fill();
 
-        // Core
         ctx.beginPath();
-        ctx.fillStyle = `hsla(217, 91%, 75%, ${intensity + 0.1})`;
+        ctx.fillStyle = `hsla(217, 91%, 70%, ${glowIntensity + 0.2})`;
         ctx.arc(node.x, node.y, r, 0, Math.PI * 2);
         ctx.fill();
       }
@@ -337,9 +263,9 @@ const HeroSection = () => {
                 target={link.href.startsWith("http") ? "_blank" : undefined}
                 rel="noopener noreferrer"
                 aria-label={link.label}
-                className={`group relative w-10 h-10 rounded-lg border-0 flex items-center justify-center transition-all duration-300 hover:scale-110 ${link.bg} ${link.hoverBg}`}
+                className="group relative w-10 h-10 rounded-lg border border-border bg-muted/50 flex items-center justify-center transition-all duration-300 hover:scale-110 hover:border-muted-foreground/30"
               >
-                <link.icon className="w-4 h-4 text-white font-bold" />
+                <link.icon className={`w-5 h-5 ${link.iconColor}`} />
                 <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-[10px] text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                   {link.label}
                 </div>
