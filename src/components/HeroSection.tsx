@@ -44,25 +44,33 @@ const socialLinks = [
     icon: Github,
     href: "https://github.com/STUTI-01",
     label: "GitHub",
-    iconColor: "text-[#f0f0f0]",
+    color: "hover:bg-[#333] hover:border-[#333]",
+    iconColor: "group-hover:text-white",
+    baseColor: "text-[#6e7681]",
   },
   {
     icon: Linkedin,
     href: "https://www.linkedin.com/in/stuti-mohanty-817a231aa/",
     label: "LinkedIn",
-    iconColor: "text-[#0A66C2]",
+    color: "hover:bg-[#0A66C2] hover:border-[#0A66C2]",
+    iconColor: "group-hover:text-white",
+    baseColor: "text-[#0A66C2]",
   },
   {
     icon: Mail,
     href: "mailto:stutimohanty01@gmail.com",
     label: "Email",
-    iconColor: "text-[#EA4335]",
+    color: "hover:bg-[#EA4335] hover:border-[#EA4335]",
+    iconColor: "group-hover:text-white",
+    baseColor: "text-[#EA4335]",
   },
   {
     icon: Phone,
     href: "tel:+919019158174",
     label: "Phone",
-    iconColor: "text-[#25D366]",
+    color: "hover:bg-[#25D366] hover:border-[#25D366]",
+    iconColor: "group-hover:text-white",
+    baseColor: "text-[#25D366]",
   },
 ];
 
@@ -83,7 +91,7 @@ const CircuitBackground = () => {
     const resize = () => {
       canvas.width = canvas.offsetWidth * window.devicePixelRatio;
       canvas.height = canvas.offsetHeight * window.devicePixelRatio;
-      ctx.setTransform(window.devicePixelRatio, 0, 0, window.devicePixelRatio, 0, 0);
+      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
     };
     resize();
     window.addEventListener("resize", resize);
@@ -263,9 +271,9 @@ const HeroSection = () => {
                 target={link.href.startsWith("http") ? "_blank" : undefined}
                 rel="noopener noreferrer"
                 aria-label={link.label}
-                className="group relative w-10 h-10 rounded-lg border border-border bg-muted/50 flex items-center justify-center transition-all duration-300 hover:scale-110 hover:border-muted-foreground/30"
+                className={`group relative w-10 h-10 rounded-lg border border-border bg-muted/50 flex items-center justify-center transition-all duration-300 hover:scale-110 ${link.color}`}
               >
-                <link.icon className={`w-5 h-5 ${link.iconColor}`} />
+                <link.icon className={`w-4 h-4 transition-colors ${link.baseColor} ${link.iconColor}`} />
                 <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-[10px] text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                   {link.label}
                 </div>
