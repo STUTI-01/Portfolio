@@ -290,6 +290,39 @@ const HeroSection = () => {
           transition={{ duration: 0.8, delay: 0.4 }}
         >
           <div className="relative w-64 h-64 md:w-80 md:h-80">
+            {/* Glowing bokeh dots */}
+            <motion.div
+              className="absolute w-8 h-8 rounded-full"
+              style={{ top: "10%", left: "5%", background: "radial-gradient(circle, hsla(200, 80%, 60%, 0.7) 0%, transparent 70%)", filter: "blur(4px)" }}
+              animate={{ opacity: [0.4, 0.9, 0.4], scale: [1, 1.3, 1] }}
+              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+            />
+            <motion.div
+              className="absolute w-12 h-12 rounded-full"
+              style={{ top: "55%", left: "-10%", background: "radial-gradient(circle, hsla(200, 80%, 55%, 0.6) 0%, transparent 70%)", filter: "blur(5px)" }}
+              animate={{ opacity: [0.3, 0.8, 0.3], scale: [1, 1.2, 1] }}
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+            />
+            <motion.div
+              className="absolute w-6 h-6 rounded-full"
+              style={{ top: "75%", right: "0%", background: "radial-gradient(circle, hsla(200, 80%, 65%, 0.8) 0%, transparent 70%)", filter: "blur(3px)" }}
+              animate={{ opacity: [0.5, 1, 0.5], scale: [1, 1.4, 1] }}
+              transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+            />
+            <motion.div
+              className="absolute w-10 h-10 rounded-full"
+              style={{ top: "20%", right: "-5%", background: "radial-gradient(circle, hsla(200, 80%, 50%, 0.5) 0%, transparent 70%)", filter: "blur(6px)" }}
+              animate={{ opacity: [0.2, 0.7, 0.2], scale: [1, 1.25, 1] }}
+              transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+            />
+            <motion.div
+              className="absolute w-5 h-5 rounded-full"
+              style={{ bottom: "5%", left: "30%", background: "radial-gradient(circle, hsla(200, 80%, 60%, 0.7) 0%, transparent 70%)", filter: "blur(3px)" }}
+              animate={{ opacity: [0.4, 0.9, 0.4], scale: [1, 1.3, 1] }}
+              transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
+            />
+
+            {/* Orbital rings */}
             <motion.div
               className="absolute -inset-3 rounded-full border border-secondary/20"
               animate={{ rotate: 360 }}
@@ -298,20 +331,27 @@ const HeroSection = () => {
               <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-secondary/60" />
               <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-1.5 h-1.5 rounded-full bg-secondary/40" />
             </motion.div>
-            <div className="absolute inset-0 rounded-full blur-[50px] bg-secondary/15 animate-glow-pulse" />
+            {/* Background glow behind image */}
+            <div className="absolute inset-0 rounded-full blur-[50px] bg-secondary/20 animate-glow-pulse" />
+            {/* Dark circle backdrop for transparent image */}
+            <div
+              className="absolute inset-0 rounded-full z-[9]"
+              style={{
+                background: "radial-gradient(circle, hsl(217, 50%, 12%) 0%, hsl(220, 44%, 8%) 100%)",
+              }}
+            />
             <img
               src={profilePhoto}
               alt="Stuti Mohanty"
-              className="w-full h-full object-cover rounded-full relative z-10 shadow-2xl"
+              className="w-full h-full object-cover rounded-full relative z-10"
               style={{
-                border: "2px solid hsla(217, 91%, 60%, 0.25)",
-                boxShadow: "0 0 40px hsla(217, 91%, 60%, 0.1), inset 0 0 30px hsla(220, 44%, 8%, 0.5)",
+                filter: "drop-shadow(0 0 20px hsla(217, 91%, 60%, 0.15))",
               }}
             />
             <div
               className="absolute inset-0 rounded-full z-20 pointer-events-none"
               style={{
-                background: "linear-gradient(135deg, hsla(0, 0%, 100%, 0.06) 0%, transparent 50%)",
+                background: "linear-gradient(135deg, hsla(0, 0%, 100%, 0.04) 0%, transparent 50%)",
               }}
             />
           </div>
