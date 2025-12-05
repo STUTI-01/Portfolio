@@ -205,7 +205,7 @@ const HeroSection = () => {
   const navigate = useNavigate();
 
   return (
-    <section className="min-h-screen flex flex-col justify-center relative overflow-hidden px-6 md:px-16 lg:px-24 py-20">
+    <section className="min-h-screen flex flex-col justify-center relative overflow-hidden px-6 md:px-16 lg:px-24 py-10">
       <CircuitBackground />
 
       {/* Subtle radial ambient */}
@@ -213,10 +213,42 @@ const HeroSection = () => {
         background: "radial-gradient(ellipse at 75% 25%, hsla(217, 91%, 60%, 0.05) 0%, transparent 55%), radial-gradient(ellipse at 25% 75%, hsla(217, 70%, 50%, 0.03) 0%, transparent 50%)",
       }} />
 
-      <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-24 max-w-7xl mx-auto w-full relative z-10">
+      {/* Decorative corner accents */}
+      <div className="absolute top-20 left-8 w-24 h-24 pointer-events-none z-0 opacity-20">
+        <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-secondary to-transparent" />
+        <div className="absolute top-0 left-0 h-full w-[1px] bg-gradient-to-b from-secondary to-transparent" />
+      </div>
+      <div className="absolute bottom-8 right-8 w-24 h-24 pointer-events-none z-0 opacity-20">
+        <div className="absolute bottom-0 right-0 w-full h-[1px] bg-gradient-to-l from-name-highlight to-transparent" />
+        <div className="absolute bottom-0 right-0 h-full w-[1px] bg-gradient-to-t from-name-highlight to-transparent" />
+      </div>
+
+      {/* Floating decorative dots */}
+      <motion.div
+        className="absolute top-32 right-[20%] w-1.5 h-1.5 rounded-full bg-name-highlight/40 pointer-events-none z-0"
+        animate={{ y: [0, -8, 0], opacity: [0.4, 0.8, 0.4] }}
+        transition={{ duration: 3, repeat: Infinity }}
+      />
+      <motion.div
+        className="absolute top-[60%] left-[10%] w-1 h-1 rounded-full bg-secondary/50 pointer-events-none z-0"
+        animate={{ y: [0, 6, 0], opacity: [0.3, 0.7, 0.3] }}
+        transition={{ duration: 4, repeat: Infinity, delay: 1 }}
+      />
+      <motion.div
+        className="absolute bottom-[30%] right-[8%] w-2 h-2 rounded-full bg-secondary/20 pointer-events-none z-0"
+        animate={{ scale: [1, 1.5, 1], opacity: [0.2, 0.5, 0.2] }}
+        transition={{ duration: 5, repeat: Infinity, delay: 0.5 }}
+      />
+
+      {/* Horizontal accent line */}
+      <div className="absolute top-[50%] left-0 w-full h-[1px] pointer-events-none z-0" style={{
+        background: "linear-gradient(90deg, transparent 0%, hsla(217, 91%, 60%, 0.06) 30%, hsla(45, 97%, 64%, 0.04) 70%, transparent 100%)",
+      }} />
+
+      <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-20 max-w-7xl mx-auto w-full relative z-10">
         {/* Left: Text */}
         <motion.div
-          className="flex-1 space-y-8"
+          className="flex-1 space-y-5"
           initial={{ opacity: 0, x: -40 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
@@ -279,9 +311,16 @@ const HeroSection = () => {
                 <link.icon className={`w-4 h-4 transition-colors duration-300 ${link.iconColor} ${link.hoverIcon}`} />
               </a>
             ))}
-          </motion.div>
 
-          {/* Resume download removed */}
+            {/* Status indicator */}
+            <div className="ml-3 flex items-center gap-2">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-name-highlight opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-name-highlight"></span>
+              </span>
+              <span className="text-[10px] font-mono text-name-highlight/80 tracking-wider uppercase">Open to work</span>
+            </div>
+          </motion.div>
         </motion.div>
 
         {/* Right: Photo */}
@@ -291,7 +330,7 @@ const HeroSection = () => {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, delay: 0.4 }}
         >
-          <div className="relative w-72 h-72 md:w-80 md:h-80">
+          <div className="relative w-60 h-60 md:w-72 md:h-72">
             {/* Outer orbital ring */}
             <motion.div
               className="absolute -inset-6 rounded-full"
@@ -333,7 +372,7 @@ const HeroSection = () => {
 
       {/* Skill Cards */}
       <motion.div
-        className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-7xl mx-auto w-full mt-20 relative z-10"
+        className="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-7xl mx-auto w-full mt-10 relative z-10"
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, delay: 0.9 }}
@@ -341,7 +380,7 @@ const HeroSection = () => {
         {skillCards.map((card, i) => (
           <motion.div
             key={card.title}
-            className="group glass-card p-5 space-y-3 cursor-pointer transition-all duration-300 hover:border-secondary/30"
+            className="group glass-card p-4 space-y-2 cursor-pointer transition-all duration-300 hover:border-secondary/30"
             whileHover={{ y: -4 }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
