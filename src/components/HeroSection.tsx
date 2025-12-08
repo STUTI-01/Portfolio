@@ -85,20 +85,8 @@ const CircuitBackground = () => {
     if (!ctx) return;
 
     let animationId: number;
-    let time = 0;
-
-    interface Node {
-      x: number; y: number; vx: number; vy: number;
-      radius: number; pulse: number; pulseSpeed: number;
-      hue: number; isJunction: boolean;
-    }
-    interface Line {
-      i: number; j: number; progress: number; speed: number;
-      active: boolean; cooldown: number; hue: number; trail: number[];
-    }
-
-    const nodes: Node[] = [];
-    const lines: Line[] = [];
+    const nodes: { x: number; y: number; vx: number; vy: number; radius: number; pulse: number; pulseSpeed: number }[] = [];
+    const lines: { x1: number; y1: number; x2: number; y2: number; progress: number; speed: number; active: boolean }[] = [];
 
     const resize = () => {
       canvas.width = canvas.offsetWidth * window.devicePixelRatio;
@@ -110,20 +98,16 @@ const CircuitBackground = () => {
 
     const w = canvas.offsetWidth;
     const h = canvas.offsetHeight;
-    const nodeCount = Math.floor((w * h) / 12000);
-
+    const nodeCount = Math.floor((w * h) / 18000);
     for (let i = 0; i < nodeCount; i++) {
-      const isJunction = Math.random() > 0.7;
       nodes.push({
         x: Math.random() * w,
         y: Math.random() * h,
-        vx: (Math.random() - 0.5) * 0.2,
-        vy: (Math.random() - 0.5) * 0.2,
-        radius: isJunction ? Math.random() * 2 + 1.5 : Math.random() * 1.2 + 0.4,
+        vx: (Math.random() - 0.5) * 0.15,
+        vy: (Math.random() - 0.5) * 0.15,
+        radius: Math.random() * 1.5 + 0.5,
         pulse: Math.random() * Math.PI * 2,
-        pulseSpeed: 0.015 + Math.random() * 0.025,
-        hue: Math.random() > 0.8 ? 142 : Math.random() > 0.5 ? 38 : 217,
-        isJunction,
+        pulseSpeed: 0.01 + Math.random() * 0.02,
       });
     }
 
@@ -134,15 +118,13 @@ const CircuitBackground = () => {
           const dx = nodes[i].x - nodes[j].x;
           const dy = nodes[i].y - nodes[j].y;
           const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 150 && Math.random() > 0.5) {
+          if (dist < 120 && Math.random() > 0.6) {
             lines.push({
-              i, j,
+              x1: nodes[i].x, y1: nodes[i].y,
+              x2: nodes[j].x, y2: nodes[j].y,
               progress: 0,
-              speed: 0.003 + Math.random() * 0.007,
-              active: Math.random() > 0.4,
-              cooldown: 0,
-              hue: [217, 142, 38][Math.floor(Math.random() * 3)],
-              trail: [],
+              speed: 0.002 + Math.random() * 0.004,
+              active: Math.random() > 0.7,
             });
           }
         }
@@ -151,124 +133,71 @@ const CircuitBackground = () => {
     createLines();
 
     const animate = () => {
-      time += 0.016;
       ctx.clearRect(0, 0, w, h);
 
-      // Draw lines with circuit-board right-angle paths
       for (const line of lines) {
-        const n1 = nodes[line.i];
-        const n2 = nodes[line.j];
-        const midX = (n1.x + n2.x) / 2;
-
-        // Base circuit trace
-        const baseAlpha = line.active ? 0.15 + Math.sin(time * 2) * 0.05 : 0.03;
         ctx.beginPath();
-        ctx.strokeStyle = `hsla(${line.hue}, 91%, 60%, ${baseAlpha})`;
-        ctx.lineWidth = line.active ? 0.8 : 0.4;
-        ctx.moveTo(n1.x, n1.y);
-        ctx.lineTo(midX, n1.y);
-        ctx.lineTo(midX, n2.y);
-        ctx.lineTo(n2.x, n2.y);
+        ctx.strokeStyle = `hsla(217, 91%, 60%, ${line.active ? 0.12 : 0.04})`;
+        ctx.lineWidth = 0.5;
+        const midX = (line.x1 + line.x2) / 2;
+        ctx.moveTo(line.x1, line.y1);
+        ctx.lineTo(midX, line.y1);
+        ctx.lineTo(midX, line.y2);
+        ctx.lineTo(line.x2, line.y2);
         ctx.stroke();
 
         if (line.active) {
           line.progress += line.speed;
           if (line.progress > 1) {
             line.progress = 0;
-            line.cooldown = 60 + Math.random() * 120;
-            line.active = false;
+            line.active = Math.random() > 0.5;
           }
-
           const t = line.progress;
           let px: number, py: number;
           if (t < 0.33) {
             const lt = t / 0.33;
-            px = n1.x + (midX - n1.x) * lt;
-            py = n1.y;
+            px = line.x1 + (midX - line.x1) * lt;
+            py = line.y1;
           } else if (t < 0.66) {
             const lt = (t - 0.33) / 0.33;
             px = midX;
-            py = n1.y + (n2.y - n1.y) * lt;
+            py = line.y1 + (line.y2 - line.y1) * lt;
           } else {
             const lt = (t - 0.66) / 0.34;
-            px = midX + (n2.x - midX) * lt;
-            py = n2.y;
+            px = midX + (line.x2 - midX) * lt;
+            py = line.y2;
           }
-
-          // Store trail positions
-          line.trail.push(px, py);
-          if (line.trail.length > 20) line.trail.splice(0, 2);
-
-          // Draw trail
-          for (let ti = 0; ti < line.trail.length - 2; ti += 2) {
-            const alpha = (ti / line.trail.length) * 0.4;
-            ctx.beginPath();
-            ctx.fillStyle = `hsla(${line.hue}, 91%, 70%, ${alpha})`;
-            ctx.arc(line.trail[ti], line.trail[ti + 1], 2, 0, Math.PI * 2);
-            ctx.fill();
-          }
-
-          // Bright pulse head
-          const grad = ctx.createRadialGradient(px, py, 0, px, py, 14);
-          grad.addColorStop(0, `hsla(${line.hue}, 91%, 80%, 0.9)`);
-          grad.addColorStop(0.3, `hsla(${line.hue}, 91%, 65%, 0.4)`);
-          grad.addColorStop(1, `hsla(${line.hue}, 91%, 60%, 0)`);
           ctx.beginPath();
-          ctx.fillStyle = grad;
-          ctx.arc(px, py, 14, 0, Math.PI * 2);
+          const gradient = ctx.createRadialGradient(px, py, 0, px, py, 8);
+          gradient.addColorStop(0, "hsla(217, 91%, 60%, 0.6)");
+          gradient.addColorStop(1, "hsla(217, 91%, 60%, 0)");
+          ctx.fillStyle = gradient;
+          ctx.arc(px, py, 8, 0, Math.PI * 2);
           ctx.fill();
-
-          // Inner bright core
-          ctx.beginPath();
-          ctx.fillStyle = `hsla(${line.hue}, 80%, 90%, 0.95)`;
-          ctx.arc(px, py, 2, 0, Math.PI * 2);
-          ctx.fill();
-        } else {
-          line.trail = [];
-          if (line.cooldown > 0) {
-            line.cooldown--;
-          } else if (Math.random() > 0.997) {
-            line.active = true;
-            line.progress = 0;
-          }
         }
       }
 
-      // Draw nodes
       for (const node of nodes) {
         node.x += node.vx;
         node.y += node.vy;
         if (node.x < 0 || node.x > w) node.vx *= -1;
         if (node.y < 0 || node.y > h) node.vy *= -1;
         node.pulse += node.pulseSpeed;
+        const glowIntensity = 0.3 + Math.sin(node.pulse) * 0.3;
+        const r = node.radius + Math.sin(node.pulse) * 0.3;
 
-        const glowIntensity = 0.4 + Math.sin(node.pulse) * 0.4;
-        const r = node.radius + Math.sin(node.pulse) * 0.4;
-
-        // Outer glow
-        const glow = ctx.createRadialGradient(node.x, node.y, 0, node.x, node.y, r * 8);
-        glow.addColorStop(0, `hsla(${node.hue}, 91%, 65%, ${glowIntensity * 0.35})`);
-        glow.addColorStop(0.5, `hsla(${node.hue}, 91%, 60%, ${glowIntensity * 0.1})`);
-        glow.addColorStop(1, `hsla(${node.hue}, 91%, 60%, 0)`);
         ctx.beginPath();
+        const glow = ctx.createRadialGradient(node.x, node.y, 0, node.x, node.y, r * 6);
+        glow.addColorStop(0, `hsla(217, 91%, 60%, ${glowIntensity * 0.3})`);
+        glow.addColorStop(1, "hsla(217, 91%, 60%, 0)");
         ctx.fillStyle = glow;
-        ctx.arc(node.x, node.y, r * 8, 0, Math.PI * 2);
+        ctx.arc(node.x, node.y, r * 6, 0, Math.PI * 2);
         ctx.fill();
 
-        // Core dot
         ctx.beginPath();
-        ctx.fillStyle = `hsla(${node.hue}, 85%, ${node.isJunction ? 80 : 70}%, ${glowIntensity + 0.3})`;
+        ctx.fillStyle = `hsla(217, 91%, 70%, ${glowIntensity + 0.2})`;
         ctx.arc(node.x, node.y, r, 0, Math.PI * 2);
         ctx.fill();
-
-        // Junction ring
-        if (node.isJunction) {
-          ctx.beginPath();
-          ctx.strokeStyle = `hsla(${node.hue}, 91%, 65%, ${glowIntensity * 0.5})`;
-          ctx.lineWidth = 0.5;
-          ctx.arc(node.x, node.y, r * 3, 0, Math.PI * 2);
-          ctx.stroke();
-        }
       }
 
       animationId = requestAnimationFrame(animate);
@@ -285,10 +214,11 @@ const CircuitBackground = () => {
     <canvas
       ref={canvasRef}
       className="absolute inset-0 w-full h-full pointer-events-none"
-      style={{ opacity: 0.8 }}
+      style={{ opacity: 0.6 }}
     />
   );
 };
+
 
 const HeroSection = () => {
   const navigate = useNavigate();
@@ -362,7 +292,7 @@ const HeroSection = () => {
         >
           <div className="relative w-64 h-64 md:w-80 md:h-80">
             <motion.div
-              className="absolute -inset-3 rounded-full border border-secondary/20"
+              className="absolute -inset-1.5 rounded-full border border-secondary/20"
               animate={{ rotate: 360 }}
               transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
             >
