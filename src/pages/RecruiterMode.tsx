@@ -8,7 +8,7 @@ import AnimatedCounter from "@/components/AnimatedCounter";
 import { experiences, education, skillCategories, projects, honors } from "@/data/portfolioData";
 import {
   Briefcase, GraduationCap, Wrench, FolderOpen, Award,
-  ChevronDown, ExternalLink, Github
+  ChevronDown, ExternalLink, Github, Terminal
 } from "lucide-react";
 
 const PROJECTS_PER_PAGE = 6;
@@ -69,7 +69,7 @@ const RecruiterMode = () => {
         <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent" />
       </div>
 
-      {/* About */}
+      {/* About + Engineering at Scale combined */}
       <div className="max-w-5xl mx-auto px-6 pt-20">
         <motion.section
           initial={{ opacity: 0, y: 40 }}
@@ -88,27 +88,23 @@ const RecruiterMode = () => {
           </motion.h2>
           <div className="glass-card p-8 space-y-4">
             <p className="text-foreground text-lg leading-relaxed">
-              I'm a <span className="text-primary font-semibold">Software Engineer</span> who thrives at the intersection of
-              distributed systems, AI, and high-performance computing. At{" "}
-              <span className="text-accent font-semibold">Akamai Technologies</span>, I built backend infrastructure that
-              serves millions of requests per second — optimizing latency, throughput, and reliability at CDN scale.
+              I'm a <span className="text-primary font-semibold">Software Engineer</span> with experience building
+              high-performance systems at <span className="text-accent font-semibold">Akamai Technologies</span>,{" "}
+              <span className="text-accent font-semibold">Hewlett Packard Enterprise (HPE)</span>, and{" "}
+              <span className="text-accent font-semibold">Pyramid Developers</span> — optimizing latency, throughput,
+              and reliability across CDN-scale infrastructure and enterprise platforms.
             </p>
             <p className="text-muted-foreground leading-relaxed">
-              My work spans from writing lock-free C++ data structures to designing ML pipelines that predict system failures
-              before they happen. I believe great engineering is invisible — users should only feel the speed, never the complexity.
-              When I'm not shipping code, I'm mentoring the next generation of developers, contributing to open source, and exploring
-              the cosmos through poetry and birding.
+              My work spans from writing lock-free C++ data structures to designing ML pipelines that predict system
+              failures before they happen. Beyond industry, I've led engineering initiatives across student tech
+              communities — driving hackathons, mentoring peers, and shipping open-source tools. I believe great
+              engineering is invisible: users should only feel the speed, never the complexity.
             </p>
           </div>
         </motion.section>
       </div>
 
-      {/* Divider */}
-      <div className="max-w-7xl mx-auto px-6 mt-20">
-        <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent" />
-      </div>
-
-      {/* Engineering at Scale */}
+      {/* Engineering at Scale (stats only, no terminal) */}
       <EngineeringAtScale />
 
       {/* Divider */}
@@ -447,6 +443,29 @@ const RecruiterMode = () => {
             ))}
           </div>
         </motion.section>
+
+        {/* ── ENGINEERING MINDSET (terminal moved to end) ── */}
+        <motion.div
+          className="glass-card p-5 max-w-xl mx-auto font-mono text-xs"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.3 }}
+        >
+          <div className="flex items-center gap-2 mb-3">
+            <div className="w-2.5 h-2.5 rounded-full bg-destructive/70" />
+            <div className="w-2.5 h-2.5 rounded-full bg-accent/70" />
+            <div className="w-2.5 h-2.5 rounded-full bg-primary/70" />
+            <span className="text-muted-foreground ml-2">stuti@systems ~</span>
+          </div>
+          <div className="space-y-1 text-muted-foreground">
+            <p><span className="text-secondary">$</span> cat engineering_mindset.txt</p>
+            <p className="text-foreground/80 pl-2">"Great engineering is invisible —</p>
+            <p className="text-foreground/80 pl-2"> users should only feel the speed,</p>
+            <p className="text-foreground/80 pl-2"> never the complexity."</p>
+            <p className="mt-2"><span className="text-secondary">$</span> <span className="animate-cursor-blink border-r-2 border-secondary">&nbsp;</span></p>
+          </div>
+        </motion.div>
       </div>
     </div>
   );

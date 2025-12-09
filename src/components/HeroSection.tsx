@@ -1,9 +1,10 @@
 import { motion } from "framer-motion";
 import { useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import TypewriterText from "./TypewriterText";
 import ResumeDownload from "./ResumeDownload";
 import profilePhoto from "@/assets/profile-photo.png";
-import { Github, Linkedin, Mail, Phone } from "lucide-react";
+import { Github, Linkedin, Mail, Phone, Download } from "lucide-react";
 
 const rotatingPhrases = [
   "I turn chaos into systems.",
@@ -17,34 +18,41 @@ const socialLinks = [
     icon: Github,
     href: "https://github.com/STUTI-01",
     label: "GitHub",
-    color: "hover:bg-[#333] hover:border-[#333]",
+    color: "hover:bg-[hsl(0,0%,20%)] hover:border-[hsl(0,0%,20%)]",
     iconColor: "group-hover:text-white",
-    baseColor: "text-[#6e7681]",
+    baseColor: "text-[hsl(215,14%,46%)]",
   },
   {
     icon: Linkedin,
     href: "https://www.linkedin.com/in/stuti-mohanty-817a231aa/",
     label: "LinkedIn",
-    color: "hover:bg-[#0A66C2] hover:border-[#0A66C2]",
+    color: "hover:bg-[hsl(210,82%,40%)] hover:border-[hsl(210,82%,40%)]",
     iconColor: "group-hover:text-white",
-    baseColor: "text-[#0A66C2]",
+    baseColor: "text-[hsl(210,82%,40%)]",
   },
   {
     icon: Mail,
     href: "mailto:stutimohanty01@gmail.com",
     label: "Email",
-    color: "hover:bg-[#EA4335] hover:border-[#EA4335]",
+    color: "hover:bg-[hsl(4,72%,56%)] hover:border-[hsl(4,72%,56%)]",
     iconColor: "group-hover:text-white",
-    baseColor: "text-[#EA4335]",
+    baseColor: "text-[hsl(4,72%,56%)]",
   },
   {
     icon: Phone,
     href: "tel:+919019158174",
     label: "Phone",
-    color: "hover:bg-[#25D366] hover:border-[#25D366]",
+    color: "hover:bg-[hsl(142,70%,49%)] hover:border-[hsl(142,70%,49%)]",
     iconColor: "group-hover:text-white",
-    baseColor: "text-[#25D366]",
+    baseColor: "text-[hsl(142,70%,49%)]",
   },
+];
+
+const skillCards = [
+  { title: "Backend & Systems", skills: "C++, Go, Rust, Distributed Systems", filter: "C++" },
+  { title: "AI & ML", skills: "PyTorch, TensorFlow, NLP, Computer Vision", filter: "Python" },
+  { title: "Full Stack", skills: "React, Node.js, TypeScript, PostgreSQL", filter: "React" },
+  { title: "Cloud & DevOps", skills: "AWS, Docker, Kubernetes, CI/CD", filter: "AWS" },
 ];
 
 // Circuit board animated background
@@ -194,6 +202,8 @@ const CircuitBackground = () => {
 
 
 const HeroSection = () => {
+  const navigate = useNavigate();
+
   return (
     <section className="min-h-screen flex flex-col justify-center relative overflow-hidden px-6 md:px-16 lg:px-24 py-20">
       <CircuitBackground />
@@ -286,6 +296,41 @@ const HeroSection = () => {
           </div>
         </motion.div>
       </div>
+
+      {/* Skill Cards */}
+      <motion.div
+        className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-7xl mx-auto w-full mt-16 relative z-10"
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7, delay: 0.8 }}
+      >
+        {skillCards.map((card, i) => (
+          <motion.div
+            key={card.title}
+            className="glass-card p-5 space-y-2 cursor-pointer hover:border-primary/30 transition-all duration-300 group"
+            whileHover={{ y: -4 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.9 + i * 0.1 }}
+            onClick={() => navigate(`/recruiter?skills=${card.filter}`)}
+          >
+            <h3 className="font-display font-bold text-sm text-foreground group-hover:text-primary transition-colors">
+              {card.title}
+            </h3>
+            <p className="text-xs text-muted-foreground leading-relaxed">{card.skills}</p>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                // placeholder for resume download per role
+              }}
+              className="flex items-center gap-1.5 text-[10px] font-medium text-primary/70 hover:text-primary transition-colors mt-1"
+            >
+              <Download className="w-3 h-3" />
+              Download Resume
+            </button>
+          </motion.div>
+        ))}
+      </motion.div>
     </section>
   );
 };
