@@ -292,7 +292,7 @@ const HeroSection = () => {
         >
           <div className="relative w-64 h-64 md:w-80 md:h-80">
             <motion.div
-              className="absolute -inset-1.5 rounded-full border border-secondary/20"
+              className="absolute -inset-5 rounded-full border border-secondary/20"
               animate={{ rotate: 360 }}
               transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
             >
