@@ -303,7 +303,7 @@ const HeroSection = () => {
             <img
               src={profilePhoto}
               alt="Stuti Mohanty"
-              className="w-full h-full object-cover rounded-full relative z-10 shadow-2xl"
+              className="w-full h-full object-cover object-top rounded-full relative z-10 shadow-2xl"
               style={{
                 border: "2px solid hsla(217, 91%, 60%, 0.25)",
                 boxShadow: "0 0 40px hsla(217, 91%, 60%, 0.1), inset 0 0 30px hsla(220, 44%, 8%, 0.5)",
