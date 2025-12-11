@@ -1,42 +1,15 @@
 import { motion } from "framer-motion";
 import { useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
 import TypewriterText from "./TypewriterText";
+import ResumeDownload from "./ResumeDownload";
 import profilePhoto from "@/assets/profile-photo.png";
-import { Cpu, Shield, Code, Cloud, Github, Linkedin, Mail, Phone } from "lucide-react";
+import { Github, Linkedin, Mail, Phone } from "lucide-react";
 
 const rotatingPhrases = [
   "I turn chaos into systems.",
   "I turn ideas into scale.",
   "I turn caffeine into architecture.",
   "I turn complexity into clarity.",
-];
-
-const skillCards = [
-  {
-    icon: Cpu,
-    title: "Distributed Systems & Performance",
-    description: "Building high-throughput, fault-tolerant distributed systems at scale.",
-    filterSkills: ["Distributed Systems", "C++"],
-  },
-  {
-    icon: Shield,
-    title: "C++ Concurrency & Systems Programming",
-    description: "Low-level systems optimization with multi-threaded architectures.",
-    filterSkills: ["C++"],
-  },
-  {
-    icon: Code,
-    title: "AI & Machine Learning",
-    description: "Designing intelligent systems that automate and enhance decisions.",
-    filterSkills: ["PyTorch", "TensorFlow", "NLP"],
-  },
-  {
-    icon: Cloud,
-    title: "Cloud & Backend Architecture",
-    description: "Scalable cloud-native backend solutions with modern tooling.",
-    filterSkills: ["AWS", "Docker", "Kubernetes"],
-  },
 ];
 
 const socialLinks = [
@@ -221,14 +194,6 @@ const CircuitBackground = () => {
 
 
 const HeroSection = () => {
-  const navigate = useNavigate();
-
-  const handleSkillCardClick = (filterSkills: string[]) => {
-    const params = new URLSearchParams();
-    params.set("skills", filterSkills.join(","));
-    navigate(`/recruiter?${params.toString()}`);
-  };
-
   return (
     <section className="min-h-screen flex flex-col justify-center relative overflow-hidden px-6 md:px-16 lg:px-24 py-20">
       <CircuitBackground />
@@ -258,7 +223,7 @@ const HeroSection = () => {
             </p>
           </div>
 
-          {/* Social links — colored */}
+          {/* Social links */}
           <motion.div
             className="flex items-center gap-3 pt-2"
             initial={{ opacity: 0, y: 10 }}
@@ -281,6 +246,9 @@ const HeroSection = () => {
               </a>
             ))}
           </motion.div>
+
+          {/* Resume download */}
+          <ResumeDownload />
         </motion.div>
 
         {/* Right: Photo */}
@@ -318,32 +286,6 @@ const HeroSection = () => {
           </div>
         </motion.div>
       </div>
-
-      {/* Skill Cards — clickable, navigate to projects */}
-      <motion.div
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-16 max-w-7xl mx-auto w-full relative z-10"
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 0.8 }}
-      >
-        {skillCards.map((card, i) => (
-          <motion.div
-            key={card.title}
-            className="glass-card-hover p-5 space-y-3 cursor-pointer"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 1 + i * 0.1 }}
-            onClick={() => handleSkillCardClick(card.filterSkills)}
-          >
-            <card.icon className="w-8 h-8 text-secondary" />
-            <h3 className="font-display font-semibold text-sm">{card.title}</h3>
-            <p className="text-xs text-muted-foreground leading-relaxed">{card.description}</p>
-            <span className="inline-flex items-center text-[10px] text-secondary/70 font-mono mt-1">
-              View projects →
-            </span>
-          </motion.div>
-        ))}
-      </motion.div>
     </section>
   );
 };

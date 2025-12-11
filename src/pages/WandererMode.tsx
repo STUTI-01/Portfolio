@@ -1,7 +1,8 @@
 import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import wandererHero from "@/assets/wanderer-hero.jpg";
-import { Gem, BookOpen, Bird, Camera, PenTool } from "lucide-react";
+import profilePhoto from "@/assets/profile-photo.png";
+import { Gem, BookOpen, Bird, Camera, PenTool, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const sections = [
@@ -47,33 +48,139 @@ const WandererMode = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
 
-      {/* Hero */}
-      <div className="relative h-[60vh] overflow-hidden">
-        <img
-          src={wandererHero}
-          alt="Forest landscape"
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-transparent to-background" />
-        <motion.div
-          className="absolute bottom-12 left-8 md:left-16"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-        >
-          <h1 className="text-3xl md:text-5xl font-display font-bold leading-tight text-foreground">
-            Welcome to the world,
-            <br />
-            I call mine.
-          </h1>
-          <p className="text-sm text-muted-foreground mt-2 tracking-widest uppercase">
-            A site by Stuti Mohanty
-          </p>
-        </motion.div>
-      </div>
+      {/* Dreamy Hero */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        {/* Background image with heavy overlay for dreamy feel */}
+        <div className="absolute inset-0">
+          <img
+            src={wandererHero}
+            alt="Dreamy landscape"
+            className="w-full h-full object-cover scale-110"
+            style={{ filter: "blur(2px) saturate(0.7)" }}
+          />
+          <div className="absolute inset-0" style={{
+            background: "linear-gradient(to bottom, hsl(var(--background) / 0.7) 0%, hsl(var(--background) / 0.5) 40%, hsl(var(--background) / 0.85) 80%, hsl(var(--background)) 100%)",
+          }} />
+        </div>
+
+        {/* Dreamy floating particles effect */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          {[...Array(6)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute rounded-full"
+              style={{
+                width: 4 + Math.random() * 6,
+                height: 4 + Math.random() * 6,
+                left: `${15 + Math.random() * 70}%`,
+                top: `${20 + Math.random() * 60}%`,
+                background: `hsl(var(--accent) / ${0.15 + Math.random() * 0.2})`,
+                filter: "blur(1px)",
+              }}
+              animate={{
+                y: [-20, 20, -20],
+                x: [-10, 10, -10],
+                opacity: [0.3, 0.8, 0.3],
+              }}
+              transition={{
+                duration: 4 + Math.random() * 4,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: i * 0.8,
+              }}
+            />
+          ))}
+        </div>
+
+        <div className="relative z-10 text-center px-6 max-w-3xl mx-auto">
+          {/* Profile photo — softer, dreamy treatment */}
+          <motion.div
+            className="mx-auto mb-10 relative w-40 h-40 md:w-52 md:h-52"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <div className="absolute inset-0 rounded-full blur-[40px] bg-accent/20" />
+            <img
+              src={profilePhoto}
+              alt="Stuti Mohanty"
+              className="w-full h-full object-cover object-top rounded-full relative z-10"
+              style={{
+                border: "2px solid hsl(var(--accent) / 0.3)",
+                boxShadow: "0 0 60px hsl(var(--accent) / 0.15)",
+              }}
+            />
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 0.3 }}
+          >
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <Sparkles className="w-4 h-4 text-accent/60" />
+              <p className="text-xs font-mono text-accent/70 tracking-[0.4em] uppercase">
+                Beyond the code
+              </p>
+              <Sparkles className="w-4 h-4 text-accent/60" />
+            </div>
+
+            <h1 className="text-4xl md:text-6xl font-poetry font-bold text-foreground leading-tight mb-6">
+              A soul that writes in
+              <br />
+              <span className="text-accent italic">verses & visions</span>
+            </h1>
+
+            <motion.p
+              className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-xl mx-auto"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.8 }}
+            >
+              When the compiler rests, the poet awakens. Here lives the art, the wonder, 
+              and the quiet observations of a curious mind.
+            </motion.p>
+          </motion.div>
+
+          {/* Scroll indicator */}
+          <motion.div
+            className="mt-16"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.5 }}
+          >
+            <motion.div
+              className="w-6 h-10 mx-auto rounded-full border-2 border-accent/30 flex items-start justify-center p-1.5"
+              animate={{ borderColor: ["hsl(var(--accent) / 0.2)", "hsl(var(--accent) / 0.5)", "hsl(var(--accent) / 0.2)"] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            >
+              <motion.div
+                className="w-1.5 h-1.5 rounded-full bg-accent/60"
+                animate={{ y: [0, 16, 0] }}
+                transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+              />
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
 
       {/* Section Grid */}
       <div className="max-w-5xl mx-auto px-6 py-20">
+        <motion.div
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7 }}
+        >
+          <p className="text-xs font-mono text-accent/60 tracking-[0.3em] uppercase mb-3">
+            Explore
+          </p>
+          <h2 className="text-3xl md:text-4xl font-poetry font-bold text-foreground">
+            Windows to My World
+          </h2>
+        </motion.div>
+
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {sections.map((section, i) => (
             <motion.div
