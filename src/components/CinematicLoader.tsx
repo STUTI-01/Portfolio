@@ -39,7 +39,7 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
                   animate={phase >= 1 ? { opacity: 1, y: 0 } : {}}
                   transition={{ duration: 0.8, delay: 0.1 }}
                 >
-                  Every story has a perspective.
+                  Built to build. Designed to deliver.
                 </motion.span>
               </h1>
 
