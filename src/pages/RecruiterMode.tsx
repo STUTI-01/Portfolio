@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSearchParams } from "react-router-dom";
 import Navbar from "@/components/Navbar";
+import HeroSection from "@/components/HeroSection";
+import EngineeringAtScale from "@/components/EngineeringAtScale";
 import AnimatedCounter from "@/components/AnimatedCounter";
 import { experiences, education, skillCategories, projects, honors } from "@/data/portfolioData";
 import {
@@ -21,7 +23,6 @@ const RecruiterMode = () => {
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const [projectPage, setProjectPage] = useState(0);
 
-  // Read skill filters from URL on mount
   useEffect(() => {
     const skills = searchParams.get("skills");
     if (skills) {
@@ -57,18 +58,30 @@ const RecruiterMode = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <div className="max-w-5xl mx-auto px-6 pt-24 pb-20 space-y-28">
 
-        {/* ── ABOUT ── */}
+      {/* Hero Section */}
+      <div className="pt-14">
+        <HeroSection />
+      </div>
+
+      {/* Divider */}
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+      </div>
+
+      {/* About */}
+      <div className="max-w-5xl mx-auto px-6 pt-20">
         <motion.section
           initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.7 }}
         >
           <motion.h2
             className="section-heading mb-8"
             initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
             About
@@ -88,6 +101,23 @@ const RecruiterMode = () => {
             </p>
           </div>
         </motion.section>
+      </div>
+
+      {/* Divider */}
+      <div className="max-w-7xl mx-auto px-6 mt-20">
+        <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+      </div>
+
+      {/* Engineering at Scale */}
+      <EngineeringAtScale />
+
+      {/* Divider */}
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+      </div>
+
+      {/* Rest of recruiter content */}
+      <div className="max-w-5xl mx-auto px-6 py-20 space-y-28">
 
         {/* ── EXPERIENCE ── */}
         <motion.section
@@ -113,7 +143,6 @@ const RecruiterMode = () => {
                   transition={{ duration: 0.4, delay: i * 0.05 }}
                   className="relative"
                 >
-                  {/* Timeline dot */}
                   <div className="absolute -left-5 top-7 z-10">
                     <div className={`w-4 h-4 rounded-full border-2 border-current ${exp.typeColor}`}>
                       <div className="w-2 h-2 rounded-full bg-current m-auto mt-[2px]" />
@@ -124,7 +153,6 @@ const RecruiterMode = () => {
                     className="glass-card ml-3 cursor-pointer transition-all duration-300 hover:border-primary/30"
                     onClick={() => setExpandedExp(isOpen ? null : exp.id)}
                   >
-                    {/* Header */}
                     <div className="flex items-start justify-between p-6">
                       <div className="space-y-1.5">
                         <div className="flex items-center gap-3">
@@ -144,7 +172,6 @@ const RecruiterMode = () => {
                       </motion.div>
                     </div>
 
-                    {/* Stats row (always visible) */}
                     <div className="flex flex-wrap gap-8 px-6 pb-5">
                       {exp.stats.map((stat) => (
                         <div key={stat.label} className="text-center">
@@ -154,7 +181,6 @@ const RecruiterMode = () => {
                       ))}
                     </div>
 
-                    {/* Expandable content */}
                     <AnimatePresence>
                       {isOpen && (
                         <motion.div
@@ -286,7 +312,6 @@ const RecruiterMode = () => {
             <h2 className="section-heading">Projects</h2>
           </div>
 
-          {/* Skill rail filter */}
           <div className="mb-8 overflow-x-auto pb-2">
             <div className="flex gap-2 min-w-max">
               <button
@@ -318,7 +343,6 @@ const RecruiterMode = () => {
             </div>
           </div>
 
-          {/* Project grid */}
           <AnimatePresence mode="wait">
             <motion.div
               key={`${activeFilters.join(",")}-${projectPage}`}
@@ -369,7 +393,6 @@ const RecruiterMode = () => {
             </motion.div>
           </AnimatePresence>
 
-          {/* Pagination */}
           {totalPages > 1 && (
             <div className="flex items-center justify-center gap-3 mt-8">
               {Array.from({ length: totalPages }).map((_, i) => (
