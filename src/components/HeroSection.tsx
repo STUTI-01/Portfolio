@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import TypewriterText from "./TypewriterText";
 import ResumeDownload from "./ResumeDownload";
 import profilePhoto from "@/assets/profile-photo.png";
-import { Github, Linkedin, Mail, Phone, Download } from "lucide-react";
+import { Github, Linkedin, Mail, Phone, Download, ArrowRight } from "lucide-react";
 
 const rotatingPhrases = [
   "I turn chaos into systems.",
@@ -18,33 +18,21 @@ const socialLinks = [
     icon: Github,
     href: "https://github.com/STUTI-01",
     label: "GitHub",
-    color: "hover:bg-[hsl(0,0%,20%)] hover:border-[hsl(0,0%,20%)]",
-    iconColor: "group-hover:text-white",
-    baseColor: "text-[hsl(215,14%,46%)]",
   },
   {
     icon: Linkedin,
     href: "https://www.linkedin.com/in/stuti-mohanty-817a231aa/",
     label: "LinkedIn",
-    color: "hover:bg-[hsl(210,82%,40%)] hover:border-[hsl(210,82%,40%)]",
-    iconColor: "group-hover:text-white",
-    baseColor: "text-[hsl(210,82%,40%)]",
   },
   {
     icon: Mail,
     href: "mailto:stutimohanty01@gmail.com",
     label: "Email",
-    color: "hover:bg-[hsl(4,72%,56%)] hover:border-[hsl(4,72%,56%)]",
-    iconColor: "group-hover:text-white",
-    baseColor: "text-[hsl(4,72%,56%)]",
   },
   {
     icon: Phone,
     href: "tel:+919019158174",
     label: "Phone",
-    color: "hover:bg-[hsl(142,70%,49%)] hover:border-[hsl(142,70%,49%)]",
-    iconColor: "group-hover:text-white",
-    baseColor: "text-[hsl(142,70%,49%)]",
   },
 ];
 
@@ -55,7 +43,7 @@ const skillCards = [
   { title: "Cloud & DevOps", skills: "AWS, Docker, Kubernetes, CI/CD", filter: "AWS" },
 ];
 
-// Circuit board animated background
+// Subtle particle background
 const CircuitBackground = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -79,16 +67,16 @@ const CircuitBackground = () => {
 
     const w = canvas.offsetWidth;
     const h = canvas.offsetHeight;
-    const nodeCount = Math.floor((w * h) / 18000);
+    const nodeCount = Math.floor((w * h) / 22000);
     for (let i = 0; i < nodeCount; i++) {
       nodes.push({
         x: Math.random() * w,
         y: Math.random() * h,
-        vx: (Math.random() - 0.5) * 0.15,
-        vy: (Math.random() - 0.5) * 0.15,
-        radius: Math.random() * 1.5 + 0.5,
+        vx: (Math.random() - 0.5) * 0.1,
+        vy: (Math.random() - 0.5) * 0.1,
+        radius: Math.random() * 1.2 + 0.4,
         pulse: Math.random() * Math.PI * 2,
-        pulseSpeed: 0.01 + Math.random() * 0.02,
+        pulseSpeed: 0.008 + Math.random() * 0.015,
       });
     }
 
@@ -99,13 +87,13 @@ const CircuitBackground = () => {
           const dx = nodes[i].x - nodes[j].x;
           const dy = nodes[i].y - nodes[j].y;
           const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 120 && Math.random() > 0.6) {
+          if (dist < 100 && Math.random() > 0.65) {
             lines.push({
               x1: nodes[i].x, y1: nodes[i].y,
               x2: nodes[j].x, y2: nodes[j].y,
               progress: 0,
-              speed: 0.002 + Math.random() * 0.004,
-              active: Math.random() > 0.7,
+              speed: 0.002 + Math.random() * 0.003,
+              active: Math.random() > 0.75,
             });
           }
         }
@@ -118,7 +106,7 @@ const CircuitBackground = () => {
 
       for (const line of lines) {
         ctx.beginPath();
-        ctx.strokeStyle = `hsla(217, 91%, 60%, ${line.active ? 0.12 : 0.04})`;
+        ctx.strokeStyle = `hsla(217, 91%, 60%, ${line.active ? 0.08 : 0.03})`;
         ctx.lineWidth = 0.5;
         const midX = (line.x1 + line.x2) / 2;
         ctx.moveTo(line.x1, line.y1);
@@ -149,11 +137,11 @@ const CircuitBackground = () => {
             py = line.y2;
           }
           ctx.beginPath();
-          const gradient = ctx.createRadialGradient(px, py, 0, px, py, 8);
-          gradient.addColorStop(0, "hsla(217, 91%, 60%, 0.6)");
+          const gradient = ctx.createRadialGradient(px, py, 0, px, py, 6);
+          gradient.addColorStop(0, "hsla(217, 91%, 60%, 0.4)");
           gradient.addColorStop(1, "hsla(217, 91%, 60%, 0)");
           ctx.fillStyle = gradient;
-          ctx.arc(px, py, 8, 0, Math.PI * 2);
+          ctx.arc(px, py, 6, 0, Math.PI * 2);
           ctx.fill();
         }
       }
@@ -164,19 +152,19 @@ const CircuitBackground = () => {
         if (node.x < 0 || node.x > w) node.vx *= -1;
         if (node.y < 0 || node.y > h) node.vy *= -1;
         node.pulse += node.pulseSpeed;
-        const glowIntensity = 0.3 + Math.sin(node.pulse) * 0.3;
-        const r = node.radius + Math.sin(node.pulse) * 0.3;
+        const glowIntensity = 0.2 + Math.sin(node.pulse) * 0.2;
+        const r = node.radius + Math.sin(node.pulse) * 0.2;
 
         ctx.beginPath();
-        const glow = ctx.createRadialGradient(node.x, node.y, 0, node.x, node.y, r * 6);
-        glow.addColorStop(0, `hsla(217, 91%, 60%, ${glowIntensity * 0.3})`);
+        const glow = ctx.createRadialGradient(node.x, node.y, 0, node.x, node.y, r * 5);
+        glow.addColorStop(0, `hsla(217, 91%, 60%, ${glowIntensity * 0.25})`);
         glow.addColorStop(1, "hsla(217, 91%, 60%, 0)");
         ctx.fillStyle = glow;
-        ctx.arc(node.x, node.y, r * 6, 0, Math.PI * 2);
+        ctx.arc(node.x, node.y, r * 5, 0, Math.PI * 2);
         ctx.fill();
 
         ctx.beginPath();
-        ctx.fillStyle = `hsla(217, 91%, 70%, ${glowIntensity + 0.2})`;
+        ctx.fillStyle = `hsla(217, 91%, 70%, ${glowIntensity + 0.15})`;
         ctx.arc(node.x, node.y, r, 0, Math.PI * 2);
         ctx.fill();
       }
@@ -195,7 +183,7 @@ const CircuitBackground = () => {
     <canvas
       ref={canvasRef}
       className="absolute inset-0 w-full h-full pointer-events-none"
-      style={{ opacity: 0.6 }}
+      style={{ opacity: 0.5 }}
     />
   );
 };
@@ -208,34 +196,45 @@ const HeroSection = () => {
     <section className="min-h-screen flex flex-col justify-center relative overflow-hidden px-6 md:px-16 lg:px-24 py-20">
       <CircuitBackground />
 
+      {/* Subtle radial ambient */}
       <div className="absolute inset-0 pointer-events-none" style={{
-        background: "radial-gradient(ellipse at 70% 30%, hsla(217, 91%, 60%, 0.06) 0%, transparent 60%), radial-gradient(ellipse at 20% 80%, hsla(142, 71%, 45%, 0.04) 0%, transparent 50%)",
+        background: "radial-gradient(ellipse at 75% 25%, hsla(217, 91%, 60%, 0.05) 0%, transparent 55%), radial-gradient(ellipse at 25% 75%, hsla(217, 70%, 50%, 0.03) 0%, transparent 50%)",
       }} />
 
-      <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20 max-w-7xl mx-auto w-full relative z-10">
+      <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-24 max-w-7xl mx-auto w-full relative z-10">
         {/* Left: Text */}
         <motion.div
-          className="flex-1 space-y-6"
+          className="flex-1 space-y-8"
           initial={{ opacity: 0, x: -40 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
         >
-          <div className="space-y-2">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold leading-tight">
-              Hi, I am{" "}
-              <span className="text-name-highlight italic">Stuti Mohanty</span>
+          {/* Subtle label */}
+          <motion.p
+            className="text-xs font-mono tracking-[0.3em] uppercase text-secondary"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1, duration: 0.5 }}
+          >
+            Software Engineer
+          </motion.p>
+
+          <div className="space-y-3">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold leading-[1.1] tracking-tight">
+              Hi, I'm{" "}
+              <span className="text-secondary">Stuti Mohanty</span>
             </h1>
-            <p className="text-xl md:text-2xl text-muted-foreground">
+            <p className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-lg">
               I turn coffee into code.
             </p>
-            <p className="text-lg md:text-xl text-muted-foreground h-8">
+            <p className="text-base md:text-lg text-muted-foreground/80 h-7">
               <TypewriterText phrases={rotatingPhrases} />
             </p>
           </div>
 
-          {/* Social links */}
+          {/* Social links — monochrome with blue accent on hover */}
           <motion.div
-            className="flex items-center gap-3 pt-2"
+            className="flex items-center gap-2.5"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.6 }}
@@ -247,12 +246,9 @@ const HeroSection = () => {
                 target={link.href.startsWith("http") ? "_blank" : undefined}
                 rel="noopener noreferrer"
                 aria-label={link.label}
-                className={`group relative w-10 h-10 rounded-lg border border-border bg-muted/50 flex items-center justify-center transition-all duration-300 hover:scale-110 ${link.color}`}
+                className="group relative w-10 h-10 rounded-lg border border-border/60 bg-muted/30 flex items-center justify-center transition-all duration-300 hover:border-secondary/50 hover:bg-secondary/10 hover:scale-110"
               >
-                <link.icon className={`w-4 h-4 transition-colors ${link.baseColor} ${link.iconColor}`} />
-                <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-[10px] text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                  {link.label}
-                </div>
+                <link.icon className="w-4 h-4 text-muted-foreground group-hover:text-secondary transition-colors duration-300" />
               </a>
             ))}
           </motion.div>
@@ -263,34 +259,45 @@ const HeroSection = () => {
 
         {/* Right: Photo */}
         <motion.div
-          className="relative"
+          className="relative flex-shrink-0"
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, delay: 0.4 }}
         >
-          <div className="relative w-64 h-64 md:w-80 md:h-80">
+          <div className="relative w-72 h-72 md:w-80 md:h-80">
+            {/* Outer orbital ring */}
             <motion.div
-              className="absolute -inset-5 rounded-full border border-secondary/20"
+              className="absolute -inset-6 rounded-full"
+              style={{ border: "1px solid hsla(217, 91%, 60%, 0.12)" }}
               animate={{ rotate: 360 }}
-              transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+              transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
             >
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-secondary/60" />
-              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-1.5 h-1.5 rounded-full bg-secondary/40" />
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full" style={{ background: "hsla(217, 91%, 60%, 0.5)" }} />
+              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-1.5 h-1.5 rounded-full" style={{ background: "hsla(217, 91%, 60%, 0.3)" }} />
             </motion.div>
-            <div className="absolute inset-0 rounded-full blur-[50px] bg-secondary/15 animate-glow-pulse" />
+
+            {/* Inner glow */}
+            <div
+              className="absolute inset-0 rounded-full animate-glow-pulse"
+              style={{ background: "hsla(217, 91%, 60%, 0.08)", filter: "blur(40px)" }}
+            />
+
+            {/* Photo */}
             <img
               src={profilePhoto}
               alt="Stuti Mohanty"
-              className="w-full h-full object-cover object-top rounded-full relative z-10 shadow-2xl"
+              className="w-full h-full object-cover object-top rounded-full relative z-10"
               style={{
-                border: "2px solid hsla(217, 91%, 60%, 0.25)",
-                boxShadow: "0 0 40px hsla(217, 91%, 60%, 0.1), inset 0 0 30px hsla(220, 44%, 8%, 0.5)",
+                border: "2px solid hsla(217, 91%, 60%, 0.2)",
+                boxShadow: "0 0 50px hsla(217, 91%, 60%, 0.08), 0 20px 60px hsla(220, 44%, 4%, 0.5)",
               }}
             />
+
+            {/* Subtle shine overlay */}
             <div
               className="absolute inset-0 rounded-full z-20 pointer-events-none"
               style={{
-                background: "linear-gradient(135deg, hsla(0, 0%, 100%, 0.06) 0%, transparent 50%)",
+                background: "linear-gradient(135deg, hsla(0, 0%, 100%, 0.04) 0%, transparent 50%)",
               }}
             />
           </div>
@@ -299,35 +306,30 @@ const HeroSection = () => {
 
       {/* Skill Cards */}
       <motion.div
-        className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-7xl mx-auto w-full mt-16 relative z-10"
+        className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-7xl mx-auto w-full mt-20 relative z-10"
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, delay: 0.8 }}
+        transition={{ duration: 0.7, delay: 0.9 }}
       >
         {skillCards.map((card, i) => (
           <motion.div
             key={card.title}
-            className="glass-card p-5 space-y-2 cursor-pointer hover:border-primary/30 transition-all duration-300 group"
+            className="group glass-card p-5 space-y-3 cursor-pointer transition-all duration-300 hover:border-secondary/30"
             whileHover={{ y: -4 }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.9 + i * 0.1 }}
+            transition={{ delay: 1.0 + i * 0.1 }}
             onClick={() => navigate(`/recruiter?skills=${card.filter}`)}
           >
-            <h3 className="font-display font-bold text-sm text-foreground group-hover:text-primary transition-colors">
+            <h3 className="font-display font-bold text-sm text-foreground group-hover:text-secondary transition-colors duration-300">
               {card.title}
             </h3>
             <p className="text-xs text-muted-foreground leading-relaxed">{card.skills}</p>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                // placeholder for resume download per role
-              }}
-              className="flex items-center gap-1.5 text-[10px] font-medium text-primary/70 hover:text-primary transition-colors mt-1"
-            >
+            <div className="flex items-center gap-1.5 text-[10px] font-medium text-secondary/60 group-hover:text-secondary transition-colors pt-1">
               <Download className="w-3 h-3" />
-              Download Resume
-            </button>
+              <span>Download Resume</span>
+              <ArrowRight className="w-2.5 h-2.5 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
+            </div>
           </motion.div>
         ))}
       </motion.div>
