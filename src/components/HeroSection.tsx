@@ -18,21 +18,33 @@ const socialLinks = [
     icon: Github,
     href: "https://github.com/STUTI-01",
     label: "GitHub",
+    hoverBg: "hover:bg-[hsl(220,13%,18%)] hover:border-[hsl(220,13%,18%)]",
+    iconColor: "text-[hsl(215,14%,46%)]",
+    hoverIcon: "group-hover:text-white",
   },
   {
     icon: Linkedin,
     href: "https://www.linkedin.com/in/stuti-mohanty-817a231aa/",
     label: "LinkedIn",
+    hoverBg: "hover:bg-[hsl(210,82%,40%)] hover:border-[hsl(210,82%,40%)]",
+    iconColor: "text-[hsl(210,82%,40%)]",
+    hoverIcon: "group-hover:text-white",
   },
   {
     icon: Mail,
     href: "mailto:stutimohanty01@gmail.com",
     label: "Email",
+    hoverBg: "hover:bg-[hsl(45,97%,54%)] hover:border-[hsl(45,97%,54%)]",
+    iconColor: "text-[hsl(45,97%,54%)]",
+    hoverIcon: "group-hover:text-[hsl(220,44%,8%)]",
   },
   {
     icon: Phone,
     href: "tel:+919019158174",
     label: "Phone",
+    hoverBg: "hover:bg-[hsl(217,91%,60%)] hover:border-[hsl(217,91%,60%)]",
+    iconColor: "text-[hsl(217,91%,60%)]",
+    hoverIcon: "group-hover:text-white",
   },
 ];
 
@@ -222,7 +234,23 @@ const HeroSection = () => {
           <div className="space-y-3">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold leading-[1.1] tracking-tight">
               Hi, I'm{" "}
-              <span className="text-secondary">Stuti Mohanty</span>
+              <span className="text-name-highlight italic inline-block overflow-hidden">
+                {"Stuti Mohanty".split("").map((char, i) => (
+                  <motion.span
+                    key={i}
+                    className="inline-block"
+                    initial={{ opacity: 0, y: 30, rotateX: 90 }}
+                    animate={{ opacity: 1, y: 0, rotateX: 0 }}
+                    transition={{
+                      duration: 0.5,
+                      delay: 0.6 + i * 0.05,
+                      ease: [0.22, 1, 0.36, 1],
+                    }}
+                  >
+                    {char === " " ? "\u00A0" : char}
+                  </motion.span>
+                ))}
+              </span>
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-lg">
               I turn coffee into code.
@@ -246,9 +274,9 @@ const HeroSection = () => {
                 target={link.href.startsWith("http") ? "_blank" : undefined}
                 rel="noopener noreferrer"
                 aria-label={link.label}
-                className="group relative w-10 h-10 rounded-lg border border-border/60 bg-muted/30 flex items-center justify-center transition-all duration-300 hover:border-secondary/50 hover:bg-secondary/10 hover:scale-110"
+                className={`group relative w-10 h-10 rounded-lg border border-border/60 bg-muted/30 flex items-center justify-center transition-all duration-300 hover:scale-110 ${link.hoverBg}`}
               >
-                <link.icon className="w-4 h-4 text-muted-foreground group-hover:text-secondary transition-colors duration-300" />
+                <link.icon className={`w-4 h-4 transition-colors duration-300 ${link.iconColor} ${link.hoverIcon}`} />
               </a>
             ))}
           </motion.div>
