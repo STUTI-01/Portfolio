@@ -18,9 +18,9 @@ const socialLinks = [
     icon: Github,
     href: "https://github.com/STUTI-01",
     label: "GitHub",
-    hoverBg: "hover:bg-[hsl(220,13%,18%)] hover:border-[hsl(220,13%,18%)]",
-    iconColor: "text-[hsl(215,14%,46%)]",
-    hoverIcon: "group-hover:text-white",
+    hoverBg: "hover:bg-[hsl(0,0%,100%)] hover:border-[hsl(0,0%,100%)]",
+    iconColor: "text-[hsl(0,0%,85%)]",
+    hoverIcon: "group-hover:text-[hsl(220,44%,8%)]",
   },
   {
     icon: Linkedin,
@@ -34,16 +34,16 @@ const socialLinks = [
     icon: Mail,
     href: "mailto:stutimohanty01@gmail.com",
     label: "Email",
-    hoverBg: "hover:bg-[hsl(45,97%,54%)] hover:border-[hsl(45,97%,54%)]",
-    iconColor: "text-[hsl(45,97%,54%)]",
-    hoverIcon: "group-hover:text-[hsl(220,44%,8%)]",
+    hoverBg: "hover:bg-[hsl(4,72%,56%)] hover:border-[hsl(4,72%,56%)]",
+    iconColor: "text-[hsl(4,72%,56%)]",
+    hoverIcon: "group-hover:text-white",
   },
   {
     icon: Phone,
     href: "tel:+919019158174",
     label: "Phone",
-    hoverBg: "hover:bg-[hsl(217,91%,60%)] hover:border-[hsl(217,91%,60%)]",
-    iconColor: "text-[hsl(217,91%,60%)]",
+    hoverBg: "hover:bg-[hsl(142,70%,49%)] hover:border-[hsl(142,70%,49%)]",
+    iconColor: "text-[hsl(142,70%,49%)]",
     hoverIcon: "group-hover:text-white",
   },
 ];
@@ -281,8 +281,7 @@ const HeroSection = () => {
             ))}
           </motion.div>
 
-          {/* Resume download */}
-          <ResumeDownload />
+          {/* Resume download removed */}
         </motion.div>
 
         {/* Right: Photo */}
@@ -353,7 +352,7 @@ const HeroSection = () => {
               {card.title}
             </h3>
             <p className="text-xs text-muted-foreground leading-relaxed">{card.skills}</p>
-            <div className="flex items-center gap-1.5 text-[10px] font-medium text-secondary/60 group-hover:text-secondary transition-colors pt-1">
+            <div className="flex items-center gap-1.5 text-[10px] font-medium text-name-highlight/70 group-hover:text-name-highlight transition-colors pt-1">
               <Download className="w-3 h-3" />
               <span>Download Resume</span>
               <ArrowRight className="w-2.5 h-2.5 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
