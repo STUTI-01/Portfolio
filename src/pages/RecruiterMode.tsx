@@ -123,7 +123,7 @@ const RecruiterMode = () => {
           transition={{ duration: 0.6 }}
         >
           <div className="flex items-center gap-3 mb-10">
-            <Briefcase className="w-7 h-7 text-primary" />
+            <Briefcase className="w-7 h-7 text-[hsl(142,71%,45%)]" />
             <h2 className="section-heading">Professional Experience</h2>
           </div>
 
@@ -304,7 +304,7 @@ const RecruiterMode = () => {
           transition={{ duration: 0.6 }}
         >
           <div className="flex items-center gap-3 mb-4">
-            <FolderOpen className="w-7 h-7 text-primary" />
+            <FolderOpen className="w-7 h-7 text-[hsl(142,71%,45%)]" />
             <h2 className="section-heading">Projects</h2>
           </div>
 
@@ -425,7 +425,7 @@ const RecruiterMode = () => {
           transition={{ duration: 0.6 }}
         >
           <div className="flex items-center gap-3 mb-8">
-            <Award className="w-7 h-7 text-accent" />
+            <Award className="w-7 h-7 text-[hsl(142,71%,45%)]" />
             <h2 className="section-heading">Honors & Certifications</h2>
           </div>
           <div className="space-y-3">
