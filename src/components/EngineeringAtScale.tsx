@@ -22,7 +22,7 @@ const EngineeringAtScale = () => (
         viewport={{ once: true }}
         transition={{ duration: 0.6 }}
       >
-        <p className="text-xs font-mono text-[hsl(142,71%,45%)] tracking-[0.3em] uppercase mb-3">
+        <p className="text-xs font-mono text-secondary tracking-[0.3em] uppercase mb-3">
           Impact in Numbers
         </p>
         <h2 className="text-3xl md:text-4xl font-display font-bold text-foreground">

@@ -311,7 +311,7 @@ const HeroSection = () => {
           <div className="space-y-3">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold leading-[1.1] tracking-tight">
               Hi, I'm{" "}
-              <span className="text-name-highlight italic inline-block overflow-hidden">
+              <span className="text-name-highlight italic inline-block">
                 {"Stuti Mohanty".split("").map((char, i) => (
                   <motion.span
                     key={i}
