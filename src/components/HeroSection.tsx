@@ -3,7 +3,8 @@ import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import TypewriterText from "./TypewriterText";
 import profilePhoto from "@/assets/profile-photo.png";
-import { Github, Linkedin, Mail, Phone, Download, ArrowRight, Code2, Brain, Layers, Cloud } from "lucide-react";
+import { Github, Linkedin, Mail, Phone, Download, ArrowRight, ChevronDown } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 const rotatingPhrases = [
   "I turn chaos into systems.",
@@ -48,10 +49,10 @@ const socialLinks = [
 ];
 
 const skillCards = [
-  { title: "Backend & Systems", skills: "C++, Go, Rust, Distributed Systems", filter: "C++", icon: Code2 },
-  { title: "AI & ML", skills: "PyTorch, TensorFlow, NLP, Computer Vision", filter: "Python", icon: Brain },
-  { title: "Full Stack", skills: "React, Node.js, TypeScript, PostgreSQL", filter: "React", icon: Layers },
-  { title: "Cloud & DevOps", skills: "AWS, Docker, Kubernetes, CI/CD", filter: "AWS", icon: Cloud },
+  { title: "Backend & Systems", skills: "C++, Go, Rust, Distributed Systems", filter: "C++" },
+  { title: "AI & ML", skills: "PyTorch, TensorFlow, NLP, Computer Vision", filter: "Python" },
+  { title: "Full Stack", skills: "React, Node.js, TypeScript, PostgreSQL", filter: "React" },
+  { title: "Cloud & DevOps", skills: "AWS, Docker, Kubernetes, CI/CD", filter: "AWS" },
 ];
 
 // Enhanced circuit background with blue + golden accents
@@ -343,18 +344,26 @@ const HeroSection = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.6 }}
           >
+            <TooltipProvider delayDuration={200}>
             {socialLinks.map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                target={link.href.startsWith("http") ? "_blank" : undefined}
-                rel="noopener noreferrer"
-                aria-label={link.label}
-                className={`group relative w-10 h-10 rounded-lg border border-border/60 bg-muted/30 flex items-center justify-center transition-all duration-300 hover:scale-110 ${link.hoverBg}`}
-              >
-                <link.icon className={`w-4 h-4 transition-colors duration-300 ${link.iconColor} ${link.hoverIcon}`} />
-              </a>
+              <Tooltip key={link.label}>
+                <TooltipTrigger asChild>
+                  <a
+                    href={link.href}
+                    target={link.href.startsWith("http") ? "_blank" : undefined}
+                    rel="noopener noreferrer"
+                    aria-label={link.label}
+                    className={`group relative w-10 h-10 rounded-lg border border-border/60 bg-muted/30 flex items-center justify-center transition-all duration-300 hover:scale-110 ${link.hoverBg}`}
+                  >
+                    <link.icon className={`w-4 h-4 transition-colors duration-300 ${link.iconColor} ${link.hoverIcon}`} />
+                  </a>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" className="text-xs">
+                  {link.label}
+                </TooltipContent>
+              </Tooltip>
             ))}
+            </TooltipProvider>
 
             {/* Status indicator */}
             <div className="ml-3 flex items-center gap-2">
@@ -434,27 +443,16 @@ const HeroSection = () => {
         {skillCards.map((card, i) => (
           <motion.div
             key={card.title}
-            className="group relative glass-card p-4 space-y-2 cursor-pointer transition-all duration-300 hover:border-secondary/30 overflow-hidden"
+            className="group glass-card p-4 space-y-2 cursor-pointer transition-all duration-300 hover:border-secondary/30"
             whileHover={{ y: -4 }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.0 + i * 0.1 }}
             onClick={() => navigate(`/recruiter?skills=${card.filter}`)}
           >
-            {/* Top accent bar */}
-            <div className="absolute top-0 left-0 right-0 h-[2px]" style={{
-              background: "linear-gradient(90deg, hsla(217, 91%, 60%, 0.6), hsla(45, 97%, 64%, 0.4))",
-            }} />
-            {/* Hover glow */}
-            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{
-              background: "radial-gradient(ellipse at 50% 0%, hsla(217, 91%, 60%, 0.06) 0%, transparent 70%)",
-            }} />
-            <div className="flex items-center gap-2">
-              <card.icon className="w-4 h-4 text-secondary/60 group-hover:text-secondary transition-colors duration-300" />
-              <h3 className="font-display font-bold text-sm text-foreground group-hover:text-secondary transition-colors duration-300">
-                {card.title}
-              </h3>
-            </div>
+            <h3 className="font-display font-bold text-sm text-foreground group-hover:text-secondary transition-colors duration-300">
+              {card.title}
+            </h3>
             <p className="text-xs text-muted-foreground leading-relaxed">{card.skills}</p>
             <div className="flex items-center gap-1.5 text-[10px] font-medium text-name-highlight/70 group-hover:text-name-highlight transition-colors pt-1">
               <Download className="w-3 h-3" />
@@ -463,6 +461,22 @@ const HeroSection = () => {
             </div>
           </motion.div>
         ))}
+      </motion.div>
+
+      {/* Scroll indicator */}
+      <motion.div
+        className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 z-10"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.5 }}
+      >
+        <span className="text-[9px] font-mono text-muted-foreground/60 tracking-widest uppercase">Scroll</span>
+        <motion.div
+          animate={{ y: [0, 6, 0] }}
+          transition={{ duration: 1.5, repeat: Infinity }}
+        >
+          <ChevronDown className="w-4 h-4 text-secondary/50" />
+        </motion.div>
       </motion.div>
     </section>
   );
