@@ -5,9 +5,10 @@ interface AnimatedCounterProps {
   suffix?: string;
   prefix?: string;
   duration?: number;
+  className?: string;
 }
 
-const AnimatedCounter = ({ end, suffix = "", prefix = "", duration = 2000 }: AnimatedCounterProps) => {
+const AnimatedCounter = ({ end, suffix = "", prefix = "", duration = 2000, className }: AnimatedCounterProps) => {
   const [count, setCount] = useState(0);
   const ref = useRef<HTMLSpanElement>(null);
   const hasAnimated = useRef(false);
@@ -35,7 +36,7 @@ const AnimatedCounter = ({ end, suffix = "", prefix = "", duration = 2000 }: Ani
   }, [end, duration]);
 
   return (
-    <span ref={ref} className="font-display font-bold text-2xl text-primary">
+    <span ref={ref} className={className || "font-display font-bold text-2xl text-primary"}>
       {prefix}{count}{suffix}
     </span>
   );

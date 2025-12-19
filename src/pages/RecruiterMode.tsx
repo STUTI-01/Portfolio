@@ -171,7 +171,7 @@ const RecruiterMode = () => {
                     <div className="flex flex-wrap gap-8 px-6 pb-5">
                       {exp.stats.map((stat) => (
                         <div key={stat.label} className="text-center">
-                          <AnimatedCounter end={stat.value} suffix={stat.suffix} />
+                          <AnimatedCounter end={stat.value} suffix={stat.suffix} className="font-display font-bold text-2xl text-[hsl(142,71%,45%)]" />
                           <p className="text-[11px] text-muted-foreground mt-1">{stat.label}</p>
                         </div>
                       ))}
