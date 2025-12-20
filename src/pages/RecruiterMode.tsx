@@ -88,7 +88,7 @@ const RecruiterMode = () => {
           </motion.h2>
           <div className="glass-card p-8 space-y-4">
             <p className="text-foreground text-lg leading-relaxed">
-              I'm a <span className="text-primary font-semibold">Software Engineer</span> with experience building
+              I'm a <span className="text-[hsl(142,71%,45%)] font-semibold">Software Engineer</span> with experience building
               high-performance systems at <span className="text-accent font-semibold">Akamai Technologies</span>,{" "}
               <span className="text-accent font-semibold">Hewlett Packard Enterprise (HPE)</span>, and{" "}
               <span className="text-accent font-semibold">Pyramid Developers</span> — optimizing latency, throughput,
