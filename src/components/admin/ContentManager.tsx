@@ -4,15 +4,17 @@ import { Plus, Pencil, Trash2, Loader2, Save, X, Image as ImageIcon } from "luci
 import { adminApi } from "@/lib/adminApi";
 import ImageUpload from "@/components/admin/ImageUpload";
 import MultiImageUpload from "@/components/admin/MultiImageUpload";
+import FileUpload from "@/components/admin/FileUpload";
 import { supabase } from "@/integrations/supabase/client";
 
 export interface FieldConfig {
   key: string;
   label: string;
-  type: "text" | "textarea" | "select" | "boolean" | "date" | "number" | "image" | "tags";
+  type: "text" | "textarea" | "select" | "boolean" | "date" | "number" | "image" | "file" | "tags";
   options?: string[];
   required?: boolean;
   imageFolder?: string;
+  fileAccept?: string;
 }
 
 interface ContentManagerProps {
@@ -131,6 +133,15 @@ const ContentManager = ({ table, fields, title, displayField, imageField, hasGal
             value={value || null}
             onChange={(url) => updateField(field.key, url)}
             folder={field.imageFolder || table}
+          />
+        );
+      case "file":
+        return (
+          <FileUpload
+            value={value || null}
+            onChange={(url) => updateField(field.key, url)}
+            folder={field.imageFolder || table}
+            accept={field.fileAccept || ".pdf"}
           />
         );
       case "textarea":
