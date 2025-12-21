@@ -54,7 +54,7 @@ const EngineeringAtScale = () => {
                 whileHover={{ y: -4 }}
               >
                 <Icon className={`w-6 h-6 ${stat.color} mx-auto mb-3 group-hover:scale-110 transition-transform`} />
-                <p className="text-2xl md:text-3xl font-display font-bold text-foreground">{stat.value}</p>
+                <p className={`text-2xl md:text-3xl font-display font-bold ${stat.color}`}>{stat.value}</p>
                 <p className="text-xs text-muted-foreground mt-1">{stat.label}</p>
               </motion.div>
             );
