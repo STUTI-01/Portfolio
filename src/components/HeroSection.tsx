@@ -11,6 +11,7 @@ const rotatingPhrases = [
   "I turn ideas into scale.",
   "I turn caffeine into architecture.",
   "I turn complexity into clarity.",
+  "I turn bugs into features.",
 ];
 
 const socialLinks = [
