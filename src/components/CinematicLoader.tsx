@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import profilePhoto from "@/assets/profile-photo.png";
 
 interface CinematicLoaderProps {
   onComplete: () => void;
@@ -9,6 +10,10 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
   const [phase, setPhase] = useState(0);
 
   useEffect(() => {
+    // Preload profile photo during loader
+    const img = new Image();
+    img.src = profilePhoto;
+
     const timers = [
       setTimeout(() => setPhase(1), 400),
       setTimeout(() => setPhase(2), 2200),
@@ -39,7 +44,7 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
                   animate={phase >= 1 ? { opacity: 1, y: 0 } : {}}
                   transition={{ duration: 0.8, delay: 0.1 }}
                 >
-                  Built to build. Designed to deliver.
+                  My world has different stories.
                 </motion.span>
               </h1>
 
