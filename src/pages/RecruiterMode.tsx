@@ -308,8 +308,9 @@ const RecruiterMode = () => {
             <h2 className="section-heading">Projects</h2>
           </div>
 
-          <div className="mb-8 overflow-x-auto pb-2">
-            <div className="flex gap-2 min-w-max">
+          <div className="mb-8">
+            <p className="text-xs font-mono text-muted-foreground/60 tracking-wider uppercase mb-3">Filter by tech stack</p>
+            <div className="flex flex-wrap gap-2">
               <button
                 onClick={clearFilters}
                 className={`px-4 py-1.5 rounded-full text-xs font-medium border transition-all duration-200 ${
@@ -326,7 +327,7 @@ const RecruiterMode = () => {
                   <button
                     key={skill}
                     onClick={() => toggleFilter(skill)}
-                    className={`px-4 py-1.5 rounded-full text-xs font-medium border transition-all duration-200 whitespace-nowrap ${
+                    className={`px-4 py-1.5 rounded-full text-xs font-medium border transition-all duration-200 ${
                       isActive
                         ? "bg-primary/20 border-primary/50 text-primary"
                         : "border-border text-muted-foreground hover:text-foreground hover:border-primary/30"
