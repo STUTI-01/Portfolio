@@ -15,9 +15,9 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
 
     const timers = [
       setTimeout(() => setPhase(1), 500),
-      setTimeout(() => setPhase(2), 3000),
-      setTimeout(() => setPhase(3), 4800),
-      setTimeout(() => onComplete(), 5600),
+      setTimeout(() => setPhase(2), 3200),
+      setTimeout(() => setPhase(3), 6000),
+      setTimeout(() => onComplete(), 6800),
     ];
     return () => timers.forEach(clearTimeout);
   }, [onComplete]);
