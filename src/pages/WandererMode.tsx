@@ -1,4 +1,5 @@
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
 import Navbar from "@/components/Navbar";
 import wandererHero from "@/assets/wanderer-hero.jpg";
 import profilePhoto from "@/assets/profile-photo.png";
@@ -44,12 +45,18 @@ const sections = [
 ];
 
 const WandererMode = () => {
+  const heroRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
+  const y1 = useTransform(scrollYProgress, [0, 1], [0, -120]);
+  const y2 = useTransform(scrollYProgress, [0, 1], [0, -200]);
+  const y3 = useTransform(scrollYProgress, [0, 1], [0, -80]);
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
 
       {/* Hero — full bleed with collage-style images */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      <section ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* Deep gradient background instead of image */}
         <div className="absolute inset-0" style={{
           background: `
@@ -68,8 +75,9 @@ const WandererMode = () => {
         {/* Floating collage images */}
         <motion.div
           className="absolute top-[12%] left-[8%] w-32 h-44 md:w-44 md:h-56 rounded-2xl overflow-hidden shadow-2xl pointer-events-none"
-          initial={{ opacity: 0, y: 40, rotate: -8 }}
-          animate={{ opacity: 0.7, y: 0, rotate: -8 }}
+          style={{ y: y1 }}
+          initial={{ opacity: 0, rotate: -8 }}
+          animate={{ opacity: 0.7, rotate: -8 }}
           transition={{ duration: 1.2, delay: 0.3 }}
         >
           <img src={wandererHero} alt="" className="w-full h-full object-cover" style={{ filter: "saturate(0.6) brightness(0.8)" }} />
@@ -78,8 +86,9 @@ const WandererMode = () => {
 
         <motion.div
           className="absolute bottom-[15%] right-[6%] w-36 h-48 md:w-48 md:h-60 rounded-2xl overflow-hidden shadow-2xl pointer-events-none"
-          initial={{ opacity: 0, y: 40, rotate: 6 }}
-          animate={{ opacity: 0.6, y: 0, rotate: 6 }}
+          style={{ y: y2 }}
+          initial={{ opacity: 0, rotate: 6 }}
+          animate={{ opacity: 0.6, rotate: 6 }}
           transition={{ duration: 1.2, delay: 0.6 }}
         >
           <img src={profilePhoto} alt="" className="w-full h-full object-cover object-top" style={{ filter: "saturate(0.5) brightness(0.75)" }} />
@@ -88,8 +97,9 @@ const WandererMode = () => {
 
         <motion.div
           className="absolute top-[20%] right-[12%] w-24 h-32 md:w-32 md:h-40 rounded-xl overflow-hidden shadow-xl pointer-events-none hidden md:block"
-          initial={{ opacity: 0, y: 30, rotate: 4 }}
-          animate={{ opacity: 0.5, y: 0, rotate: 4 }}
+          style={{ y: y3 }}
+          initial={{ opacity: 0, rotate: 4 }}
+          animate={{ opacity: 0.5, rotate: 4 }}
           transition={{ duration: 1.2, delay: 0.9 }}
         >
           <img src={wandererHero} alt="" className="w-full h-full object-cover object-bottom" style={{ filter: "saturate(0.4) brightness(0.7) hue-rotate(30deg)" }} />
