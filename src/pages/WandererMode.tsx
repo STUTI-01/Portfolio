@@ -2,9 +2,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import Navbar from "@/components/Navbar";
 import stutiPhoto from "@/assets/stuti-wanderer.jpeg";
-import vintageCamera from "@/assets/vintage-camera.png";
-import burningCandle from "@/assets/burning-candle.png";
-import { Gem, BookOpen, Bird, Camera, PenTool, Sparkles, ArrowDown } from "lucide-react";
+import { Gem, BookOpen, Bird, Camera, PenTool, Sparkles, ArrowDown, Sun, Flower2 } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const sections = [
@@ -15,81 +13,69 @@ const sections = [
   { icon: PenTool, title: "Verse Vault", description: "Poetry in Hindi, English, and Odia — the language of the soul.", path: "/wanderer/poetry" },
 ];
 
-/* ── SVG Sketch Elements (kept as decorative accents) ── */
-const SketchBird = ({ className, flip = false }: { className?: string; flip?: boolean }) => (
-  <svg className={className} viewBox="0 0 100 60" fill="none" style={flip ? { transform: "scaleX(-1)" } : {}}>
-    <path d="M10 40 Q20 28 40 26 Q52 25 58 30 Q62 22 72 20 Q82 18 88 22" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
-    <path d="M58 30 Q55 38 48 42 Q40 46 28 44" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
-    <circle cx="70" cy="23" r="1.8" stroke="currentColor" strokeWidth="1" />
-    <path d="M76 22 L85 19" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
-    <path d="M10 40 Q5 38 3 32" stroke="currentColor" strokeWidth="1" strokeLinecap="round" />
-    <path d="M10 40 Q7 44 3 42" stroke="currentColor" strokeWidth="1" strokeLinecap="round" />
-  </svg>
-);
-
-const SketchFeather = ({ className }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 50 120" fill="none">
-    <path d="M25 5 Q30 25 28 45 Q26 65 24 85 Q23 95 25 115" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
-    <path d="M25 15 Q15 18 8 25" stroke="currentColor" strokeWidth="0.7" strokeLinecap="round" />
-    <path d="M26 30 Q16 32 10 38" stroke="currentColor" strokeWidth="0.7" strokeLinecap="round" />
-    <path d="M27 45 Q18 46 12 52" stroke="currentColor" strokeWidth="0.7" strokeLinecap="round" />
-    <path d="M25 15 Q33 12 40 15" stroke="currentColor" strokeWidth="0.7" strokeLinecap="round" />
-    <path d="M27 30 Q35 27 42 30" stroke="currentColor" strokeWidth="0.7" strokeLinecap="round" />
-    <path d="M28 45 Q35 42 42 44" stroke="currentColor" strokeWidth="0.7" strokeLinecap="round" />
-  </svg>
-);
-
-const SketchCompass = ({ className }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 100 100" fill="none">
-    <circle cx="50" cy="50" r="40" stroke="currentColor" strokeWidth="1.3" />
-    <circle cx="50" cy="50" r="35" stroke="currentColor" strokeWidth="0.5" strokeDasharray="3 2" />
-    <circle cx="50" cy="50" r="3" stroke="currentColor" strokeWidth="1" />
-    <line x1="50" y1="15" x2="50" y2="25" stroke="currentColor" strokeWidth="1.2" />
-    <line x1="50" y1="75" x2="50" y2="85" stroke="currentColor" strokeWidth="1" />
-    <line x1="15" y1="50" x2="25" y2="50" stroke="currentColor" strokeWidth="1" />
-    <line x1="75" y1="50" x2="85" y2="50" stroke="currentColor" strokeWidth="1" />
-    <path d="M50 18 L46 30 L50 27 L54 30 Z" stroke="currentColor" strokeWidth="0.8" />
-  </svg>
-);
-
-/* ── Twinkling star ── */
+/* Twinkling star */
 const TwinklingStar = ({ x, y, size, delay }: { x: string; y: string; size: number; delay: number }) => (
   <motion.div
     className="absolute pointer-events-none"
     style={{ left: x, top: y }}
-    animate={{ opacity: [0.1, 0.8, 0.1], scale: [0.8, 1.2, 0.8] }}
-    transition={{ duration: 2 + delay * 0.3, repeat: Infinity, ease: "easeInOut", delay }}
+    animate={{ opacity: [0.05, 0.7, 0.05], scale: [0.8, 1.3, 0.8] }}
+    transition={{ duration: 2.5 + delay * 0.4, repeat: Infinity, ease: "easeInOut", delay }}
   >
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       <path d="M12 2 L13.5 9 L20 10 L14 13 L15.5 20 L12 15 L8.5 20 L10 13 L4 10 L10.5 9 Z"
-        stroke="hsla(45, 70%, 65%, 0.6)" strokeWidth="0.8" fill="hsla(45, 70%, 65%, 0.08)" />
+        stroke="hsla(45, 70%, 65%, 0.5)" strokeWidth="0.8" fill="hsla(45, 70%, 65%, 0.06)" />
     </svg>
   </motion.div>
 );
 
 const stars = [
-  { x: "5%", y: "6%", size: 14, delay: 0 }, { x: "15%", y: "18%", size: 10, delay: 0.7 },
-  { x: "82%", y: "10%", size: 12, delay: 0.3 }, { x: "90%", y: "28%", size: 9, delay: 1.2 },
-  { x: "70%", y: "4%", size: 11, delay: 0.5 }, { x: "45%", y: "2%", size: 8, delay: 1.5 },
-  { x: "25%", y: "5%", size: 10, delay: 0.9 }, { x: "60%", y: "12%", size: 7, delay: 1.8 },
-  { x: "8%", y: "55%", size: 9, delay: 1.1 }, { x: "92%", y: "60%", size: 11, delay: 0.4 },
-  { x: "75%", y: "85%", size: 10, delay: 0.8 }, { x: "18%", y: "80%", size: 9, delay: 1.3 },
+  { x: "4%", y: "5%", size: 14, delay: 0 }, { x: "14%", y: "20%", size: 10, delay: 0.7 },
+  { x: "85%", y: "8%", size: 12, delay: 0.3 }, { x: "92%", y: "35%", size: 9, delay: 1.2 },
+  { x: "72%", y: "3%", size: 11, delay: 0.5 }, { x: "48%", y: "2%", size: 8, delay: 1.5 },
+  { x: "28%", y: "7%", size: 10, delay: 0.9 }, { x: "62%", y: "14%", size: 7, delay: 1.8 },
+  { x: "6%", y: "60%", size: 9, delay: 1.1 }, { x: "94%", y: "55%", size: 10, delay: 0.4 },
+  { x: "78%", y: "82%", size: 10, delay: 0.8 }, { x: "16%", y: "78%", size: 9, delay: 1.3 },
+  { x: "38%", y: "88%", size: 8, delay: 1.6 }, { x: "55%", y: "92%", size: 7, delay: 2.0 },
 ];
+
+/* Floating icon element */
+const FloatingIcon = ({ Icon, x, y, size, delay, rotate, color }: {
+  Icon: React.ElementType; x: string; y: string; size: number; delay: number; rotate: number; color: string;
+}) => (
+  <motion.div
+    className="absolute pointer-events-none"
+    style={{ left: x, top: y }}
+    initial={{ opacity: 0, rotate }}
+    animate={{ opacity: [0.12, 0.3, 0.12], y: [-6, 6, -6], rotate: [rotate - 3, rotate + 3, rotate - 3] }}
+    transition={{ duration: 5 + delay, repeat: Infinity, ease: "easeInOut", delay }}
+  >
+    <Icon style={{ width: size, height: size, color }} />
+  </motion.div>
+);
+
+/* Floating circle */
+const FloatingCircle = ({ x, y, size, delay, color }: {
+  x: string; y: string; size: number; delay: number; color: string;
+}) => (
+  <motion.div
+    className="absolute rounded-full pointer-events-none"
+    style={{ left: x, top: y, width: size, height: size, border: `1px solid ${color}` }}
+    animate={{ opacity: [0.1, 0.35, 0.1], scale: [0.9, 1.1, 0.9] }}
+    transition={{ duration: 4 + delay * 0.5, repeat: Infinity, ease: "easeInOut", delay }}
+  />
+);
 
 const WandererMode = () => {
   const heroRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
-  const y1 = useTransform(scrollYProgress, [0, 1], [0, -80]);
-  const y2 = useTransform(scrollYProgress, [0, 1], [0, -130]);
-  const y3 = useTransform(scrollYProgress, [0, 1], [0, -50]);
-  const y4 = useTransform(scrollYProgress, [0, 1], [0, -100]);
+  const yPhoto = useTransform(scrollYProgress, [0, 1], [0, -60]);
 
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
 
       {/* ── HERO ── */}
-      <section ref={heroRef} className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden px-6 py-20">
+      <section ref={heroRef} className="relative min-h-screen flex items-center overflow-hidden px-6 md:px-12 lg:px-20">
         {/* Background */}
         <div className="absolute inset-0" style={{
           background: `
@@ -108,86 +94,35 @@ const WandererMode = () => {
         {/* Twinkling stars */}
         {stars.map((s, i) => <TwinklingStar key={i} {...s} />)}
 
-        {/* ── Real camera image — top right ── */}
-        <motion.div
-          className="absolute top-[4%] right-[3%] md:right-[8%] pointer-events-none"
-          style={{ y: y1 }}
-          initial={{ opacity: 0, rotate: 12 }}
-          animate={{ opacity: 0.7, rotate: 12 }}
-          transition={{ duration: 1.2, delay: 0.3 }}
-        >
-          <img src={vintageCamera} alt="" className="w-28 h-28 md:w-40 md:h-40 object-contain drop-shadow-2xl" style={{ filter: "brightness(1.1)" }} />
-        </motion.div>
+        {/* Floating icons — sunflowers, flowers, suns */}
+        <FloatingIcon Icon={Flower2} x="8%" y="15%" size={22} delay={0} rotate={-15} color="hsla(45, 70%, 60%, 0.2)" />
+        <FloatingIcon Icon={Sun} x="18%" y="70%" size={20} delay={1.2} rotate={10} color="hsla(40, 65%, 55%, 0.15)" />
+        <FloatingIcon Icon={Flower2} x="80%" y="75%" size={18} delay={0.8} rotate={20} color="hsla(330, 40%, 60%, 0.15)" />
+        <FloatingIcon Icon={Sparkles} x="88%" y="18%" size={16} delay={1.5} rotate={-8} color="hsla(45, 60%, 65%, 0.18)" />
+        <FloatingIcon Icon={Flower2} x="70%" y="90%" size={20} delay={0.4} rotate={-12} color="hsla(45, 70%, 60%, 0.12)" />
+        <FloatingIcon Icon={Sun} x="5%" y="45%" size={18} delay={2} rotate={5} color="hsla(35, 60%, 55%, 0.12)" />
+        <FloatingIcon Icon={Flower2} x="50%" y="5%" size={16} delay={1} rotate={15} color="hsla(330, 35%, 55%, 0.1)" />
 
-        {/* ── Real candle — bottom left ── */}
-        <motion.div
-          className="absolute bottom-[3%] left-[4%] md:left-[8%] pointer-events-none"
-          style={{ y: y2 }}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.85 }}
-          transition={{ duration: 1.2, delay: 0.6 }}
-        >
-          <img src={burningCandle} alt="" className="w-24 h-24 md:w-36 md:h-36 object-contain" style={{ filter: "brightness(1.2)" }} />
-          {/* Warm glow from candle */}
+        {/* Floating circles */}
+        <FloatingCircle x="12%" y="30%" size={40} delay={0.3} color="hsla(45, 50%, 60%, 0.12)" />
+        <FloatingCircle x="75%" y="15%" size={60} delay={1} color="hsla(270, 30%, 60%, 0.08)" />
+        <FloatingCircle x="85%" y="65%" size={35} delay={0.6} color="hsla(35, 50%, 55%, 0.1)" />
+        <FloatingCircle x="25%" y="80%" size={50} delay={1.4} color="hsla(330, 30%, 55%, 0.08)" />
+        <FloatingCircle x="60%" y="50%" size={28} delay={1.8} color="hsla(45, 40%, 60%, 0.06)" />
+        <FloatingCircle x="40%" y="35%" size={45} delay={0.9} color="hsla(200, 30%, 55%, 0.06)" />
+
+        {/* ── Layout: Left text + Right photo ── */}
+        <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-12 lg:gap-16 py-20">
+
+          {/* Left — Text */}
           <motion.div
-            className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-32 rounded-full pointer-events-none -z-10"
-            style={{ background: "radial-gradient(circle, hsla(35, 80%, 55%, 0.12), transparent 70%)" }}
-            animate={{ opacity: [0.4, 0.8, 0.4], scale: [0.95, 1.15, 0.95] }}
-            transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-          />
-        </motion.div>
-
-        {/* ── Sketch birds — top left ── */}
-        <motion.div
-          className="absolute top-[10%] left-[8%] text-accent/20 pointer-events-none"
-          style={{ y: y3 }}
-          initial={{ opacity: 0, x: -15 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 1.2, delay: 0.5 }}
-        >
-          <SketchBird className="w-20 h-12 md:w-28 md:h-18" />
-        </motion.div>
-        <motion.div
-          className="absolute top-[16%] left-[20%] text-accent/14 pointer-events-none"
-          style={{ y: y3 }}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 0.8 }}
-        >
-          <SketchBird className="w-14 h-9" flip />
-        </motion.div>
-
-        {/* ── Compass — bottom right ── */}
-        <motion.div
-          className="absolute bottom-[6%] right-[4%] md:right-[10%] text-accent/15 pointer-events-none hidden md:block"
-          style={{ y: y4 }}
-          initial={{ opacity: 0, rotate: -12 }}
-          animate={{ opacity: 1, rotate: -12 }}
-          transition={{ duration: 1, delay: 0.7 }}
-        >
-          <SketchCompass className="w-24 h-24" />
-        </motion.div>
-
-        {/* ── Feather — left mid ── */}
-        <motion.div
-          className="absolute top-[50%] left-[3%] text-accent/12 pointer-events-none hidden md:block"
-          style={{ y: y1 }}
-          initial={{ opacity: 0, rotate: 20 }}
-          animate={{ opacity: 1, rotate: 20 }}
-          transition={{ duration: 1, delay: 1 }}
-        >
-          <SketchFeather className="w-10 h-24" />
-        </motion.div>
-
-        {/* ── CONTENT: Centered text ── */}
-        <div className="relative z-10 text-center max-w-4xl mx-auto">
-          <motion.div
+            className="flex-1 text-center lg:text-left"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.3 }}
           >
             <motion.div
-              className="flex items-center justify-center gap-3 mb-6"
+              className="flex items-center justify-center lg:justify-start gap-3 mb-6"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5, duration: 0.8 }}
@@ -196,30 +131,30 @@ const WandererMode = () => {
               <Sparkles className="w-3.5 h-3.5 text-accent/50" />
               <p className="text-[10px] font-mono text-accent/60 tracking-[0.5em] uppercase">Beyond the code</p>
               <Sparkles className="w-3.5 h-3.5 text-accent/50" />
-              <div className="w-10 h-[1px] bg-gradient-to-l from-transparent to-accent/40" />
+              <div className="w-10 h-[1px] bg-gradient-to-l from-transparent to-accent/40 hidden lg:block" />
             </motion.div>
 
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-poetry font-bold text-foreground leading-[1.2] mb-4">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-poetry font-bold text-foreground leading-[1.2] mb-6">
               <motion.span
-                className="inline"
+                className="block"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: 0.6 }}
               >
-                A soul that writes in{" "}
+                A soul that writes
               </motion.span>
               <motion.span
-                className="text-accent italic"
+                className="block text-accent italic"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 1.0 }}
               >
-                verses & visions
+                in verses & visions
               </motion.span>
             </h1>
 
             <motion.p
-              className="text-lg md:text-xl text-muted-foreground/70 leading-relaxed max-w-xl mx-auto font-poetry italic"
+              className="text-lg md:text-xl text-muted-foreground/70 leading-relaxed max-w-lg mx-auto lg:mx-0 font-poetry italic"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.8, delay: 1.4 }}
@@ -227,70 +162,67 @@ const WandererMode = () => {
               When the compiler rests, the poet awakens. Here lives the art, the wonder,
               and the quiet observations of a curious mind.
             </motion.p>
+
+            <motion.div
+              className="mt-10 flex flex-col items-center lg:items-start gap-2"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 2 }}
+            >
+              <span className="text-[9px] font-mono text-muted-foreground/40 tracking-widest uppercase">Explore</span>
+              <motion.div animate={{ y: [0, 6, 0] }} transition={{ duration: 1.5, repeat: Infinity }}>
+                <ArrowDown className="w-4 h-4 text-accent/30" />
+              </motion.div>
+            </motion.div>
+          </motion.div>
+
+          {/* Right — Photo in frame */}
+          <motion.div
+            className="flex-shrink-0"
+            style={{ y: yPhoto }}
+            initial={{ opacity: 0, scale: 0.92 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1.2, delay: 0.5 }}
+          >
+            <div className="relative">
+              {/* Frame */}
+              <div className="relative p-2.5 md:p-3 rounded-lg" style={{
+                border: "2px solid hsla(35, 40%, 55%, 0.2)",
+                background: "hsla(30, 15%, 12%, 0.35)",
+                boxShadow: "0 10px 50px hsla(0, 0%, 0%, 0.4), inset 0 1px 0 hsla(35, 40%, 60%, 0.06)",
+              }}>
+                {/* Top camera-style details */}
+                <div className="flex items-center justify-between mb-2 px-1.5">
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-2 h-2 rounded-full" style={{ border: "1px solid hsla(35, 40%, 55%, 0.25)" }} />
+                    <div className="w-5 h-1 rounded-full" style={{ border: "1px solid hsla(35, 40%, 55%, 0.15)" }} />
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <div className="w-1 h-1 rounded-full bg-accent/15" />
+                    <div className="w-1 h-1 rounded-full bg-accent/15" />
+                  </div>
+                </div>
+                {/* Photo */}
+                <div className="overflow-hidden rounded" style={{ boxShadow: "inset 0 2px 8px hsla(0, 0%, 0%, 0.3)" }}>
+                  <img
+                    src={stutiPhoto}
+                    alt="Stuti Mohanty"
+                    className="w-56 h-64 md:w-64 md:h-[300px] lg:w-72 lg:h-[340px] object-cover object-top"
+                  />
+                </div>
+                {/* Bottom line */}
+                <div className="flex items-center justify-center mt-2">
+                  <div className="w-12 h-[1px] bg-gradient-to-r from-transparent via-accent/15 to-transparent" />
+                </div>
+              </div>
+
+              {/* Glow behind */}
+              <div className="absolute inset-0 -z-10 blur-[60px] opacity-10" style={{
+                background: "radial-gradient(circle, hsla(35, 50%, 55%, 0.4), transparent 70%)",
+              }} />
+            </div>
           </motion.div>
         </div>
-
-        {/* ── Photo below text — inside a camera-frame style border ── */}
-        <motion.div
-          className="relative z-10 mt-12"
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 1.2 }}
-        >
-          <div className="relative">
-            {/* Outer camera-style frame */}
-            <div className="relative p-2 md:p-3 rounded-lg" style={{
-              border: "2px solid hsla(35, 40%, 55%, 0.25)",
-              background: "hsla(30, 15%, 12%, 0.4)",
-              boxShadow: "0 8px 40px hsla(0, 0%, 0%, 0.4), inset 0 1px 0 hsla(35, 40%, 60%, 0.08)",
-            }}>
-              {/* Camera details — top bar */}
-              <div className="flex items-center justify-between mb-2 px-2">
-                <div className="flex items-center gap-1.5">
-                  <div className="w-2 h-2 rounded-full" style={{ border: "1px solid hsla(35, 40%, 55%, 0.3)" }} />
-                  <div className="w-6 h-1.5 rounded-full" style={{ border: "1px solid hsla(35, 40%, 55%, 0.2)" }} />
-                </div>
-                <div className="flex items-center gap-1">
-                  <div className="w-1 h-1 rounded-full bg-accent/20" />
-                  <div className="w-1 h-1 rounded-full bg-accent/20" />
-                  <div className="w-1 h-1 rounded-full bg-accent/20" />
-                </div>
-              </div>
-              {/* Photo */}
-              <div className="overflow-hidden rounded" style={{
-                boxShadow: "inset 0 2px 8px hsla(0, 0%, 0%, 0.3)",
-              }}>
-                <img
-                  src={stutiPhoto}
-                  alt="Stuti Mohanty"
-                  className="w-52 h-60 md:w-64 md:h-72 object-cover object-top"
-                />
-              </div>
-              {/* Bottom detail */}
-              <div className="flex items-center justify-center mt-2">
-                <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-accent/20 to-transparent" />
-              </div>
-            </div>
-
-            {/* Warm glow behind frame */}
-            <div className="absolute inset-0 -z-10 blur-[50px] opacity-15" style={{
-              background: "radial-gradient(circle, hsla(35, 50%, 55%, 0.4), transparent 70%)",
-            }} />
-          </div>
-        </motion.div>
-
-        {/* Scroll indicator */}
-        <motion.div
-          className="relative z-10 mt-12 flex flex-col items-center gap-2"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 2 }}
-        >
-          <span className="text-[9px] font-mono text-muted-foreground/40 tracking-widest uppercase">Explore</span>
-          <motion.div animate={{ y: [0, 6, 0] }} transition={{ duration: 1.5, repeat: Infinity }}>
-            <ArrowDown className="w-4 h-4 text-accent/30" />
-          </motion.div>
-        </motion.div>
       </section>
 
       {/* ── SECTIONS ── */}
