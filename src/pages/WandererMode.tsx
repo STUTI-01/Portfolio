@@ -1,7 +1,6 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import Navbar from "@/components/Navbar";
-import wandererHero from "@/assets/wanderer-hero.jpg";
 import profilePhoto from "@/assets/profile-photo.png";
 import { Gem, BookOpen, Bird, Camera, PenTool, Sparkles, ArrowDown } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -44,169 +43,287 @@ const sections = [
   },
 ];
 
-// Torn paper edge SVG clip path
-const TornEdge = ({ side = "bottom", className = "" }: { side?: "bottom" | "top"; className?: string }) => (
-  <svg
-    className={`absolute left-0 right-0 w-full ${side === "bottom" ? "bottom-0 translate-y-[98%]" : "top-0 -translate-y-[98%] rotate-180"} ${className}`}
-    viewBox="0 0 1200 40"
-    preserveAspectRatio="none"
-    style={{ height: "40px" }}
-  >
-    <path
-      d="M0,20 Q30,5 60,18 T120,15 T180,22 T240,12 T300,20 T360,14 T420,22 T480,10 T540,20 T600,16 T660,22 T720,12 T780,18 T840,22 T900,14 T960,20 T1020,16 T1080,22 T1140,14 T1200,20 L1200,40 L0,40 Z"
-      fill="currentColor"
-    />
+/* ── Scattered SVG line-art illustrations ── */
+
+const SketchCamera = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 120 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="10" y="30" width="100" height="60" rx="8" stroke="currentColor" strokeWidth="1.5" />
+    <rect x="40" y="18" width="30" height="14" rx="3" stroke="currentColor" strokeWidth="1.2" />
+    <circle cx="60" cy="58" r="18" stroke="currentColor" strokeWidth="1.5" />
+    <circle cx="60" cy="58" r="10" stroke="currentColor" strokeWidth="1" />
+    <circle cx="60" cy="58" r="4" stroke="currentColor" strokeWidth="0.8" />
+    <rect x="85" y="36" width="12" height="8" rx="2" stroke="currentColor" strokeWidth="1" />
+    <line x1="15" y1="42" x2="35" y2="42" stroke="currentColor" strokeWidth="0.8" />
+    {/* Strap */}
+    <path d="M10 35 Q-5 20 8 10" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" fill="none" />
+    <path d="M110 35 Q125 20 112 10" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" fill="none" />
   </svg>
 );
 
-// Decorative tape strip
-const TapeStrip = ({ className = "", rotate = 0 }: { className?: string; rotate?: number }) => (
-  <div
-    className={`absolute w-16 h-5 pointer-events-none ${className}`}
-    style={{
-      transform: `rotate(${rotate}deg)`,
-      background: "linear-gradient(135deg, hsla(45, 30%, 70%, 0.15) 0%, hsla(45, 20%, 60%, 0.08) 100%)",
-      backdropFilter: "blur(2px)",
-      borderRadius: "2px",
-    }}
-  />
+const SketchBird = ({ className, flip = false }: { className?: string; flip?: boolean }) => (
+  <svg className={className} viewBox="0 0 100 70" fill="none" xmlns="http://www.w3.org/2000/svg"
+    style={flip ? { transform: "scaleX(-1)" } : {}}>
+    <path d="M15 45 Q25 30 45 28 Q55 27 60 32 Q65 25 75 22 Q85 20 90 25" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" fill="none" />
+    <path d="M60 32 Q58 40 50 45 Q42 50 30 48" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" fill="none" />
+    <circle cx="72" cy="26" r="2" stroke="currentColor" strokeWidth="1" />
+    <path d="M78 25 L88 22" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+    {/* Wing detail */}
+    <path d="M45 32 Q50 20 65 18" stroke="currentColor" strokeWidth="0.8" strokeLinecap="round" fill="none" />
+    <path d="M42 35 Q48 24 60 22" stroke="currentColor" strokeWidth="0.6" strokeLinecap="round" fill="none" />
+    {/* Tail */}
+    <path d="M15 45 Q8 42 5 35" stroke="currentColor" strokeWidth="1" strokeLinecap="round" fill="none" />
+    <path d="M15 45 Q10 48 5 45" stroke="currentColor" strokeWidth="1" strokeLinecap="round" fill="none" />
+  </svg>
+);
+
+const SketchCompass = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="50" cy="50" r="40" stroke="currentColor" strokeWidth="1.3" />
+    <circle cx="50" cy="50" r="35" stroke="currentColor" strokeWidth="0.6" />
+    <circle cx="50" cy="50" r="3" stroke="currentColor" strokeWidth="1" />
+    {/* N S E W */}
+    <line x1="50" y1="15" x2="50" y2="25" stroke="currentColor" strokeWidth="1.2" />
+    <line x1="50" y1="75" x2="50" y2="85" stroke="currentColor" strokeWidth="1" />
+    <line x1="15" y1="50" x2="25" y2="50" stroke="currentColor" strokeWidth="1" />
+    <line x1="75" y1="50" x2="85" y2="50" stroke="currentColor" strokeWidth="1" />
+    {/* Arrow */}
+    <path d="M50 18 L46 30 L50 27 L54 30 Z" stroke="currentColor" strokeWidth="0.8" />
+    {/* Diagonals */}
+    <line x1="25" y1="25" x2="30" y2="30" stroke="currentColor" strokeWidth="0.6" />
+    <line x1="75" y1="25" x2="70" y2="30" stroke="currentColor" strokeWidth="0.6" />
+    <line x1="25" y1="75" x2="30" y2="70" stroke="currentColor" strokeWidth="0.6" />
+    <line x1="75" y1="75" x2="70" y2="70" stroke="currentColor" strokeWidth="0.6" />
+  </svg>
+);
+
+const SketchFeather = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 50 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M25 5 Q30 25 28 45 Q26 65 24 85 Q23 95 25 115" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" fill="none" />
+    {/* Left barbs */}
+    <path d="M25 15 Q15 18 8 25" stroke="currentColor" strokeWidth="0.7" strokeLinecap="round" fill="none" />
+    <path d="M26 30 Q16 32 10 38" stroke="currentColor" strokeWidth="0.7" strokeLinecap="round" fill="none" />
+    <path d="M27 45 Q18 46 12 52" stroke="currentColor" strokeWidth="0.7" strokeLinecap="round" fill="none" />
+    <path d="M27 60 Q19 60 14 65" stroke="currentColor" strokeWidth="0.7" strokeLinecap="round" fill="none" />
+    {/* Right barbs */}
+    <path d="M25 15 Q33 12 40 15" stroke="currentColor" strokeWidth="0.7" strokeLinecap="round" fill="none" />
+    <path d="M27 30 Q35 27 42 30" stroke="currentColor" strokeWidth="0.7" strokeLinecap="round" fill="none" />
+    <path d="M28 45 Q35 42 42 44" stroke="currentColor" strokeWidth="0.7" strokeLinecap="round" fill="none" />
+    <path d="M27 60 Q34 57 40 59" stroke="currentColor" strokeWidth="0.7" strokeLinecap="round" fill="none" />
+  </svg>
+);
+
+const SketchGlobe = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="50" cy="50" r="38" stroke="currentColor" strokeWidth="1.3" />
+    <ellipse cx="50" cy="50" rx="18" ry="38" stroke="currentColor" strokeWidth="0.8" />
+    <ellipse cx="50" cy="50" rx="32" ry="38" stroke="currentColor" strokeWidth="0.5" />
+    <line x1="12" y1="35" x2="88" y2="35" stroke="currentColor" strokeWidth="0.6" />
+    <line x1="12" y1="50" x2="88" y2="50" stroke="currentColor" strokeWidth="0.8" />
+    <line x1="12" y1="65" x2="88" y2="65" stroke="currentColor" strokeWidth="0.6" />
+  </svg>
+);
+
+const SketchFlower = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 80 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M40 95 Q38 70 40 50" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" fill="none" />
+    <path d="M40 70 Q30 60 22 62" stroke="currentColor" strokeWidth="0.8" strokeLinecap="round" fill="none" />
+    <path d="M40 60 Q50 52 55 55" stroke="currentColor" strokeWidth="0.8" strokeLinecap="round" fill="none" />
+    {/* Petals */}
+    <ellipse cx="40" cy="35" rx="6" ry="12" stroke="currentColor" strokeWidth="0.9" transform="rotate(0 40 35)" />
+    <ellipse cx="40" cy="35" rx="6" ry="12" stroke="currentColor" strokeWidth="0.9" transform="rotate(72 40 35)" />
+    <ellipse cx="40" cy="35" rx="6" ry="12" stroke="currentColor" strokeWidth="0.9" transform="rotate(144 40 35)" />
+    <ellipse cx="40" cy="35" rx="6" ry="12" stroke="currentColor" strokeWidth="0.9" transform="rotate(216 40 35)" />
+    <ellipse cx="40" cy="35" rx="6" ry="12" stroke="currentColor" strokeWidth="0.9" transform="rotate(288 40 35)" />
+    <circle cx="40" cy="35" r="5" stroke="currentColor" strokeWidth="1" />
+  </svg>
+);
+
+const SketchBookOpen = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 120 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M60 15 Q40 10 10 18 L10 70 Q40 62 60 68" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" fill="none" />
+    <path d="M60 15 Q80 10 110 18 L110 70 Q80 62 60 68" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" fill="none" />
+    <line x1="60" y1="15" x2="60" y2="68" stroke="currentColor" strokeWidth="0.8" />
+    {/* Page lines */}
+    <line x1="20" y1="30" x2="50" y2="27" stroke="currentColor" strokeWidth="0.4" />
+    <line x1="20" y1="38" x2="50" y2="35" stroke="currentColor" strokeWidth="0.4" />
+    <line x1="20" y1="46" x2="50" y2="43" stroke="currentColor" strokeWidth="0.4" />
+    <line x1="70" y1="27" x2="100" y2="30" stroke="currentColor" strokeWidth="0.4" />
+    <line x1="70" y1="35" x2="100" y2="38" stroke="currentColor" strokeWidth="0.4" />
+    <line x1="70" y1="43" x2="100" y2="46" stroke="currentColor" strokeWidth="0.4" />
+  </svg>
 );
 
 const WandererMode = () => {
   const heroRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
-  const y1 = useTransform(scrollYProgress, [0, 1], [0, -100]);
-  const y2 = useTransform(scrollYProgress, [0, 1], [0, -160]);
-  const y3 = useTransform(scrollYProgress, [0, 1], [0, -60]);
+  const y1 = useTransform(scrollYProgress, [0, 1], [0, -80]);
+  const y2 = useTransform(scrollYProgress, [0, 1], [0, -140]);
+  const y3 = useTransform(scrollYProgress, [0, 1], [0, -50]);
+  const y4 = useTransform(scrollYProgress, [0, 1], [0, -100]);
 
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
 
-      {/* ── HERO: Scrapbook collage ── */}
+      {/* ── HERO ── */}
       <section ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Warm textured background */}
+        {/* Warm parchment-style background */}
         <div className="absolute inset-0" style={{
           background: `
-            radial-gradient(ellipse 90% 70% at 50% 30%, hsla(30, 25%, 18%, 0.5) 0%, transparent 60%),
-            radial-gradient(ellipse 60% 60% at 80% 80%, hsla(270, 20%, 15%, 0.3) 0%, transparent 50%),
-            radial-gradient(ellipse 70% 50% at 15% 70%, hsla(20, 30%, 14%, 0.3) 0%, transparent 50%),
+            radial-gradient(ellipse 80% 60% at 50% 40%, hsla(30, 20%, 16%, 0.5) 0%, transparent 60%),
+            radial-gradient(ellipse 60% 50% at 85% 20%, hsla(35, 25%, 14%, 0.3) 0%, transparent 50%),
+            radial-gradient(ellipse 50% 40% at 10% 80%, hsla(25, 20%, 12%, 0.3) 0%, transparent 50%),
             hsl(var(--background))
           `,
         }} />
 
-        {/* Paper grain texture */}
-        <div className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E")`,
+        {/* Paper grain */}
+        <div className="absolute inset-0 opacity-[0.035] pointer-events-none" style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E")`,
         }} />
 
-        {/* Scrapbook photo — top left, landscape with tape */}
+        {/* ── Scattered sketch elements ── */}
+
+        {/* Camera — top right */}
         <motion.div
-          className="absolute top-[8%] left-[5%] md:left-[8%] pointer-events-none"
+          className="absolute top-[6%] right-[8%] md:right-[12%] text-accent/25 pointer-events-none"
           style={{ y: y1 }}
-          initial={{ opacity: 0, rotate: -7 }}
-          animate={{ opacity: 1, rotate: -7 }}
-          transition={{ duration: 1.2, delay: 0.2 }}
+          initial={{ opacity: 0, rotate: 15 }}
+          animate={{ opacity: 1, rotate: 15 }}
+          transition={{ duration: 1, delay: 0.3 }}
         >
-          <div className="relative">
-            <TapeStrip className="-top-2.5 left-1/2 -translate-x-1/2" rotate={-3} />
-            <div className="w-28 h-36 md:w-40 md:h-52 bg-foreground/5 p-1.5 md:p-2 shadow-xl" style={{
-              boxShadow: "4px 6px 20px hsla(0, 0%, 0%, 0.4), 0 0 0 1px hsla(30, 20%, 50%, 0.08)",
-            }}>
-              <img src={wandererHero} alt="" className="w-full h-full object-cover" style={{ filter: "saturate(0.5) brightness(0.85) sepia(0.15)" }} />
-            </div>
-            <div className="absolute -bottom-1 left-2 right-2 h-3 bg-gradient-to-t from-background/30 to-transparent blur-sm" />
-          </div>
+          <SketchCamera className="w-28 h-24 md:w-40 md:h-32" />
         </motion.div>
 
-        {/* Scrapbook photo — bottom right, profile with tape */}
+        {/* Bird — top left, flying */}
         <motion.div
-          className="absolute bottom-[12%] right-[4%] md:right-[10%] pointer-events-none"
-          style={{ y: y2 }}
-          initial={{ opacity: 0, rotate: 5 }}
-          animate={{ opacity: 1, rotate: 5 }}
+          className="absolute top-[10%] left-[6%] md:left-[10%] text-accent/20 pointer-events-none"
+          style={{ y: y3 }}
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 1.2, delay: 0.5 }}
         >
-          <div className="relative">
-            <TapeStrip className="-top-2 left-3" rotate={8} />
-            <TapeStrip className="-top-2 right-2" rotate={-5} />
-            <div className="w-32 h-44 md:w-44 md:h-56 bg-foreground/5 p-1.5 md:p-2 shadow-xl" style={{
-              boxShadow: "4px 6px 20px hsla(0, 0%, 0%, 0.4), 0 0 0 1px hsla(30, 20%, 50%, 0.08)",
-            }}>
-              <img src={profilePhoto} alt="" className="w-full h-full object-cover object-top" style={{ filter: "saturate(0.4) brightness(0.8) sepia(0.2)" }} />
-            </div>
-          </div>
+          <SketchBird className="w-24 h-16 md:w-32 md:h-22" />
         </motion.div>
 
-        {/* Small accent photo — top right, desktop only */}
+        {/* Second bird — mid right, smaller */}
         <motion.div
-          className="absolute top-[18%] right-[8%] md:right-[15%] pointer-events-none hidden md:block"
-          style={{ y: y3 }}
-          initial={{ opacity: 0, rotate: 3 }}
-          animate={{ opacity: 0.8, rotate: 3 }}
-          transition={{ duration: 1.2, delay: 0.8 }}
+          className="absolute top-[35%] right-[4%] md:right-[6%] text-accent/15 pointer-events-none"
+          style={{ y: y2 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 0.8 }}
         >
-          <div className="relative">
-            <TapeStrip className="-top-2 left-1/2 -translate-x-1/2" rotate={2} />
-            <div className="w-24 h-28 bg-foreground/5 p-1.5 shadow-lg" style={{
-              boxShadow: "3px 4px 15px hsla(0, 0%, 0%, 0.35), 0 0 0 1px hsla(30, 20%, 50%, 0.06)",
-            }}>
-              <img src={wandererHero} alt="" className="w-full h-full object-cover object-bottom" style={{ filter: "saturate(0.3) brightness(0.75) sepia(0.25) hue-rotate(20deg)" }} />
-            </div>
-          </div>
+          <SketchBird className="w-16 h-10 md:w-20 md:h-14" flip />
         </motion.div>
 
-        {/* Decorative torn paper scraps */}
+        {/* Compass — bottom left */}
         <motion.div
-          className="absolute bottom-[35%] left-[3%] w-20 h-14 md:w-28 md:h-18 pointer-events-none opacity-[0.07] hidden md:block"
-          style={{ y: y3 }}
-          initial={{ rotate: 12 }}
-          animate={{ rotate: 12 }}
+          className="absolute bottom-[10%] left-[5%] md:left-[8%] text-accent/20 pointer-events-none"
+          style={{ y: y4 }}
+          initial={{ opacity: 0, rotate: -10 }}
+          animate={{ opacity: 1, rotate: -10 }}
+          transition={{ duration: 1, delay: 0.6 }}
         >
-          <div className="w-full h-full rounded-sm" style={{
-            background: "linear-gradient(145deg, hsla(30, 40%, 70%, 0.3), hsla(20, 30%, 60%, 0.15))",
-          }} />
+          <SketchCompass className="w-24 h-24 md:w-32 md:h-32" />
         </motion.div>
 
+        {/* Feather — right side, mid-low */}
         <motion.div
-          className="absolute top-[40%] right-[3%] w-16 h-20 pointer-events-none opacity-[0.05] hidden md:block"
+          className="absolute bottom-[20%] right-[10%] md:right-[15%] text-accent/18 pointer-events-none"
           style={{ y: y1 }}
-          initial={{ rotate: -15 }}
-          animate={{ rotate: -15 }}
+          initial={{ opacity: 0, rotate: 25 }}
+          animate={{ opacity: 1, rotate: 25 }}
+          transition={{ duration: 1, delay: 0.7 }}
         >
-          <div className="w-full h-full rounded-sm" style={{
-            background: "linear-gradient(120deg, hsla(330, 25%, 65%, 0.25), hsla(270, 20%, 55%, 0.1))",
-          }} />
+          <SketchFeather className="w-12 h-28 md:w-16 md:h-36" />
         </motion.div>
 
-        {/* Floating dust particles */}
+        {/* Globe — top center-left */}
+        <motion.div
+          className="absolute top-[5%] left-[30%] md:left-[25%] text-accent/12 pointer-events-none hidden md:block"
+          style={{ y: y3 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 0.9 }}
+        >
+          <SketchGlobe className="w-20 h-20" />
+        </motion.div>
+
+        {/* Flower — bottom right area */}
+        <motion.div
+          className="absolute bottom-[8%] right-[30%] md:right-[35%] text-accent/15 pointer-events-none hidden md:block"
+          style={{ y: y2 }}
+          initial={{ opacity: 0, rotate: -8 }}
+          animate={{ opacity: 1, rotate: -8 }}
+          transition={{ duration: 1, delay: 1 }}
+        >
+          <SketchFlower className="w-16 h-20" />
+        </motion.div>
+
+        {/* Open book — bottom left area */}
+        <motion.div
+          className="absolute bottom-[25%] left-[2%] md:left-[12%] text-accent/12 pointer-events-none hidden md:block"
+          style={{ y: y4 }}
+          initial={{ opacity: 0, rotate: -5 }}
+          animate={{ opacity: 1, rotate: -5 }}
+          transition={{ duration: 1, delay: 1.1 }}
+        >
+          <SketchBookOpen className="w-24 h-16" />
+        </motion.div>
+
+        {/* ── Profile photo in organic blob shape ── */}
+        <motion.div
+          className="absolute bottom-[8%] left-[8%] md:left-[auto] md:bottom-[auto] md:top-[15%] md:right-[22%] pointer-events-none hidden md:block"
+          style={{ y: y1 }}
+          initial={{ opacity: 0, scale: 0.85 }}
+          animate={{ opacity: 0.85, scale: 1 }}
+          transition={{ duration: 1.2, delay: 0.4 }}
+        >
+          <div className="relative w-36 h-44">
+            <svg viewBox="0 0 200 240" className="absolute inset-0 w-full h-full">
+              <defs>
+                <clipPath id="blobClip">
+                  <path d="M100,10 Q160,0 180,50 Q200,100 175,160 Q150,220 100,230 Q50,240 25,180 Q0,120 20,60 Q40,10 100,10 Z" />
+                </clipPath>
+              </defs>
+              <image
+                href={profilePhoto}
+                width="200"
+                height="240"
+                clipPath="url(#blobClip)"
+                preserveAspectRatio="xMidYMin slice"
+              />
+              <path
+                d="M100,10 Q160,0 180,50 Q200,100 175,160 Q150,220 100,230 Q50,240 25,180 Q0,120 20,60 Q40,10 100,10 Z"
+                fill="none"
+                stroke="hsla(35, 50%, 65%, 0.3)"
+                strokeWidth="2"
+              />
+            </svg>
+          </div>
+        </motion.div>
+
+        {/* Floating dust */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          {[...Array(10)].map((_, i) => (
+          {[...Array(8)].map((_, i) => (
             <motion.div
               key={i}
               className="absolute rounded-full"
               style={{
                 width: 2 + (i % 3),
                 height: 2 + (i % 3),
-                left: `${8 + i * 9}%`,
-                top: `${10 + (i % 5) * 18}%`,
-                background: `hsla(30, 30%, 70%, ${0.1 + (i % 4) * 0.05})`,
+                left: `${8 + i * 11}%`,
+                top: `${12 + (i % 5) * 17}%`,
+                background: `hsla(35, 40%, 70%, ${0.08 + (i % 4) * 0.04})`,
               }}
-              animate={{
-                y: [-10, 12, -10],
-                opacity: [0.15, 0.5, 0.15],
-              }}
-              transition={{
-                duration: 5 + i * 0.7,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: i * 0.4,
-              }}
+              animate={{ y: [-8, 10, -8], opacity: [0.1, 0.4, 0.1] }}
+              transition={{ duration: 5 + i * 0.8, repeat: Infinity, ease: "easeInOut", delay: i * 0.4 }}
             />
           ))}
         </div>
 
-        {/* Content */}
+        {/* ── Content ── */}
         <div className="relative z-10 text-center px-6 max-w-3xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -269,26 +386,15 @@ const WandererMode = () => {
             transition={{ delay: 2 }}
           >
             <span className="text-[9px] font-mono text-muted-foreground/40 tracking-widest uppercase">Explore</span>
-            <motion.div
-              animate={{ y: [0, 6, 0] }}
-              transition={{ duration: 1.5, repeat: Infinity }}
-            >
+            <motion.div animate={{ y: [0, 6, 0] }} transition={{ duration: 1.5, repeat: Infinity }}>
               <ArrowDown className="w-4 h-4 text-accent/30" />
             </motion.div>
           </motion.div>
         </div>
       </section>
 
-      {/* ── Torn edge transition ── */}
-      <div className="relative text-background">
-        <TornEdge side="top" />
-      </div>
-
-      {/* ── SECTIONS: Scrapbook cards ── */}
+      {/* ── SECTIONS ── */}
       <div className="relative max-w-5xl mx-auto px-6 py-24">
-        {/* Subtle vertical line */}
-        <div className="absolute left-1/2 top-0 bottom-0 w-[1px] bg-gradient-to-b from-transparent via-accent/10 to-transparent pointer-events-none hidden lg:block" />
-
         <motion.div
           className="text-center mb-20"
           initial={{ opacity: 0, y: 20 }}
@@ -296,12 +402,8 @@ const WandererMode = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
         >
-          <p className="text-[10px] font-mono text-accent/50 tracking-[0.5em] uppercase mb-3">
-            Explore
-          </p>
-          <h2 className="text-3xl md:text-4xl font-poetry font-bold text-foreground">
-            Windows to My World
-          </h2>
+          <p className="text-[10px] font-mono text-accent/50 tracking-[0.5em] uppercase mb-3">Explore</p>
+          <h2 className="text-3xl md:text-4xl font-poetry font-bold text-foreground">Windows to My World</h2>
           <div className="w-16 h-[1px] mx-auto mt-4 bg-gradient-to-r from-transparent via-accent/30 to-transparent" />
         </motion.div>
 
@@ -309,28 +411,18 @@ const WandererMode = () => {
           {sections.map((section, i) => (
             <motion.div
               key={section.title}
-              initial={{ opacity: 0, y: 30, rotate: 0 }}
-              whileInView={{ opacity: 1, y: 0, rotate: section.rotate }}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: i * 0.1 }}
-              whileHover={{ rotate: 0, scale: 1.03 }}
             >
-              <Link to={section.path} className="block relative group">
-                {/* Tape decoration */}
-                <TapeStrip className="-top-2 left-6" rotate={section.rotate > 0 ? 5 : -4} />
-
+              <Link to={section.path} className="block group">
                 <div
-                  className="p-6 space-y-3 h-full border border-foreground/[0.06] transition-all duration-300 group-hover:border-accent/20"
-                  style={{
-                    background: "hsla(30, 15%, 15%, 0.3)",
-                    backdropFilter: "blur(8px)",
-                    boxShadow: "3px 4px 16px hsla(0, 0%, 0%, 0.25)",
-                  }}
+                  className="p-6 space-y-3 h-full border border-accent/10 transition-all duration-300 group-hover:border-accent/25 rounded-sm"
+                  style={{ background: "hsla(30, 15%, 12%, 0.25)", backdropFilter: "blur(6px)" }}
                 >
-                  <section.icon className="w-7 h-7 text-accent/70 group-hover:text-accent transition-colors duration-300" />
-                  <h3 className="font-poetry font-bold text-lg text-foreground group-hover:text-accent transition-colors duration-300">
-                    {section.title}
-                  </h3>
+                  <section.icon className="w-7 h-7 text-accent/60 group-hover:text-accent transition-colors duration-300" />
+                  <h3 className="font-poetry font-bold text-lg text-foreground group-hover:text-accent transition-colors duration-300">{section.title}</h3>
                   <p className="text-sm text-muted-foreground/70 leading-relaxed">{section.description}</p>
                   <div className="w-8 h-[1px] bg-accent/20 group-hover:w-12 transition-all duration-300" />
                 </div>
@@ -341,26 +433,18 @@ const WandererMode = () => {
 
         {/* Poetry teaser */}
         <motion.div
-          className="mt-28 text-center relative"
+          className="mt-28 text-center"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
         >
-          <div className="inline-block relative">
-            <TapeStrip className="-top-3 left-4" rotate={-6} />
-            <TapeStrip className="-top-3 right-4" rotate={4} />
-            <div className="px-10 py-8 border border-foreground/[0.05]" style={{
-              background: "hsla(30, 15%, 15%, 0.2)",
-              boxShadow: "2px 3px 12px hsla(0, 0%, 0%, 0.2)",
-            }}>
-              <p className="font-poetry text-2xl md:text-3xl text-foreground/70 italic max-w-xl mx-auto leading-relaxed">
-                "Deep Dive Into,
-                <br />
-                The World of Poetry"
-              </p>
-            </div>
-          </div>
+          <div className="w-12 h-[1px] mx-auto mb-8 bg-gradient-to-r from-transparent via-accent/30 to-transparent" />
+          <p className="font-poetry text-2xl md:text-3xl text-foreground/70 italic max-w-xl mx-auto leading-relaxed">
+            "Deep Dive Into,
+            <br />
+            The World of Poetry"
+          </p>
         </motion.div>
       </div>
     </div>
