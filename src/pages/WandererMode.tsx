@@ -18,12 +18,12 @@ const TwinklingStar = ({ x, y, size, delay }: { x: string; y: string; size: numb
   <motion.div
     className="absolute pointer-events-none"
     style={{ left: x, top: y }}
-    animate={{ opacity: [0.05, 0.7, 0.05], scale: [0.8, 1.3, 0.8] }}
-    transition={{ duration: 2.5 + delay * 0.4, repeat: Infinity, ease: "easeInOut", delay }}
+    animate={{ opacity: [0.15, 1, 0.15], scale: [0.8, 1.3, 0.8] }}
+    transition={{ duration: 2 + delay * 0.3, repeat: Infinity, ease: "easeInOut", delay }}
   >
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       <path d="M12 2 L13.5 9 L20 10 L14 13 L15.5 20 L12 15 L8.5 20 L10 13 L4 10 L10.5 9 Z"
-        stroke="hsla(45, 70%, 65%, 0.5)" strokeWidth="0.8" fill="hsla(45, 70%, 65%, 0.06)" />
+        stroke="hsla(45, 80%, 70%, 0.8)" strokeWidth="1" fill="hsla(45, 80%, 70%, 0.15)" />
     </svg>
   </motion.div>
 );
@@ -46,7 +46,7 @@ const FloatingIcon = ({ Icon, x, y, size, delay, rotate, color }: {
     className="absolute pointer-events-none"
     style={{ left: x, top: y }}
     initial={{ opacity: 0, rotate }}
-    animate={{ opacity: [0.12, 0.3, 0.12], y: [-6, 6, -6], rotate: [rotate - 3, rotate + 3, rotate - 3] }}
+    animate={{ opacity: [0.25, 0.6, 0.25], y: [-6, 6, -6], rotate: [rotate - 3, rotate + 3, rotate - 3] }}
     transition={{ duration: 5 + delay, repeat: Infinity, ease: "easeInOut", delay }}
   >
     <Icon style={{ width: size, height: size, color }} />
@@ -59,8 +59,8 @@ const FloatingCircle = ({ x, y, size, delay, color }: {
 }) => (
   <motion.div
     className="absolute rounded-full pointer-events-none"
-    style={{ left: x, top: y, width: size, height: size, border: `1px solid ${color}` }}
-    animate={{ opacity: [0.1, 0.35, 0.1], scale: [0.9, 1.1, 0.9] }}
+    style={{ left: x, top: y, width: size, height: size, border: `1.5px solid ${color}` }}
+    animate={{ opacity: [0.2, 0.5, 0.2], scale: [0.9, 1.1, 0.9] }}
     transition={{ duration: 4 + delay * 0.5, repeat: Infinity, ease: "easeInOut", delay }}
   />
 );
@@ -97,19 +97,22 @@ const WandererMode = () => {
         {/* Floating icons — sunflowers, flowers, suns */}
         <FloatingIcon Icon={Flower2} x="8%" y="15%" size={22} delay={0} rotate={-15} color="hsla(45, 70%, 60%, 0.2)" />
         <FloatingIcon Icon={Sun} x="18%" y="70%" size={20} delay={1.2} rotate={10} color="hsla(40, 65%, 55%, 0.15)" />
-        <FloatingIcon Icon={Flower2} x="80%" y="75%" size={18} delay={0.8} rotate={20} color="hsla(330, 40%, 60%, 0.15)" />
-        <FloatingIcon Icon={Sparkles} x="88%" y="18%" size={16} delay={1.5} rotate={-8} color="hsla(45, 60%, 65%, 0.18)" />
-        <FloatingIcon Icon={Flower2} x="70%" y="90%" size={20} delay={0.4} rotate={-12} color="hsla(45, 70%, 60%, 0.12)" />
-        <FloatingIcon Icon={Sun} x="5%" y="45%" size={18} delay={2} rotate={5} color="hsla(35, 60%, 55%, 0.12)" />
-        <FloatingIcon Icon={Flower2} x="50%" y="5%" size={16} delay={1} rotate={15} color="hsla(330, 35%, 55%, 0.1)" />
+        <FloatingIcon Icon={Flower2} x="8%" y="15%" size={26} delay={0} rotate={-15} color="hsla(45, 80%, 65%, 0.45)" />
+        <FloatingIcon Icon={Sun} x="18%" y="70%" size={24} delay={1.2} rotate={10} color="hsla(40, 75%, 60%, 0.4)" />
+        <FloatingIcon Icon={Flower2} x="80%" y="75%" size={22} delay={0.8} rotate={20} color="hsla(330, 50%, 65%, 0.35)" />
+        <FloatingIcon Icon={Sparkles} x="88%" y="18%" size={20} delay={1.5} rotate={-8} color="hsla(45, 70%, 70%, 0.4)" />
+        <FloatingIcon Icon={Flower2} x="70%" y="90%" size={24} delay={0.4} rotate={-12} color="hsla(45, 80%, 65%, 0.3)" />
+        <FloatingIcon Icon={Sun} x="5%" y="45%" size={22} delay={2} rotate={5} color="hsla(35, 70%, 60%, 0.35)" />
+        <FloatingIcon Icon={Flower2} x="50%" y="5%" size={20} delay={1} rotate={15} color="hsla(330, 45%, 60%, 0.25)" />
+        <FloatingIcon Icon={Sun} x="92%" y="45%" size={18} delay={0.6} rotate={-5} color="hsla(40, 75%, 60%, 0.3)" />
 
         {/* Floating circles */}
-        <FloatingCircle x="12%" y="30%" size={40} delay={0.3} color="hsla(45, 50%, 60%, 0.12)" />
-        <FloatingCircle x="75%" y="15%" size={60} delay={1} color="hsla(270, 30%, 60%, 0.08)" />
-        <FloatingCircle x="85%" y="65%" size={35} delay={0.6} color="hsla(35, 50%, 55%, 0.1)" />
-        <FloatingCircle x="25%" y="80%" size={50} delay={1.4} color="hsla(330, 30%, 55%, 0.08)" />
-        <FloatingCircle x="60%" y="50%" size={28} delay={1.8} color="hsla(45, 40%, 60%, 0.06)" />
-        <FloatingCircle x="40%" y="35%" size={45} delay={0.9} color="hsla(200, 30%, 55%, 0.06)" />
+        <FloatingCircle x="12%" y="30%" size={45} delay={0.3} color="hsla(45, 60%, 65%, 0.25)" />
+        <FloatingCircle x="75%" y="15%" size={65} delay={1} color="hsla(270, 40%, 65%, 0.18)" />
+        <FloatingCircle x="85%" y="65%" size={40} delay={0.6} color="hsla(35, 60%, 60%, 0.22)" />
+        <FloatingCircle x="25%" y="80%" size={55} delay={1.4} color="hsla(330, 40%, 60%, 0.16)" />
+        <FloatingCircle x="60%" y="50%" size={32} delay={1.8} color="hsla(45, 50%, 65%, 0.14)" />
+        <FloatingCircle x="40%" y="35%" size={50} delay={0.9} color="hsla(200, 40%, 60%, 0.12)" />
 
         {/* ── Layout: Left text + Right photo ── */}
         <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-12 lg:gap-16 py-20">
@@ -122,16 +125,16 @@ const WandererMode = () => {
             transition={{ duration: 1, delay: 0.3 }}
           >
             <motion.div
-              className="flex items-center justify-center lg:justify-start gap-3 mb-6"
+              className="flex items-center justify-center gap-3 mb-6"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5, duration: 0.8 }}
             >
-              <div className="w-10 h-[1px] bg-gradient-to-r from-transparent to-accent/40" />
-              <Sparkles className="w-3.5 h-3.5 text-accent/50" />
-              <p className="text-[10px] font-mono text-accent/60 tracking-[0.5em] uppercase">Beyond the code</p>
-              <Sparkles className="w-3.5 h-3.5 text-accent/50" />
-              <div className="w-10 h-[1px] bg-gradient-to-l from-transparent to-accent/40 hidden lg:block" />
+              <div className="w-12 h-[1px] bg-gradient-to-r from-transparent to-accent/50" />
+              <Sparkles className="w-4 h-4 text-accent/60" />
+              <p className="text-sm font-mono text-accent/70 tracking-[0.4em] uppercase">Beyond the code</p>
+              <Sparkles className="w-4 h-4 text-accent/60" />
+              <div className="w-12 h-[1px] bg-gradient-to-l from-transparent to-accent/50" />
             </motion.div>
 
             <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-poetry font-bold text-foreground leading-[1.2] mb-6">
@@ -144,12 +147,13 @@ const WandererMode = () => {
                 A soul that writes
               </motion.span>
               <motion.span
-                className="block text-accent italic"
+                className="block"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 1.0 }}
               >
-                in verses & visions
+                <span className="text-foreground">in </span>
+                <span className="text-accent italic">verses & visions</span>
               </motion.span>
             </h1>
 
@@ -163,17 +167,6 @@ const WandererMode = () => {
               and the quiet observations of a curious mind.
             </motion.p>
 
-            <motion.div
-              className="mt-10 flex flex-col items-center lg:items-start gap-2"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 2 }}
-            >
-              <span className="text-[9px] font-mono text-muted-foreground/40 tracking-widest uppercase">Explore</span>
-              <motion.div animate={{ y: [0, 6, 0] }} transition={{ duration: 1.5, repeat: Infinity }}>
-                <ArrowDown className="w-4 h-4 text-accent/30" />
-              </motion.div>
-            </motion.div>
           </motion.div>
 
           {/* Right — Photo in frame */}
@@ -223,6 +216,19 @@ const WandererMode = () => {
             </div>
           </motion.div>
         </div>
+
+        {/* Explore — centered bottom */}
+        <motion.div
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 2 }}
+        >
+          <span className="text-xs font-mono text-muted-foreground/60 tracking-[0.3em] uppercase">Explore</span>
+          <motion.div animate={{ y: [0, 8, 0] }} transition={{ duration: 1.5, repeat: Infinity }}>
+            <ArrowDown className="w-6 h-6 text-accent/50" />
+          </motion.div>
+        </motion.div>
       </section>
 
       {/* ── SECTIONS ── */}
