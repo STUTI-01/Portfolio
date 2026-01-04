@@ -91,8 +91,46 @@ const WandererMode = () => {
           backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E")`,
         }} />
 
+        {/* "Beyond the Code" — top center */}
+        <motion.div
+          className="absolute top-24 md:top-28 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3"
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.8 }}
+        >
+          <div className="w-12 h-[1px] bg-gradient-to-r from-transparent to-accent/50" />
+          <Sparkles className="w-4 h-4 text-accent/60" />
+          <p className="text-sm font-mono text-accent/70 tracking-[0.4em] uppercase whitespace-nowrap">Beyond the code</p>
+          <Sparkles className="w-4 h-4 text-accent/60" />
+          <div className="w-12 h-[1px] bg-gradient-to-l from-transparent to-accent/50" />
+        </motion.div>
+
         {/* Twinkling stars */}
         {stars.map((s, i) => <TwinklingStar key={i} {...s} />)}
+
+        {/* White glowing sparkles */}
+        {[
+          { x: "10%", y: "12%", size: 6, delay: 0 }, { x: "25%", y: "30%", size: 4, delay: 0.5 },
+          { x: "45%", y: "8%", size: 5, delay: 1.0 }, { x: "60%", y: "25%", size: 4, delay: 0.3 },
+          { x: "80%", y: "10%", size: 6, delay: 0.8 }, { x: "90%", y: "40%", size: 5, delay: 1.3 },
+          { x: "15%", y: "55%", size: 4, delay: 0.6 }, { x: "35%", y: "70%", size: 5, delay: 1.1 },
+          { x: "55%", y: "60%", size: 6, delay: 0.2 }, { x: "70%", y: "80%", size: 4, delay: 1.5 },
+          { x: "88%", y: "70%", size: 5, delay: 0.9 }, { x: "30%", y: "90%", size: 4, delay: 1.7 },
+          { x: "65%", y: "45%", size: 3, delay: 0.4 }, { x: "50%", y: "85%", size: 5, delay: 1.2 },
+          { x: "20%", y: "42%", size: 3, delay: 0.7 }, { x: "75%", y: "55%", size: 4, delay: 1.4 },
+        ].map((s, i) => (
+          <motion.div
+            key={`sparkle-${i}`}
+            className="absolute rounded-full pointer-events-none"
+            style={{
+              left: s.x, top: s.y, width: s.size, height: s.size,
+              background: "white",
+              boxShadow: `0 0 ${s.size * 2}px ${s.size}px rgba(255,255,255,0.8), 0 0 ${s.size * 4}px ${s.size * 2}px rgba(255,255,255,0.4)`,
+            }}
+            animate={{ opacity: [0, 1, 0], scale: [0.5, 1.5, 0.5] }}
+            transition={{ duration: 1.5 + s.delay * 0.3, repeat: Infinity, ease: "easeInOut", delay: s.delay }}
+          />
+        ))}
 
         {/* Floating icons — sunflowers, flowers, suns */}
         <FloatingIcon Icon={Flower2} x="8%" y="15%" size={22} delay={0} rotate={-15} color="hsla(45, 70%, 60%, 0.2)" />
@@ -124,18 +162,7 @@ const WandererMode = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.3 }}
           >
-            <motion.div
-              className="flex items-center justify-center gap-3 mb-6"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5, duration: 0.8 }}
-            >
-              <div className="w-12 h-[1px] bg-gradient-to-r from-transparent to-accent/50" />
-              <Sparkles className="w-4 h-4 text-accent/60" />
-              <p className="text-sm font-mono text-accent/70 tracking-[0.4em] uppercase">Beyond the code</p>
-              <Sparkles className="w-4 h-4 text-accent/60" />
-              <div className="w-12 h-[1px] bg-gradient-to-l from-transparent to-accent/50" />
-            </motion.div>
+            {/* "Beyond the Code" moved to absolute top-center */}
 
             <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-poetry font-bold text-foreground leading-[1.2] mb-6">
               <motion.span
@@ -144,7 +171,7 @@ const WandererMode = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: 0.6 }}
               >
-                A soul that writes
+                A soul that writes in
               </motion.span>
               <motion.span
                 className="block"
@@ -152,7 +179,6 @@ const WandererMode = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 1.0 }}
               >
-                <span className="text-foreground">in </span>
                 <span className="text-accent italic">verses & visions</span>
               </motion.span>
             </h1>
