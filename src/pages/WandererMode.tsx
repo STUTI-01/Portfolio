@@ -93,7 +93,7 @@ const WandererMode = () => {
 
         {/* "Beyond the Code" — top center */}
         <motion.div
-          className="absolute top-24 md:top-28 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3"
+          className="absolute top-24 md:top-28 left-0 right-0 z-20 flex items-center justify-center gap-3"
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.8 }}
@@ -110,14 +110,14 @@ const WandererMode = () => {
 
         {/* White glowing sparkles */}
         {[
-          { x: "10%", y: "12%", size: 6, delay: 0 }, { x: "25%", y: "30%", size: 4, delay: 0.5 },
-          { x: "45%", y: "8%", size: 5, delay: 1.0 }, { x: "60%", y: "25%", size: 4, delay: 0.3 },
-          { x: "80%", y: "10%", size: 6, delay: 0.8 }, { x: "90%", y: "40%", size: 5, delay: 1.3 },
-          { x: "15%", y: "55%", size: 4, delay: 0.6 }, { x: "35%", y: "70%", size: 5, delay: 1.1 },
-          { x: "55%", y: "60%", size: 6, delay: 0.2 }, { x: "70%", y: "80%", size: 4, delay: 1.5 },
-          { x: "88%", y: "70%", size: 5, delay: 0.9 }, { x: "30%", y: "90%", size: 4, delay: 1.7 },
-          { x: "65%", y: "45%", size: 3, delay: 0.4 }, { x: "50%", y: "85%", size: 5, delay: 1.2 },
-          { x: "20%", y: "42%", size: 3, delay: 0.7 }, { x: "75%", y: "55%", size: 4, delay: 1.4 },
+          { x: "10%", y: "12%", size: 2, delay: 0 }, { x: "25%", y: "30%", size: 2, delay: 0.5 },
+          { x: "45%", y: "8%", size: 1.5, delay: 1.0 }, { x: "60%", y: "25%", size: 2, delay: 0.3 },
+          { x: "80%", y: "10%", size: 2, delay: 0.8 }, { x: "90%", y: "40%", size: 1.5, delay: 1.3 },
+          { x: "15%", y: "55%", size: 2, delay: 0.6 }, { x: "35%", y: "70%", size: 1.5, delay: 1.1 },
+          { x: "55%", y: "60%", size: 2, delay: 0.2 }, { x: "70%", y: "80%", size: 1.5, delay: 1.5 },
+          { x: "88%", y: "70%", size: 2, delay: 0.9 }, { x: "30%", y: "90%", size: 1.5, delay: 1.7 },
+          { x: "65%", y: "45%", size: 2, delay: 0.4 }, { x: "50%", y: "85%", size: 1.5, delay: 1.2 },
+          { x: "20%", y: "42%", size: 2, delay: 0.7 }, { x: "75%", y: "55%", size: 1.5, delay: 1.4 },
         ].map((s, i) => (
           <motion.div
             key={`sparkle-${i}`}
@@ -125,10 +125,10 @@ const WandererMode = () => {
             style={{
               left: s.x, top: s.y, width: s.size, height: s.size,
               background: "white",
-              boxShadow: `0 0 ${s.size * 2}px ${s.size}px rgba(255,255,255,0.8), 0 0 ${s.size * 4}px ${s.size * 2}px rgba(255,255,255,0.4)`,
+              boxShadow: `0 0 ${s.size * 3}px ${s.size}px rgba(255,255,255,0.6)`,
             }}
-            animate={{ opacity: [0, 1, 0], scale: [0.5, 1.5, 0.5] }}
-            transition={{ duration: 1.5 + s.delay * 0.3, repeat: Infinity, ease: "easeInOut", delay: s.delay }}
+            animate={{ opacity: [0.1, 0.7, 0.1] }}
+            transition={{ duration: 2.5 + s.delay * 0.5, repeat: Infinity, ease: "easeInOut", delay: s.delay }}
           />
         ))}
 
