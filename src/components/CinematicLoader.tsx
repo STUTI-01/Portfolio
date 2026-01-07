@@ -16,11 +16,14 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
     const timers = [
       setTimeout(() => setPhase(1), 500),
       setTimeout(() => setPhase(2), 3200),
-      setTimeout(() => setPhase(3), 6000),
-      setTimeout(() => onComplete(), 6800),
     ];
     return () => timers.forEach(clearTimeout);
-  }, [onComplete]);
+  }, []);
+
+  const handleChooseClick = () => {
+    setPhase(3);
+    setTimeout(() => onComplete(), 800);
+  };
 
   return (
     <AnimatePresence>
@@ -122,6 +125,86 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
             />
           </motion.div>
 
+          {/* Earth Glow Arc — semi-circle curve below text */}
+          <div className="absolute left-1/2 -translate-x-1/2 bottom-[18%] w-[500px] md:w-[700px] h-[160px] md:h-[200px] pointer-events-none z-10">
+            <svg
+              viewBox="0 0 700 200"
+              fill="none"
+              className="w-full h-full"
+              preserveAspectRatio="xMidYMid meet"
+            >
+              <defs>
+                <linearGradient id="arcGlow" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="hsla(217, 91%, 60%, 0)" />
+                  <stop offset="20%" stopColor="hsla(217, 91%, 60%, 0.4)" />
+                  <stop offset="50%" stopColor="hsla(45, 97%, 64%, 0.6)" />
+                  <stop offset="80%" stopColor="hsla(217, 91%, 60%, 0.4)" />
+                  <stop offset="100%" stopColor="hsla(217, 91%, 60%, 0)" />
+                </linearGradient>
+                <filter id="arcBlur">
+                  <feGaussianBlur stdDeviation="3" />
+                </filter>
+                <filter id="sparkGlow">
+                  <feGaussianBlur stdDeviation="4" />
+                </filter>
+              </defs>
+
+              {/* Outer soft glow */}
+              <motion.path
+                d="M 50 180 Q 350 -20 650 180"
+                stroke="url(#arcGlow)"
+                strokeWidth="6"
+                strokeLinecap="round"
+                fill="none"
+                filter="url(#arcBlur)"
+                initial={{ pathLength: 0, opacity: 0 }}
+                animate={phase >= 1 ? { pathLength: 1, opacity: 0.6 } : {}}
+                transition={{ duration: 2, ease: "easeInOut", delay: 0.3 }}
+              />
+
+              {/* Main arc line */}
+              <motion.path
+                d="M 50 180 Q 350 -20 650 180"
+                stroke="url(#arcGlow)"
+                strokeWidth="2"
+                strokeLinecap="round"
+                fill="none"
+                initial={{ pathLength: 0, opacity: 0 }}
+                animate={phase >= 1 ? { pathLength: 1, opacity: 1 } : {}}
+                transition={{ duration: 2, ease: "easeInOut", delay: 0.2 }}
+              />
+
+              {/* Traveling spark dot */}
+              {phase >= 1 && (
+                <motion.circle
+                  r="4"
+                  fill="white"
+                  filter="url(#sparkGlow)"
+                  initial={{ offsetDistance: "0%" }}
+                  animate={{ offsetDistance: ["0%", "100%"] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                  style={{
+                    offsetPath: `path("M 50 180 Q 350 -20 650 180")`,
+                    offsetRotate: "0deg",
+                  }}
+                />
+              )}
+              {phase >= 1 && (
+                <motion.circle
+                  r="2"
+                  fill="hsla(45, 97%, 74%, 1)"
+                  initial={{ offsetDistance: "0%" }}
+                  animate={{ offsetDistance: ["0%", "100%"] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                  style={{
+                    offsetPath: `path("M 50 180 Q 350 -20 650 180")`,
+                    offsetRotate: "0deg",
+                  }}
+                />
+              )}
+            </svg>
+          </div>
+
           {/* Content */}
           <div className="relative text-center z-20">
             <motion.div
@@ -129,14 +212,6 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
               animate={phase >= 1 ? { opacity: 1, scale: 1 } : {}}
               transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
             >
-              {/* Decorative line above text */}
-              <motion.div
-                className="w-12 h-[1px] mx-auto mb-8 bg-gradient-to-r from-transparent via-secondary to-transparent"
-                initial={{ scaleX: 0 }}
-                animate={phase >= 1 ? { scaleX: 1 } : {}}
-                transition={{ duration: 1, delay: 0.3 }}
-              />
-
               <h1 className="text-3xl md:text-5xl lg:text-6xl font-display font-bold text-foreground leading-tight">
                 {"My world has different stories.".split(" ").map((word, i) => (
                   <motion.span
@@ -156,22 +231,47 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
               </h1>
 
               {phase >= 2 && (
-                <>
-                  <motion.div
-                    className="w-8 h-[1px] mx-auto mt-8 mb-6 bg-gradient-to-r from-transparent via-name-highlight to-transparent"
-                    initial={{ scaleX: 0, opacity: 0 }}
-                    animate={{ scaleX: 1, opacity: 1 }}
-                    transition={{ duration: 0.6 }}
-                  />
+                <motion.button
+                  onClick={handleChooseClick}
+                  className="mt-10 cursor-pointer bg-transparent border-none outline-none group"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.8 }}
+                >
                   <motion.p
-                    className="text-lg md:text-xl text-muted-foreground tracking-widest uppercase font-mono"
+                    className="text-lg md:text-xl tracking-widest uppercase font-mono"
                     initial={{ opacity: 0, letterSpacing: "0.6em" }}
-                    animate={{ opacity: 1, letterSpacing: "0.3em" }}
-                    transition={{ duration: 1 }}
+                    animate={{
+                      opacity: 1,
+                      letterSpacing: "0.3em",
+                      color: [
+                        "hsla(0, 0%, 60%, 1)",
+                        "hsla(217, 91%, 70%, 1)",
+                        "hsla(45, 97%, 64%, 1)",
+                        "hsla(217, 91%, 80%, 1)",
+                      ],
+                    }}
+                    transition={{
+                      opacity: { duration: 0.6 },
+                      letterSpacing: { duration: 1 },
+                      color: { duration: 4, repeat: Infinity, ease: "easeInOut" },
+                    }}
+                    whileHover={{
+                      scale: 1.05,
+                      textShadow: "0 0 20px hsla(45, 97%, 64%, 0.5)",
+                    }}
                   >
                     Choose yours.
                   </motion.p>
-                </>
+                  <motion.div
+                    className="w-16 h-[1px] mx-auto mt-3"
+                    style={{
+                      background: "linear-gradient(90deg, transparent, hsla(45, 97%, 64%, 0.6), transparent)",
+                    }}
+                    animate={{ opacity: [0.3, 1, 0.3] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                  />
+                </motion.button>
               )}
             </motion.div>
           </div>
