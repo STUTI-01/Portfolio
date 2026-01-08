@@ -45,18 +45,6 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
             }}
           />
 
-          {/* Scanning line */}
-          <motion.div
-            className="absolute left-0 right-0 h-[1px] pointer-events-none z-10"
-            style={{
-              background: "linear-gradient(90deg, transparent, hsla(217, 91%, 60%, 0.3), transparent)",
-              boxShadow: "0 0 30px 10px hsla(217, 91%, 60%, 0.08)",
-            }}
-            initial={{ top: "-5%" }}
-            animate={{ top: "105%" }}
-            transition={{ duration: 4, ease: "linear", repeat: Infinity }}
-          />
-
           {/* Pulsing corner accents */}
           <motion.div
             className="absolute top-12 left-12 w-16 h-16 pointer-events-none"
@@ -125,82 +113,82 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
             />
           </motion.div>
 
-          {/* Earth Glow Arc — semi-circle curve below text */}
-          <div className="absolute left-1/2 -translate-x-1/2 bottom-[18%] w-[500px] md:w-[700px] h-[160px] md:h-[200px] pointer-events-none z-10">
+          {/* Earth Glow Arc — full-width curved line below content */}
+          <div className="absolute left-0 right-0 bottom-[22%] h-[120px] md:h-[160px] pointer-events-none z-10">
             <svg
-              viewBox="0 0 700 200"
+              viewBox="0 0 1200 160"
               fill="none"
               className="w-full h-full"
-              preserveAspectRatio="xMidYMid meet"
+              preserveAspectRatio="none"
             >
               <defs>
                 <linearGradient id="arcGlow" x1="0%" y1="0%" x2="100%" y2="0%">
                   <stop offset="0%" stopColor="hsla(217, 91%, 60%, 0)" />
-                  <stop offset="20%" stopColor="hsla(217, 91%, 60%, 0.4)" />
-                  <stop offset="50%" stopColor="hsla(45, 97%, 64%, 0.6)" />
-                  <stop offset="80%" stopColor="hsla(217, 91%, 60%, 0.4)" />
+                  <stop offset="15%" stopColor="hsla(217, 91%, 60%, 0.3)" />
+                  <stop offset="50%" stopColor="hsla(45, 97%, 64%, 0.5)" />
+                  <stop offset="85%" stopColor="hsla(217, 91%, 60%, 0.3)" />
                   <stop offset="100%" stopColor="hsla(217, 91%, 60%, 0)" />
                 </linearGradient>
                 <filter id="arcBlur">
-                  <feGaussianBlur stdDeviation="3" />
+                  <feGaussianBlur stdDeviation="4" />
                 </filter>
                 <filter id="sparkGlow">
-                  <feGaussianBlur stdDeviation="4" />
+                  <feGaussianBlur stdDeviation="5" />
                 </filter>
               </defs>
 
-              {/* Outer soft glow */}
+              {/* Soft outer glow */}
               <motion.path
-                d="M 50 180 Q 350 -20 650 180"
+                d="M 0 150 Q 600 -30 1200 150"
                 stroke="url(#arcGlow)"
-                strokeWidth="6"
+                strokeWidth="8"
                 strokeLinecap="round"
                 fill="none"
                 filter="url(#arcBlur)"
                 initial={{ pathLength: 0, opacity: 0 }}
-                animate={phase >= 1 ? { pathLength: 1, opacity: 0.6 } : {}}
-                transition={{ duration: 2, ease: "easeInOut", delay: 0.3 }}
+                animate={phase >= 1 ? { pathLength: 1, opacity: 0.5 } : {}}
+                transition={{ duration: 2.5, ease: "easeInOut", delay: 0.3 }}
               />
 
               {/* Main arc line */}
               <motion.path
-                d="M 50 180 Q 350 -20 650 180"
+                d="M 0 150 Q 600 -30 1200 150"
                 stroke="url(#arcGlow)"
-                strokeWidth="2"
+                strokeWidth="1.5"
                 strokeLinecap="round"
                 fill="none"
                 initial={{ pathLength: 0, opacity: 0 }}
                 animate={phase >= 1 ? { pathLength: 1, opacity: 1 } : {}}
-                transition={{ duration: 2, ease: "easeInOut", delay: 0.2 }}
+                transition={{ duration: 2.5, ease: "easeInOut", delay: 0.2 }}
               />
 
-              {/* Traveling spark dot */}
+              {/* Traveling spark — goes once left to right then stops */}
               {phase >= 1 && (
-                <motion.circle
-                  r="4"
-                  fill="white"
-                  filter="url(#sparkGlow)"
-                  initial={{ offsetDistance: "0%" }}
-                  animate={{ offsetDistance: ["0%", "100%"] }}
-                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                  style={{
-                    offsetPath: `path("M 50 180 Q 350 -20 650 180")`,
-                    offsetRotate: "0deg",
-                  }}
-                />
-              )}
-              {phase >= 1 && (
-                <motion.circle
-                  r="2"
-                  fill="hsla(45, 97%, 74%, 1)"
-                  initial={{ offsetDistance: "0%" }}
-                  animate={{ offsetDistance: ["0%", "100%"] }}
-                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                  style={{
-                    offsetPath: `path("M 50 180 Q 350 -20 650 180")`,
-                    offsetRotate: "0deg",
-                  }}
-                />
+                <>
+                  <motion.circle
+                    r="5"
+                    fill="white"
+                    filter="url(#sparkGlow)"
+                    style={{
+                      offsetPath: `path("M 0 150 Q 600 -30 1200 150")`,
+                      offsetRotate: "0deg",
+                    }}
+                    initial={{ offsetDistance: "0%", opacity: 0 }}
+                    animate={{ offsetDistance: "100%", opacity: [0, 1, 1, 0.8] }}
+                    transition={{ duration: 3, ease: "easeInOut", delay: 0.5 }}
+                  />
+                  <motion.circle
+                    r="2.5"
+                    fill="hsla(45, 97%, 74%, 1)"
+                    style={{
+                      offsetPath: `path("M 0 150 Q 600 -30 1200 150")`,
+                      offsetRotate: "0deg",
+                    }}
+                    initial={{ offsetDistance: "0%", opacity: 0 }}
+                    animate={{ offsetDistance: "100%", opacity: [0, 1, 1, 0] }}
+                    transition={{ duration: 3, ease: "easeInOut", delay: 0.5 }}
+                  />
+                </>
               )}
             </svg>
           </div>
@@ -239,26 +227,28 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
                   transition={{ duration: 0.8 }}
                 >
                   <motion.p
-                    className="text-lg md:text-xl tracking-widest uppercase font-mono"
-                    initial={{ opacity: 0, letterSpacing: "0.6em" }}
+                    className="text-lg md:text-2xl tracking-widest uppercase font-mono"
+                    initial={{ 
+                      opacity: 0, 
+                      letterSpacing: "0.6em",
+                      color: "hsla(0, 0%, 50%, 1)",
+                      scale: 0.9,
+                    }}
                     animate={{
                       opacity: 1,
                       letterSpacing: "0.3em",
-                      color: [
-                        "hsla(0, 0%, 60%, 1)",
-                        "hsla(217, 91%, 70%, 1)",
-                        "hsla(45, 97%, 64%, 1)",
-                        "hsla(217, 91%, 80%, 1)",
-                      ],
+                      color: "hsla(217, 91%, 70%, 1)",
+                      scale: 1,
                     }}
                     transition={{
                       opacity: { duration: 0.6 },
-                      letterSpacing: { duration: 1 },
-                      color: { duration: 4, repeat: Infinity, ease: "easeInOut" },
+                      letterSpacing: { duration: 1.2 },
+                      color: { duration: 2.5, ease: "easeOut" },
+                      scale: { duration: 2.5, ease: "easeOut" },
                     }}
                     whileHover={{
-                      scale: 1.05,
-                      textShadow: "0 0 20px hsla(45, 97%, 64%, 0.5)",
+                      scale: 1.08,
+                      textShadow: "0 0 24px hsla(217, 91%, 70%, 0.5)",
                     }}
                   >
                     Choose yours.
@@ -266,10 +256,11 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
                   <motion.div
                     className="w-16 h-[1px] mx-auto mt-3"
                     style={{
-                      background: "linear-gradient(90deg, transparent, hsla(45, 97%, 64%, 0.6), transparent)",
+                      background: "linear-gradient(90deg, transparent, hsla(217, 91%, 70%, 0.6), transparent)",
                     }}
-                    animate={{ opacity: [0.3, 1, 0.3] }}
-                    transition={{ duration: 2, repeat: Infinity }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 1.5, delay: 0.5 }}
                   />
                 </motion.button>
               )}
