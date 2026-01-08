@@ -14,7 +14,180 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      adornments: {
+        Row: {
+          category: string | null
+          created_at: string
+          description: string | null
+          display_order: number | null
+          id: string
+          image_url: string | null
+          is_featured: boolean | null
+          materials: string | null
+          title: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          id?: string
+          image_url?: string | null
+          is_featured?: boolean | null
+          materials?: string | null
+          title: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          id?: string
+          image_url?: string | null
+          is_featured?: boolean | null
+          materials?: string | null
+          title?: string
+        }
+        Relationships: []
+      }
+      bird_logs: {
+        Row: {
+          common_name: string | null
+          created_at: string
+          description: string | null
+          habitat: string | null
+          id: string
+          image_url: string | null
+          location: string | null
+          sighting_date: string | null
+          species_name: string
+        }
+        Insert: {
+          common_name?: string | null
+          created_at?: string
+          description?: string | null
+          habitat?: string | null
+          id?: string
+          image_url?: string | null
+          location?: string | null
+          sighting_date?: string | null
+          species_name: string
+        }
+        Update: {
+          common_name?: string | null
+          created_at?: string
+          description?: string | null
+          habitat?: string | null
+          id?: string
+          image_url?: string | null
+          location?: string | null
+          sighting_date?: string | null
+          species_name?: string
+        }
+        Relationships: []
+      }
+      gallery_photos: {
+        Row: {
+          category: string | null
+          created_at: string
+          description: string | null
+          display_order: number | null
+          id: string
+          image_url: string
+          is_featured: boolean | null
+          location: string | null
+          title: string | null
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          id?: string
+          image_url: string
+          is_featured?: boolean | null
+          location?: string | null
+          title?: string | null
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          id?: string
+          image_url?: string
+          is_featured?: boolean | null
+          location?: string | null
+          title?: string | null
+        }
+        Relationships: []
+      }
+      poems: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          is_featured: boolean | null
+          language: string
+          theme: string | null
+          title: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          is_featured?: boolean | null
+          language?: string
+          theme?: string | null
+          title: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          is_featured?: boolean | null
+          language?: string
+          theme?: string | null
+          title?: string
+        }
+        Relationships: []
+      }
+      thoughts: {
+        Row: {
+          category: string | null
+          content: string
+          cover_image_url: string | null
+          created_at: string
+          id: string
+          is_published: boolean | null
+          tags: string[] | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string | null
+          content: string
+          cover_image_url?: string | null
+          created_at?: string
+          id?: string
+          is_published?: boolean | null
+          tags?: string[] | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string | null
+          content?: string
+          cover_image_url?: string | null
+          created_at?: string
+          id?: string
+          is_published?: boolean | null
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
