@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
+import PageTransition from "@/components/PageTransition";
 import { supabase } from "@/integrations/supabase/client";
 import { Bird, ArrowLeft, MapPin, TreePine } from "lucide-react";
 
@@ -30,6 +31,7 @@ const FieldNotes = () => {
   }, []);
 
   return (
+    <PageTransition>
     <div className="min-h-screen bg-background">
       <Navbar />
       <div className="max-w-4xl mx-auto px-6 py-24">
@@ -57,8 +59,9 @@ const FieldNotes = () => {
                 className="relative border border-accent/10 rounded-sm p-6 md:p-8 hover:border-accent/20 transition-all duration-300"
                 style={{ background: "hsla(30, 15%, 12%, 0.25)" }}
                 initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: i * 0.1 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ delay: i * 0.1, duration: 0.5 }}
               >
                 {/* Timeline dot */}
                 <div className="absolute -left-2 top-8 w-4 h-4 rounded-full border-2 border-accent/30 bg-background" />
@@ -112,6 +115,7 @@ const FieldNotes = () => {
         )}
       </div>
     </div>
+    </PageTransition>
   );
 };
 

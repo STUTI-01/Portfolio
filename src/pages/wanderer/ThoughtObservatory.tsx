@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
+import PageTransition from "@/components/PageTransition";
 import { supabase } from "@/integrations/supabase/client";
 import { BookOpen, ArrowLeft, Tag } from "lucide-react";
 
@@ -41,6 +42,7 @@ const ThoughtObservatory = () => {
   const filtered = filter === "all" ? thoughts : thoughts.filter((t) => t.category === filter);
 
   return (
+    <PageTransition>
     <div className="min-h-screen bg-background">
       <Navbar />
       <div className="max-w-4xl mx-auto px-6 py-24">
@@ -82,8 +84,9 @@ const ThoughtObservatory = () => {
                 className="border border-accent/10 rounded-sm p-6 md:p-8 cursor-pointer hover:border-accent/20 transition-all duration-300"
                 style={{ background: "hsla(30, 15%, 12%, 0.25)" }}
                 initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.08 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ delay: i * 0.08, duration: 0.5 }}
                 onClick={() => setExpanded(expanded === thought.id ? null : thought.id)}
               >
                 <div className="flex items-start justify-between gap-4">
@@ -122,6 +125,7 @@ const ThoughtObservatory = () => {
         )}
       </div>
     </div>
+    </PageTransition>
   );
 };
 
