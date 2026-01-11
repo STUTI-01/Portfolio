@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
+import PageTransition from "@/components/PageTransition";
 import { supabase } from "@/integrations/supabase/client";
 import { Camera, ArrowLeft, MapPin, Sparkles } from "lucide-react";
 
@@ -34,6 +35,7 @@ const ThroughMyLens = () => {
   const filtered = filter === "all" ? photos : photos.filter((p) => p.category === filter);
 
   return (
+    <PageTransition>
     <div className="min-h-screen bg-background">
       <Navbar />
       <div className="max-w-6xl mx-auto px-6 py-24">
@@ -75,8 +77,9 @@ const ThroughMyLens = () => {
                 className="break-inside-avoid group cursor-pointer border border-accent/10 rounded-sm overflow-hidden hover:border-accent/25 transition-all duration-300"
                 style={{ background: "hsla(30, 15%, 12%, 0.25)" }}
                 initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.06 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ delay: i * 0.06, duration: 0.5 }}
                 onClick={() => setSelectedPhoto(photo)}
               >
                 {photo.image_url !== "/placeholder.svg" ? (
@@ -131,6 +134,7 @@ const ThroughMyLens = () => {
         )}
       </div>
     </div>
+    </PageTransition>
   );
 };
 

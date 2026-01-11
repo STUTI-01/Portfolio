@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
+import PageTransition from "@/components/PageTransition";
 import { supabase } from "@/integrations/supabase/client";
 import { PenTool, ArrowLeft, Sparkles } from "lucide-react";
 
@@ -32,6 +33,7 @@ const VerseVault = () => {
   const filtered = langFilter === "all" ? poems : poems.filter((p) => p.language === langFilter);
 
   return (
+    <PageTransition>
     <div className="min-h-screen bg-background">
       <Navbar />
       <div className="max-w-4xl mx-auto px-6 py-24">
@@ -76,8 +78,9 @@ const VerseVault = () => {
                 className="relative border border-accent/10 rounded-sm p-8 md:p-10"
                 style={{ background: "hsla(30, 15%, 12%, 0.25)" }}
                 initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.1 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ delay: i * 0.1, duration: 0.5 }}
               >
                 <div className="flex items-start justify-between mb-4">
                   <div>
@@ -97,6 +100,7 @@ const VerseVault = () => {
         )}
       </div>
     </div>
+    </PageTransition>
   );
 };
 

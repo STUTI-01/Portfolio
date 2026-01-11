@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
+import PageTransition from "@/components/PageTransition";
 import { supabase } from "@/integrations/supabase/client";
 import { Gem, ArrowLeft, Sparkles } from "lucide-react";
 
@@ -36,6 +37,7 @@ const AdornmentArchive = () => {
   const filtered = filter === "all" ? adornments : adornments.filter((a) => a.category === filter);
 
   return (
+    <PageTransition>
     <div className="min-h-screen bg-background">
       <Navbar />
       <div className="max-w-6xl mx-auto px-6 py-24">
@@ -83,8 +85,9 @@ const AdornmentArchive = () => {
                 className="group border border-accent/10 rounded-sm overflow-hidden transition-all duration-300 hover:border-accent/25"
                 style={{ background: "hsla(30, 15%, 12%, 0.25)" }}
                 initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.08 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ delay: i * 0.08, duration: 0.5 }}
               >
                 {item.image_url && item.image_url !== "/placeholder.svg" ? (
                   <div className="aspect-square overflow-hidden">
@@ -111,6 +114,7 @@ const AdornmentArchive = () => {
         )}
       </div>
     </div>
+    </PageTransition>
   );
 };
 
