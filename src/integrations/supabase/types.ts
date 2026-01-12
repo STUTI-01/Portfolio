@@ -20,6 +20,7 @@ export type Database = {
           created_at: string
           description: string | null
           display_order: number | null
+          footnote: string | null
           id: string
           image_url: string | null
           is_featured: boolean | null
@@ -31,6 +32,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           display_order?: number | null
+          footnote?: string | null
           id?: string
           image_url?: string | null
           is_featured?: boolean | null
@@ -42,6 +44,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           display_order?: number | null
+          footnote?: string | null
           id?: string
           image_url?: string | null
           is_featured?: boolean | null
@@ -55,6 +58,7 @@ export type Database = {
           common_name: string | null
           created_at: string
           description: string | null
+          footnote: string | null
           habitat: string | null
           id: string
           image_url: string | null
@@ -66,6 +70,7 @@ export type Database = {
           common_name?: string | null
           created_at?: string
           description?: string | null
+          footnote?: string | null
           habitat?: string | null
           id?: string
           image_url?: string | null
@@ -77,6 +82,7 @@ export type Database = {
           common_name?: string | null
           created_at?: string
           description?: string | null
+          footnote?: string | null
           habitat?: string | null
           id?: string
           image_url?: string | null
@@ -86,12 +92,43 @@ export type Database = {
         }
         Relationships: []
       }
+      detail_images: {
+        Row: {
+          caption: string | null
+          created_at: string
+          display_order: number | null
+          entity_id: string
+          entity_type: string
+          id: string
+          image_url: string
+        }
+        Insert: {
+          caption?: string | null
+          created_at?: string
+          display_order?: number | null
+          entity_id: string
+          entity_type: string
+          id?: string
+          image_url: string
+        }
+        Update: {
+          caption?: string | null
+          created_at?: string
+          display_order?: number | null
+          entity_id?: string
+          entity_type?: string
+          id?: string
+          image_url?: string
+        }
+        Relationships: []
+      }
       gallery_photos: {
         Row: {
           category: string | null
           created_at: string
           description: string | null
           display_order: number | null
+          footnote: string | null
           id: string
           image_url: string
           is_featured: boolean | null
@@ -103,6 +140,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           display_order?: number | null
+          footnote?: string | null
           id?: string
           image_url: string
           is_featured?: boolean | null
@@ -114,6 +152,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           display_order?: number | null
+          footnote?: string | null
           id?: string
           image_url?: string
           is_featured?: boolean | null
@@ -158,6 +197,7 @@ export type Database = {
           content: string
           cover_image_url: string | null
           created_at: string
+          footnote: string | null
           id: string
           is_published: boolean | null
           tags: string[] | null
@@ -169,6 +209,7 @@ export type Database = {
           content: string
           cover_image_url?: string | null
           created_at?: string
+          footnote?: string | null
           id?: string
           is_published?: boolean | null
           tags?: string[] | null
@@ -180,6 +221,7 @@ export type Database = {
           content?: string
           cover_image_url?: string | null
           created_at?: string
+          footnote?: string | null
           id?: string
           is_published?: boolean | null
           tags?: string[] | null

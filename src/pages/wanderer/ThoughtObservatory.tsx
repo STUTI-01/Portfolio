@@ -26,7 +26,6 @@ const categoryColors: Record<string, string> = {
 const ThoughtObservatory = () => {
   const [thoughts, setThoughts] = useState<Thought[]>([]);
   const [filter, setFilter] = useState("all");
-  const [expanded, setExpanded] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -81,13 +80,12 @@ const ThoughtObservatory = () => {
             {filtered.map((thought, i) => (
               <motion.article
                 key={thought.id}
-                className="border border-accent/10 rounded-sm p-6 md:p-8 cursor-pointer hover:border-accent/20 transition-all duration-300"
+                className="border border-accent/10 rounded-sm p-6 md:p-8 hover:border-accent/20 transition-all duration-300"
                 style={{ background: "hsla(30, 15%, 12%, 0.25)" }}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
                 transition={{ delay: i * 0.08, duration: 0.5 }}
-                onClick={() => setExpanded(expanded === thought.id ? null : thought.id)}
               >
                 <div className="flex items-start justify-between gap-4">
                   <div>
@@ -103,7 +101,7 @@ const ThoughtObservatory = () => {
 
                 <div className="w-8 h-[1px] bg-accent/20 my-4" />
 
-                <p className={`text-sm text-muted-foreground/70 leading-relaxed ${expanded === thought.id ? "" : "line-clamp-3"}`}>
+                <p className="text-sm text-muted-foreground/70 leading-relaxed line-clamp-3">
                   {thought.content}
                 </p>
 
@@ -116,9 +114,9 @@ const ThoughtObservatory = () => {
                   </div>
                 )}
 
-                <span className="text-[10px] font-mono text-accent/40 mt-3 inline-block">
-                  {expanded === thought.id ? "Click to collapse" : "Click to read more →"}
-                </span>
+                <Link to={`/wanderer/thoughts/${thought.id}`} className="text-[10px] font-mono text-accent/50 hover:text-accent transition-colors mt-3 inline-block">
+                  Read more →
+                </Link>
               </motion.article>
             ))}
           </div>
