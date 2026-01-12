@@ -122,6 +122,78 @@ export type Database = {
         }
         Relationships: []
       }
+      education: {
+        Row: {
+          created_at: string
+          degree: string
+          display_order: number | null
+          id: string
+          institution: string
+          score: string | null
+          year: string
+        }
+        Insert: {
+          created_at?: string
+          degree: string
+          display_order?: number | null
+          id?: string
+          institution: string
+          score?: string | null
+          year: string
+        }
+        Update: {
+          created_at?: string
+          degree?: string
+          display_order?: number | null
+          id?: string
+          institution?: string
+          score?: string | null
+          year?: string
+        }
+        Relationships: []
+      }
+      experiences: {
+        Row: {
+          company: string
+          created_at: string
+          description: string | null
+          display_order: number | null
+          id: string
+          role: string
+          stats: Json | null
+          tech_stack: string[] | null
+          timeline: string
+          type: string
+          type_color: string
+        }
+        Insert: {
+          company: string
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          id?: string
+          role: string
+          stats?: Json | null
+          tech_stack?: string[] | null
+          timeline: string
+          type?: string
+          type_color?: string
+        }
+        Update: {
+          company?: string
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          id?: string
+          role?: string
+          stats?: Json | null
+          tech_stack?: string[] | null
+          timeline?: string
+          type?: string
+          type_color?: string
+        }
+        Relationships: []
+      }
       gallery_photos: {
         Row: {
           category: string | null
@@ -161,6 +233,27 @@ export type Database = {
         }
         Relationships: []
       }
+      honors: {
+        Row: {
+          created_at: string
+          display_order: number | null
+          id: string
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number | null
+          id?: string
+          title: string
+        }
+        Update: {
+          created_at?: string
+          display_order?: number | null
+          id?: string
+          title?: string
+        }
+        Relationships: []
+      }
       poems: {
         Row: {
           content: string
@@ -188,6 +281,66 @@ export type Database = {
           language?: string
           theme?: string | null
           title?: string
+        }
+        Relationships: []
+      }
+      projects: {
+        Row: {
+          created_at: string
+          demo_url: string | null
+          display_order: number | null
+          github_url: string | null
+          id: string
+          metrics: string | null
+          summary: string | null
+          tech_stack: string[] | null
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          demo_url?: string | null
+          display_order?: number | null
+          github_url?: string | null
+          id?: string
+          metrics?: string | null
+          summary?: string | null
+          tech_stack?: string[] | null
+          title: string
+        }
+        Update: {
+          created_at?: string
+          demo_url?: string | null
+          display_order?: number | null
+          github_url?: string | null
+          id?: string
+          metrics?: string | null
+          summary?: string | null
+          tech_stack?: string[] | null
+          title?: string
+        }
+        Relationships: []
+      }
+      skill_categories: {
+        Row: {
+          category: string
+          created_at: string
+          display_order: number | null
+          id: string
+          skills: string[] | null
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          display_order?: number | null
+          id?: string
+          skills?: string[] | null
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          display_order?: number | null
+          id?: string
+          skills?: string[] | null
         }
         Relationships: []
       }

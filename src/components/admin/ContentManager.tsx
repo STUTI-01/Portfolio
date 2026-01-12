@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Plus, Pencil, Trash2, Loader2, Save, X, Image as ImageIcon } from "lucide-react";
 import { adminApi } from "@/lib/adminApi";
 import ImageUpload from "@/components/admin/ImageUpload";
+import MultiImageUpload from "@/components/admin/MultiImageUpload";
+import { supabase } from "@/integrations/supabase/client";
 
 export interface FieldConfig {
   key: string;
@@ -19,21 +21,40 @@ interface ContentManagerProps {
   title: string;
   displayField: string;
   imageField?: string;
+  hasGallery?: boolean;
+  galleryEntityType?: string;
 }
 
-const ContentManager = ({ table, fields, title, displayField, imageField }: ContentManagerProps) => {
+const ContentManager = ({ table, fields, title, displayField, imageField, hasGallery, galleryEntityType }: ContentManagerProps) => {
   const [items, setItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState<any | null>(null);
   const [isNew, setIsNew] = useState(false);
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState<string | null>(null);
+  const [galleryImages, setGalleryImages] = useState<Record<string, any[]>>({});
 
   const fetchItems = async () => {
     setLoading(true);
     try {
       const data = await adminApi({ action: "list", table });
       setItems(data);
+      // Fetch gallery images for items with gallery support
+      if (hasGallery && galleryEntityType && data.length > 0) {
+        const { data: images } = await supabase
+          .from("detail_images")
+          .select("*")
+          .eq("entity_type", galleryEntityType)
+          .order("display_order");
+        if (images) {
+          const grouped: Record<string, any[]> = {};
+          images.forEach((img: any) => {
+            if (!grouped[img.entity_id]) grouped[img.entity_id] = [];
+            grouped[img.entity_id].push(img);
+          });
+          setGalleryImages(grouped);
+        }
+      }
     } catch (err: any) {
       alert("Failed to load: " + err.message);
     }
@@ -236,6 +257,18 @@ const ContentManager = ({ table, fields, title, displayField, imageField }: Cont
               ))}
             </div>
 
+            {/* Multi-image gallery upload (shown when editing existing item) */}
+            {hasGallery && galleryEntityType && !isNew && editing?.id && (
+              <div className="border-t border-border/30 pt-4 mt-4">
+                <MultiImageUpload
+                  entityType={galleryEntityType}
+                  entityId={editing.id}
+                  images={galleryImages[editing.id] || []}
+                  onRefresh={fetchItems}
+                />
+              </div>
+            )}
+
             <div className="flex gap-3 pt-2">
               <button
                 onClick={handleSave}
@@ -290,6 +323,11 @@ const ContentManager = ({ table, fields, title, displayField, imageField }: Cont
                 </p>
                 <p className="text-[10px] font-mono text-muted-foreground/50">
                   {new Date(item.created_at).toLocaleDateString()}
+                  {hasGallery && galleryImages[item.id]?.length > 0 && (
+                    <span className="ml-2 text-accent/50">
+                      · {galleryImages[item.id].length} gallery image{galleryImages[item.id].length > 1 ? "s" : ""}
+                    </span>
+                  )}
                 </p>
               </div>
               <div className="flex items-center gap-2 flex-shrink-0">
