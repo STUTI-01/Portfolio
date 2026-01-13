@@ -3,7 +3,7 @@ import { createClient } from "jsr:@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
 const ADMIN_PASSCODE = "282108";
@@ -14,6 +14,57 @@ Deno.serve(async (req) => {
   }
 
   try {
+    const contentType = req.headers.get("content-type") || "";
+
+    const supabase = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
+    );
+
+    // Handle file uploads via multipart form
+    if (contentType.includes("multipart/form-data")) {
+      const formData = await req.formData();
+      const passcode = formData.get("passcode") as string;
+      if (passcode !== ADMIN_PASSCODE) {
+        return new Response(JSON.stringify({ error: "Unauthorized" }), {
+          status: 401,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
+      const file = formData.get("file") as File;
+      const folder = (formData.get("folder") as string) || "uploads";
+
+      if (!file) {
+        return new Response(JSON.stringify({ error: "No file provided" }), {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
+      const ext = file.name.split(".").pop() || "jpg";
+      const fileName = `${folder}/${crypto.randomUUID()}.${ext}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("wanderer-media")
+        .upload(fileName, file, {
+          contentType: file.type,
+          upsert: false,
+        });
+
+      if (uploadError) throw uploadError;
+
+      const { data: urlData } = supabase.storage
+        .from("wanderer-media")
+        .getPublicUrl(fileName);
+
+      return new Response(
+        JSON.stringify({ url: urlData.publicUrl, path: fileName }),
+        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // Handle JSON requests (CRUD)
     const { passcode, action, table, data, id } = await req.json();
 
     if (passcode !== ADMIN_PASSCODE) {
@@ -23,7 +74,14 @@ Deno.serve(async (req) => {
       });
     }
 
-    const allowedTables = ["adornments", "thoughts", "bird_logs", "gallery_photos", "poems"];
+    const allowedTables = [
+      "adornments",
+      "thoughts",
+      "bird_logs",
+      "gallery_photos",
+      "poems",
+      "detail_images",
+    ];
     if (!allowedTables.includes(table)) {
       return new Response(JSON.stringify({ error: "Invalid table" }), {
         status: 400,
@@ -31,22 +89,26 @@ Deno.serve(async (req) => {
       });
     }
 
-    const supabase = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
-    );
-
     let result;
 
     switch (action) {
       case "create": {
-        const { data: created, error } = await supabase.from(table).insert(data).select().single();
+        const { data: created, error } = await supabase
+          .from(table)
+          .insert(data)
+          .select()
+          .single();
         if (error) throw error;
         result = created;
         break;
       }
       case "update": {
-        const { data: updated, error } = await supabase.from(table).update(data).eq("id", id).select().single();
+        const { data: updated, error } = await supabase
+          .from(table)
+          .update(data)
+          .eq("id", id)
+          .select()
+          .single();
         if (error) throw error;
         result = updated;
         break;
@@ -58,7 +120,10 @@ Deno.serve(async (req) => {
         break;
       }
       case "list": {
-        const { data: list, error } = await supabase.from(table).select("*").order("created_at", { ascending: false });
+        const { data: list, error } = await supabase
+          .from(table)
+          .select("*")
+          .order("created_at", { ascending: false });
         if (error) throw error;
         result = list;
         break;
