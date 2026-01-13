@@ -103,10 +103,13 @@ const AdornmentArchive = () => {
                     <h3 className="font-poetry font-bold text-foreground group-hover:text-accent transition-colors">{item.title}</h3>
                     {item.is_featured && <Sparkles className="w-3.5 h-3.5 text-accent/60" />}
                   </div>
-                  {item.description && <p className="text-sm text-muted-foreground/70 leading-relaxed">{item.description}</p>}
+                  {item.description && <p className="text-sm text-muted-foreground/70 leading-relaxed line-clamp-2">{item.description}</p>}
                   {item.materials && (
                     <p className="text-[10px] font-mono text-accent/50 tracking-wider uppercase">{item.materials}</p>
                   )}
+                  <Link to={`/wanderer/adornments/${item.id}`} className="text-[10px] font-mono text-accent/50 hover:text-accent transition-colors inline-block mt-1">
+                    Read more →
+                  </Link>
                 </div>
               </motion.div>
             ))}

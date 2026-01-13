@@ -104,9 +104,12 @@ const FieldNotes = () => {
                     {log.description && (
                       <>
                         <div className="w-6 h-[1px] bg-accent/15" />
-                        <p className="text-sm text-muted-foreground/70 leading-relaxed font-poetry italic">{log.description}</p>
+                        <p className="text-sm text-muted-foreground/70 leading-relaxed font-poetry italic line-clamp-2">{log.description}</p>
                       </>
                     )}
+                    <Link to={`/wanderer/birds/${log.id}`} className="text-[10px] font-mono text-accent/50 hover:text-accent transition-colors inline-block mt-1">
+                      Read more →
+                    </Link>
                   </div>
                 </div>
               </motion.div>

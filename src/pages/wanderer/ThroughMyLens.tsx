@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import PageTransition from "@/components/PageTransition";
 import { supabase } from "@/integrations/supabase/client";
-import { Camera, ArrowLeft, MapPin, Sparkles } from "lucide-react";
+import { Camera, ArrowLeft, MapPin } from "lucide-react";
 
 interface Photo {
   id: string;
@@ -19,7 +19,7 @@ interface Photo {
 const ThroughMyLens = () => {
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [filter, setFilter] = useState("all");
-  const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
+  
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -74,63 +74,37 @@ const ThroughMyLens = () => {
             {filtered.map((photo, i) => (
               <motion.div
                 key={photo.id}
-                className="break-inside-avoid group cursor-pointer border border-accent/10 rounded-sm overflow-hidden hover:border-accent/25 transition-all duration-300"
+                className="break-inside-avoid group border border-accent/10 rounded-sm overflow-hidden hover:border-accent/25 transition-all duration-300"
                 style={{ background: "hsla(30, 15%, 12%, 0.25)" }}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
                 transition={{ delay: i * 0.06, duration: 0.5 }}
-                onClick={() => setSelectedPhoto(photo)}
               >
-                {photo.image_url !== "/placeholder.svg" ? (
-                  <img src={photo.image_url} alt={photo.title || ""} className="w-full group-hover:scale-105 transition-transform duration-500" />
-                ) : (
-                  <div className="aspect-[4/3] flex items-center justify-center" style={{ background: "hsla(30, 15%, 15%, 0.4)" }}>
-                    <Camera className="w-10 h-10 text-accent/15" />
-                  </div>
-                )}
-                <div className="p-4">
-                  {photo.title && <h3 className="font-poetry font-bold text-sm text-foreground group-hover:text-accent transition-colors">{photo.title}</h3>}
-                  {photo.location && (
-                    <div className="flex items-center gap-1 mt-1">
-                      <MapPin className="w-3 h-3 text-accent/40" />
-                      <span className="text-[10px] font-mono text-muted-foreground/50">{photo.location}</span>
+                <Link to={`/wanderer/gallery/${photo.id}`} className="block cursor-pointer">
+                  {photo.image_url !== "/placeholder.svg" ? (
+                    <img src={photo.image_url} alt={photo.title || ""} className="w-full group-hover:scale-105 transition-transform duration-500" />
+                  ) : (
+                    <div className="aspect-[4/3] flex items-center justify-center" style={{ background: "hsla(30, 15%, 15%, 0.4)" }}>
+                      <Camera className="w-10 h-10 text-accent/15" />
                     </div>
                   )}
-                </div>
+                  <div className="p-4">
+                    {photo.title && <h3 className="font-poetry font-bold text-sm text-foreground group-hover:text-accent transition-colors">{photo.title}</h3>}
+                    {photo.location && (
+                      <div className="flex items-center gap-1 mt-1">
+                        <MapPin className="w-3 h-3 text-accent/40" />
+                        <span className="text-[10px] font-mono text-muted-foreground/50">{photo.location}</span>
+                      </div>
+                    )}
+                    <span className="text-[10px] font-mono text-accent/50 inline-block mt-1">
+                      View details →
+                    </span>
+                  </div>
+                </Link>
               </motion.div>
             ))}
           </div>
-        )}
-
-        {/* Lightbox */}
-        {selectedPhoto && (
-          <motion.div
-            className="fixed inset-0 z-50 bg-background/95 flex items-center justify-center p-6 cursor-pointer"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            onClick={() => setSelectedPhoto(null)}
-          >
-            <motion.div className="max-w-4xl w-full" initial={{ scale: 0.9 }} animate={{ scale: 1 }}>
-              {selectedPhoto.image_url !== "/placeholder.svg" ? (
-                <img src={selectedPhoto.image_url} alt={selectedPhoto.title || ""} className="w-full rounded-sm" />
-              ) : (
-                <div className="aspect-video flex items-center justify-center rounded-sm" style={{ background: "hsla(30, 15%, 15%, 0.4)" }}>
-                  <Camera className="w-16 h-16 text-accent/15" />
-                </div>
-              )}
-              <div className="mt-4 text-center">
-                {selectedPhoto.title && <h2 className="font-poetry text-xl font-bold text-foreground">{selectedPhoto.title}</h2>}
-                {selectedPhoto.description && <p className="text-sm text-muted-foreground/70 mt-1">{selectedPhoto.description}</p>}
-                {selectedPhoto.location && (
-                  <div className="flex items-center justify-center gap-1 mt-2">
-                    <MapPin className="w-3 h-3 text-accent/40" />
-                    <span className="text-xs font-mono text-muted-foreground/50">{selectedPhoto.location}</span>
-                  </div>
-                )}
-              </div>
-            </motion.div>
-          </motion.div>
         )}
       </div>
     </div>
