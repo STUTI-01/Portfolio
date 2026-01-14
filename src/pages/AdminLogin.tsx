@@ -15,6 +15,7 @@ const AdminLogin = () => {
     e.preventDefault();
     if (code === PASSCODE) {
       sessionStorage.setItem("admin_auth", "true");
+      sessionStorage.setItem("admin_passcode", code);
       navigate("/admin");
     } else {
       setError("Incorrect passcode");

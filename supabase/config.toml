@@ -1,1 +1,4 @@
 project_id = "xivhdquzguvowszuxsux"
+
+[functions.wanderer-admin]
+verify_jwt = false
