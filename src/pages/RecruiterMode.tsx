@@ -71,12 +71,13 @@ const RecruiterMode = () => {
   useEffect(() => {
     const fetchAll = async () => {
       setLoading(true);
+      const client = supabase as any;
       const [expRes, projRes, eduRes, skillRes, honorRes] = await Promise.all([
-        supabase.from("experiences").select("*").order("display_order"),
-        supabase.from("projects").select("*").order("display_order"),
-        supabase.from("education").select("*").order("display_order"),
-        supabase.from("skill_categories").select("*").order("display_order"),
-        supabase.from("honors").select("*").order("display_order"),
+        client.from("experiences").select("*").order("display_order"),
+        client.from("projects").select("*").order("display_order"),
+        client.from("education").select("*").order("display_order"),
+        client.from("skill_categories").select("*").order("display_order"),
+        client.from("honors").select("*").order("display_order"),
       ]);
       if (expRes.data) setExperiences(expRes.data);
       if (projRes.data) setProjects(projRes.data);
