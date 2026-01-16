@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import ContentManager, { FieldConfig } from "@/components/admin/ContentManager";
-import { LogOut, Gem, PenTool, Camera, BookOpen, Bird, Image, Briefcase, FolderOpen, GraduationCap, Award, Wrench } from "lucide-react";
+import { LogOut, Gem, PenTool, Camera, BookOpen, Bird, Image, Briefcase, FolderOpen, GraduationCap, Award, Wrench, FileText, Settings, BarChart3 } from "lucide-react";
 
 const wandererTabs = [
   { key: "adornments", label: "Jewellery", icon: Gem },
@@ -20,6 +20,9 @@ const recruiterTabs = [
   { key: "education", label: "Education", icon: GraduationCap },
   { key: "skill_categories", label: "Skills", icon: Wrench },
   { key: "honors", label: "Honors", icon: Award },
+  { key: "resumes", label: "Resumes", icon: FileText },
+  { key: "site_content", label: "Site Content", icon: Settings },
+  { key: "site_stats", label: "Stats", icon: BarChart3 },
 ];
 
 const fieldConfigs: Record<string, { fields: FieldConfig[]; displayField: string; imageField?: string; hasGallery?: boolean; galleryEntityType?: string }> = {
@@ -155,6 +158,31 @@ const fieldConfigs: Record<string, { fields: FieldConfig[]; displayField: string
     displayField: "title",
     fields: [
       { key: "title", label: "Honor/Certification", type: "text", required: true },
+      { key: "display_order", label: "Display Order", type: "number" },
+    ],
+  },
+  resumes: {
+    displayField: "role_label",
+    fields: [
+      { key: "role_label", label: "Role Label", type: "text", required: true },
+      { key: "file_url", label: "Resume PDF", type: "image", imageFolder: "resumes" },
+      { key: "display_order", label: "Display Order", type: "number" },
+    ],
+  },
+  site_content: {
+    displayField: "key",
+    fields: [
+      { key: "key", label: "Key", type: "text", required: true },
+      { key: "value", label: "Value", type: "textarea", required: true },
+    ],
+  },
+  site_stats: {
+    displayField: "label",
+    fields: [
+      { key: "icon", label: "Icon (Terminal/Zap/Globe/ArrowUp)", type: "text", required: true },
+      { key: "value", label: "Value", type: "text", required: true },
+      { key: "label", label: "Label", type: "text", required: true },
+      { key: "color", label: "Color Class", type: "text" },
       { key: "display_order", label: "Display Order", type: "number" },
     ],
   },

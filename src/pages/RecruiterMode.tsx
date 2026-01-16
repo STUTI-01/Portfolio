@@ -62,6 +62,7 @@ const RecruiterMode = () => {
   const [educationList, setEducationList] = useState<Education[]>([]);
   const [skillCategories, setSkillCategories] = useState<SkillCategory[]>([]);
   const [honors, setHonors] = useState<string[]>([]);
+  const [siteContent, setSiteContent] = useState<Record<string, string>>({});
 
   useEffect(() => {
     const skills = searchParams.get("skills");
@@ -72,19 +73,24 @@ const RecruiterMode = () => {
     const fetchAll = async () => {
       setLoading(true);
       const client = supabase as any;
-      const [expRes, projRes, eduRes, skillRes, honorRes] = await Promise.all([
+      const [expRes, projRes, eduRes, skillRes, honorRes, contentRes] = await Promise.all([
         client.from("experiences").select("*").order("display_order"),
         client.from("projects").select("*").order("display_order"),
         client.from("education").select("*").order("display_order"),
         client.from("skill_categories").select("*").order("display_order"),
         client.from("honors").select("*").order("display_order"),
+        client.from("site_content").select("*"),
       ]);
       if (expRes.data) setExperiences(expRes.data);
       if (projRes.data) setProjects(projRes.data);
       if (eduRes.data) setEducationList(eduRes.data);
       if (skillRes.data) setSkillCategories(skillRes.data);
       if (honorRes.data) setHonors(honorRes.data.map((h: any) => h.title));
-      setLoading(false);
+      if (contentRes.data) {
+        const map: Record<string, string> = {};
+        contentRes.data.forEach((c: any) => { map[c.key] = c.value; });
+        setSiteContent(map);
+      }
     };
     fetchAll();
   }, []);
@@ -167,19 +173,18 @@ const RecruiterMode = () => {
             About
           </motion.h2>
           <div className="glass-card p-8 space-y-4">
-            <p className="text-foreground text-lg leading-relaxed">
-              I'm a <span className="text-[hsl(142,71%,45%)] font-semibold">Software Engineer</span> with experience building
-              high-performance systems at <span className="text-accent font-semibold">Akamai Technologies</span>,{" "}
-              <span className="text-accent font-semibold">Hewlett Packard Enterprise (HPE)</span>, and{" "}
-              <span className="text-accent font-semibold">Pyramid Developers</span> — optimizing latency, throughput,
-              and reliability across CDN-scale infrastructure and enterprise platforms.
-            </p>
-            <p className="text-muted-foreground leading-relaxed">
-              My work spans from writing lock-free C++ data structures to designing ML pipelines that predict system
-              failures before they happen. Beyond industry, I've led engineering initiatives across student tech
-              communities — driving hackathons, mentoring peers, and shipping open-source tools. I believe great
-              engineering is invisible: users should only feel the speed, never the complexity.
-            </p>
+            {siteContent.about_paragraph_1 && (
+              <p
+                className="text-foreground text-lg leading-relaxed"
+                dangerouslySetInnerHTML={{ __html: siteContent.about_paragraph_1 }}
+              />
+            )}
+            {siteContent.about_paragraph_2 && (
+              <p
+                className="text-muted-foreground leading-relaxed"
+                dangerouslySetInnerHTML={{ __html: siteContent.about_paragraph_2 }}
+              />
+            )}
           </div>
         </motion.section>
       </div>

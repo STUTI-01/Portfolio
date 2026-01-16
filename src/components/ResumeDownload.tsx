@@ -1,25 +1,42 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Download, ChevronDown } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
-const resumeRoles = [
-  { id: "sde", label: "SDE / Backend / Systems", file: "#" },
-  { id: "ml", label: "ML / AI Engineer", file: "#" },
-  { id: "fullstack", label: "Full Stack Developer", file: "#" },
-  { id: "web", label: "Web / App Developer", file: "#" },
-  { id: "cpp", label: "C++ Software Engineer", file: "#" },
-];
+interface ResumeRole {
+  id: string;
+  role_label: string;
+  file_url: string;
+}
 
 const ResumeDownload = () => {
   const [open, setOpen] = useState(false);
-  const [selected, setSelected] = useState(resumeRoles[0]);
+  const [roles, setRoles] = useState<ResumeRole[]>([]);
+  const [selected, setSelected] = useState<ResumeRole | null>(null);
+
+  useEffect(() => {
+    const fetch = async () => {
+      const { data } = await (supabase as any).from("resumes").select("*").order("display_order");
+      if (data && data.length > 0) {
+        setRoles(data);
+        setSelected(data[0]);
+      }
+    };
+    fetch();
+  }, []);
 
   const handleDownload = () => {
-    // When actual resume files are added, this will trigger download
-    if (selected.file !== "#") {
-      window.open(selected.file, "_blank");
-    }
+    if (!selected?.file_url) return;
+    const link = document.createElement("a");
+    link.href = selected.file_url;
+    link.download = `${selected.role_label.replace(/[^a-zA-Z0-9]/g, "_")}_Resume.pdf`;
+    link.target = "_blank";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
+
+  if (!selected) return null;
 
   return (
     <motion.div
@@ -34,7 +51,7 @@ const ResumeDownload = () => {
           onClick={() => setOpen(!open)}
           className="flex items-center gap-2 px-4 py-2.5 glass-card text-sm font-medium text-foreground hover:border-primary/30 transition-all duration-200 min-w-[220px] justify-between"
         >
-          <span className="truncate">{selected.label}</span>
+          <span className="truncate">{selected.role_label}</span>
           <ChevronDown className={`w-4 h-4 text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`} />
         </button>
 
@@ -47,7 +64,7 @@ const ResumeDownload = () => {
               exit={{ opacity: 0, y: -8, scale: 0.96 }}
               transition={{ duration: 0.2 }}
             >
-              {resumeRoles.map((role) => (
+              {roles.map((role) => (
                 <button
                   key={role.id}
                   onClick={() => {
@@ -60,7 +77,7 @@ const ResumeDownload = () => {
                       : "text-muted-foreground hover:text-foreground hover:bg-muted/30"
                   }`}
                 >
-                  {role.label}
+                  {role.role_label}
                 </button>
               ))}
             </motion.div>
@@ -71,10 +88,11 @@ const ResumeDownload = () => {
       {/* Download button */}
       <button
         onClick={handleDownload}
-        className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90 transition-colors duration-200"
+        disabled={!selected.file_url}
+        className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
       >
         <Download className="w-4 h-4" />
-        Download Resume
+        {selected.file_url ? "Download Resume" : "Resume Not Uploaded"}
       </button>
     </motion.div>
   );
