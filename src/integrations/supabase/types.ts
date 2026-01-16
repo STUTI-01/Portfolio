@@ -320,6 +320,81 @@ export type Database = {
         }
         Relationships: []
       }
+      resumes: {
+        Row: {
+          created_at: string
+          display_order: number | null
+          file_url: string
+          id: string
+          role_label: string
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number | null
+          file_url: string
+          id?: string
+          role_label: string
+        }
+        Update: {
+          created_at?: string
+          display_order?: number | null
+          file_url?: string
+          id?: string
+          role_label?: string
+        }
+        Relationships: []
+      }
+      site_content: {
+        Row: {
+          created_at: string
+          id: string
+          key: string
+          value: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          key: string
+          value: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          key?: string
+          value?: string
+        }
+        Relationships: []
+      }
+      site_stats: {
+        Row: {
+          color: string
+          created_at: string
+          display_order: number | null
+          icon: string
+          id: string
+          label: string
+          value: string
+        }
+        Insert: {
+          color?: string
+          created_at?: string
+          display_order?: number | null
+          icon?: string
+          id?: string
+          label: string
+          value: string
+        }
+        Update: {
+          color?: string
+          created_at?: string
+          display_order?: number | null
+          icon?: string
+          id?: string
+          label?: string
+          value?: string
+        }
+        Relationships: []
+      }
       skill_categories: {
         Row: {
           category: string
