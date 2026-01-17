@@ -91,6 +91,7 @@ const RecruiterMode = () => {
         contentRes.data.forEach((c: any) => { map[c.key] = c.value; });
         setSiteContent(map);
       }
+      setLoading(false);
     };
     fetchAll();
   }, []);
