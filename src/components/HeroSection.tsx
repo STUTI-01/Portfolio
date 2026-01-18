@@ -357,7 +357,8 @@ const HeroSection = () => {
                     onClick={(e) => {
                       if (link.href.startsWith("http")) {
                         e.preventDefault();
-                        window.open(link.href, "_blank", "noopener,noreferrer");
+                        const opener = window.top || window;
+                        opener.open(link.href, "_blank", "noopener,noreferrer");
                       }
                     }}
                     className={`group relative w-10 h-10 rounded-lg border border-border/60 bg-muted/30 flex items-center justify-center transition-all duration-300 hover:scale-110 ${link.hoverBg}`}
