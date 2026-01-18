@@ -1,10 +1,11 @@
 import { motion } from "framer-motion";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import TypewriterText from "./TypewriterText";
 import profilePhoto from "@/assets/profile-photo.png";
 import { Github, Linkedin, Mail, Phone, Download, ArrowRight, ChevronDown } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { supabase } from "@/integrations/supabase/client";
 
 const rotatingPhrases = [
   "I turn chaos into systems.",
@@ -49,12 +50,7 @@ const socialLinks = [
   },
 ];
 
-const skillCards = [
-  { title: "Backend & Systems", skills: "C++, Go, Rust, Distributed Systems", filter: "C++" },
-  { title: "AI & ML", skills: "PyTorch, TensorFlow, NLP, Computer Vision", filter: "Python" },
-  { title: "Full Stack", skills: "React, Node.js, TypeScript, PostgreSQL", filter: "React" },
-  { title: "Cloud & DevOps", skills: "AWS, Docker, Kubernetes, CI/CD", filter: "AWS" },
-];
+// Skill cards are now loaded dynamically from the resumes table
 
 // Enhanced circuit background with blue + golden accents
 const CircuitBackground = () => {
@@ -208,6 +204,15 @@ const CircuitBackground = () => {
 
 const HeroSection = () => {
   const navigate = useNavigate();
+  const [resumeCards, setResumeCards] = useState<{ role_label: string; file_url: string }[]>([]);
+
+  useEffect(() => {
+    const fetchResumes = async () => {
+      const { data } = await (supabase as any).from("resumes").select("role_label, file_url").order("display_order");
+      if (data) setResumeCards(data);
+    };
+    fetchResumes();
+  }, []);
 
   return (
     <section className="min-h-screen flex flex-col justify-center relative overflow-hidden px-6 md:px-16 lg:px-24 py-10">
@@ -434,35 +439,43 @@ const HeroSection = () => {
         </motion.div>
       </div>
 
-      {/* Skill Cards */}
-      <motion.div
-        className="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-7xl mx-auto w-full mt-10 relative z-10"
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, delay: 0.9 }}
-      >
-        {skillCards.map((card, i) => (
-          <motion.div
-            key={card.title}
-            className="group glass-card p-4 space-y-2 cursor-pointer transition-all duration-300 hover:border-secondary/30"
-            whileHover={{ y: -4 }}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.0 + i * 0.1 }}
-            onClick={() => navigate(`/recruiter?skills=${card.filter}`)}
-          >
-            <h3 className="font-display font-bold text-sm text-foreground group-hover:text-secondary transition-colors duration-300">
-              {card.title}
-            </h3>
-            <p className="text-xs text-muted-foreground leading-relaxed">{card.skills}</p>
-            <div className="flex items-center gap-1.5 text-[10px] font-medium text-name-highlight/70 group-hover:text-name-highlight transition-colors pt-1">
-              <Download className="w-3 h-3" />
-              <span>Download Resume</span>
-              <ArrowRight className="w-2.5 h-2.5 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
-            </div>
-          </motion.div>
-        ))}
-      </motion.div>
+      {/* Resume Cards - Only show if resumes exist */}
+      {resumeCards.length > 0 && (
+        <motion.div
+          className={`grid gap-3 max-w-7xl mx-auto w-full mt-10 relative z-10 ${
+            resumeCards.length === 1 ? 'grid-cols-1 max-w-sm' :
+            resumeCards.length === 2 ? 'grid-cols-2 max-w-2xl' :
+            resumeCards.length === 3 ? 'grid-cols-3 max-w-4xl' :
+            'grid-cols-2 md:grid-cols-4'
+          }`}
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.9 }}
+        >
+          {resumeCards.map((card, i) => (
+            <motion.a
+              key={card.role_label}
+              href={card.file_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group glass-card p-4 space-y-2 cursor-pointer transition-all duration-300 hover:border-secondary/30"
+              whileHover={{ y: -4 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.0 + i * 0.1 }}
+            >
+              <h3 className="font-display font-bold text-sm text-foreground group-hover:text-secondary transition-colors duration-300">
+                {card.role_label}
+              </h3>
+              <div className="flex items-center gap-1.5 text-[10px] font-medium text-name-highlight/70 group-hover:text-name-highlight transition-colors pt-1">
+                <Download className="w-3 h-3" />
+                <span>Download Resume</span>
+                <ArrowRight className="w-2.5 h-2.5 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
+              </div>
+            </motion.a>
+          ))}
+        </motion.div>
+      )}
 
       {/* Scroll indicator */}
       <motion.div
