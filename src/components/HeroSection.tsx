@@ -354,13 +354,6 @@ const HeroSection = () => {
                     target={link.href.startsWith("http") ? "_blank" : undefined}
                     rel="noopener noreferrer"
                     aria-label={link.label}
-                    onClick={(e) => {
-                      if (link.href.startsWith("http")) {
-                        e.preventDefault();
-                        const opener = window.top || window;
-                        opener.open(link.href, "_blank", "noopener,noreferrer");
-                      }
-                    }}
                     className={`group relative w-10 h-10 rounded-lg border border-border/60 bg-muted/30 flex items-center justify-center transition-all duration-300 hover:scale-110 ${link.hoverBg}`}
                   >
                     <link.icon className={`w-4 h-4 transition-colors duration-300 ${link.iconColor} ${link.hoverIcon}`} />
