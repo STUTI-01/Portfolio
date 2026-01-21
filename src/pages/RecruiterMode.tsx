@@ -214,10 +214,18 @@ const RecruiterMode = () => {
               <h2 className="section-heading">Professional Experience</h2>
             </div>
 
-            <div className="space-y-5">
+            <div className="relative space-y-5">
+              {/* Timeline connecting line */}
+              <div className="absolute -left-3 top-7 bottom-7 w-px bg-gradient-to-b from-blue-400/50 via-yellow-400/30 to-transparent" />
+
               {experiences.map((exp, i) => {
                 const isOpen = expandedExp === exp.id;
                 const stats = parseStats(exp.stats);
+                const isFullTime = exp.type === 'Full-time';
+                const isInternship = exp.type === 'Internship';
+                const typeColor = isFullTime ? '#60a5fa' : isInternship ? '#fbbf24' : '#ffffff';
+                const dotColor = isFullTime ? 'border-blue-400 bg-blue-400' : isInternship ? 'border-yellow-400 bg-yellow-400' : 'border-white bg-white';
+
                 return (
                   <motion.div
                     key={exp.id}
@@ -228,7 +236,7 @@ const RecruiterMode = () => {
                     className="relative"
                   >
                     <div className="absolute -left-5 top-7 z-10">
-                      <div className={`w-4 h-4 rounded-full border-2 border-current ${exp.type_color}`}>
+                      <div className={`w-4 h-4 rounded-full border-2 ${dotColor}`}>
                         <div className="w-2 h-2 rounded-full bg-current m-auto mt-[2px]" />
                       </div>
                     </div>
@@ -240,12 +248,12 @@ const RecruiterMode = () => {
                       <div className="flex items-start justify-between p-6">
                         <div className="space-y-1.5">
                           <div className="flex items-center gap-3">
-                            <span className="text-xs font-mono font-semibold" style={{ color: exp.type_color === 'text-emerald-400' ? '#34d399' : exp.type_color === 'text-yellow-400' ? '#fbbf24' : '#ffffff' }}>
+                            <span className="text-xs font-mono font-semibold" style={{ color: typeColor }}>
                               {exp.type}
                             </span>
                             <span className="text-xs text-muted-foreground font-mono">{exp.timeline}</span>
                           </div>
-                          <h3 className="text-lg font-display font-bold" style={{ color: exp.type_color === 'text-emerald-400' ? '#34d399' : exp.type_color === 'text-yellow-400' ? '#fbbf24' : '#ffffff' }}>{exp.role}</h3>
+                          <h3 className="text-lg font-display font-bold" style={{ color: typeColor }}>{exp.role}</h3>
                           <p className="text-sm font-medium" style={{ color: '#34d399' }}>{exp.company}</p>
                         </div>
                         <motion.div
