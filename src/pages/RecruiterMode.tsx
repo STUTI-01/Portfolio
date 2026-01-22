@@ -245,8 +245,8 @@ const RecruiterMode = () => {
                             </span>
                             <span className="text-xs text-muted-foreground font-mono">{exp.timeline}</span>
                           </div>
-                          <h3 className="text-lg font-display font-bold tracking-wide uppercase">{exp.role}</h3>
-                          <p className={`text-sm font-medium ${exp.type_color}`}>{exp.company}</p>
+                          <h3 className={`text-lg font-display font-bold tracking-wide uppercase ${exp.type_color}`}>{exp.role}</h3>
+                          <p className="text-sm font-medium text-emerald-400">{exp.company}</p>
                         </div>
                         <motion.div
                           animate={{ rotate: isOpen ? 180 : 0 }}
