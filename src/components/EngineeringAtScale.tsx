@@ -5,6 +5,15 @@ import { supabase } from "@/integrations/supabase/client";
 
 const iconMap: Record<string, React.ComponentType<any>> = { Terminal, Zap, Globe, ArrowUp };
 
+const colorMap: Record<string, string> = {
+  "text-emerald-400": "#34d399",
+  "text-cyan-400": "#22d3ee",
+  "text-amber-400": "#fbbf24",
+  "text-rose-400": "#fb7185",
+};
+
+const getStatColor = (colorClass: string) => colorMap[colorClass] || "#ffffff";
+
 const EngineeringAtScale = () => {
   const [stats, setStats] = useState<{ icon: string; value: string; label: string; color: string }[]>([]);
 
@@ -53,8 +62,8 @@ const EngineeringAtScale = () => {
                 transition={{ duration: 0.5, delay: (i + 1) * 0.1 }}
                 whileHover={{ y: -4 }}
               >
-                <Icon className={`w-6 h-6 ${stat.color} mx-auto mb-3 group-hover:scale-110 transition-transform`} />
-                <p className={`text-2xl md:text-3xl font-display font-bold ${stat.color}`}>{stat.value}</p>
+                <Icon className="w-6 h-6 mx-auto mb-3 group-hover:scale-110 transition-transform" style={{ color: getStatColor(stat.color) }} />
+                <p className="text-2xl md:text-3xl font-display font-bold" style={{ color: getStatColor(stat.color) }}>{stat.value}</p>
                 <p className="text-xs text-muted-foreground mt-1">{stat.label}</p>
               </motion.div>
             );
