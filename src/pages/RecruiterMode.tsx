@@ -240,13 +240,13 @@ const RecruiterMode = () => {
                       <div className="flex items-start justify-between p-6">
                         <div className="space-y-1.5">
                           <div className="flex items-center gap-3">
-                            <span className={`text-xs font-mono font-semibold ${exp.type_color}`}>
+                            <span className="text-xs font-mono font-semibold" style={{ color: exp.type_color === 'text-emerald-400' ? '#34d399' : exp.type_color === 'text-yellow-400' ? '#fbbf24' : '#ffffff' }}>
                               {exp.type}
                             </span>
                             <span className="text-xs text-muted-foreground font-mono">{exp.timeline}</span>
                           </div>
-                          <h3 className={`text-lg font-display font-bold tracking-wide uppercase ${exp.type_color}`}>{exp.role}</h3>
-                          <p className="text-sm font-medium text-emerald-400">{exp.company}</p>
+                          <h3 className="text-lg font-display font-bold" style={{ color: exp.type_color === 'text-emerald-400' ? '#34d399' : exp.type_color === 'text-yellow-400' ? '#fbbf24' : '#ffffff' }}>{exp.role}</h3>
+                          <p className="text-sm font-medium" style={{ color: '#34d399' }}>{exp.company}</p>
                         </div>
                         <motion.div
                           animate={{ rotate: isOpen ? 180 : 0 }}
