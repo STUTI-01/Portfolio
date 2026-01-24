@@ -1,15 +1,17 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Terminal, Zap, Globe, ArrowUp } from "lucide-react";
+import { Terminal, Zap, Globe, ArrowUp, Briefcase, Code } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
-const iconMap: Record<string, React.ComponentType<any>> = { Terminal, Zap, Globe, ArrowUp };
+const iconMap: Record<string, React.ComponentType<any>> = { Terminal, Zap, Globe, ArrowUp, Briefcase, Code };
 
 const colorMap: Record<string, string> = {
   "text-emerald-400": "#34d399",
   "text-cyan-400": "#22d3ee",
   "text-amber-400": "#fbbf24",
   "text-rose-400": "#fb7185",
+  "text-purple-400": "#c084fc",
+  "text-orange-400": "#fb923c",
 };
 
 const getStatColor = (colorClass: string) => colorMap[colorClass] || "#ffffff";
