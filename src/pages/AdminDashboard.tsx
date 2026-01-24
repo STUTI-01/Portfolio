@@ -165,7 +165,7 @@ const fieldConfigs: Record<string, { fields: FieldConfig[]; displayField: string
     displayField: "role_label",
     fields: [
       { key: "role_label", label: "Role Label", type: "text", required: true },
-      { key: "file_url", label: "Resume PDF", type: "image", imageFolder: "resumes" },
+      { key: "file_url", label: "Resume PDF", type: "file", imageFolder: "resumes", fileAccept: ".pdf,application/pdf" },
       { key: "display_order", label: "Display Order", type: "number" },
     ],
   },
