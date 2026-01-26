@@ -204,11 +204,11 @@ const CircuitBackground = () => {
 
 const HeroSection = () => {
   const navigate = useNavigate();
-  const [resumeCards, setResumeCards] = useState<{ role_label: string; file_url: string }[]>([]);
+  const [resumeCards, setResumeCards] = useState<{ role_label: string; file_url: string; summary: string | null; tags: string[] | null }[]>([]);
 
   useEffect(() => {
     const fetchResumes = async () => {
-      const { data } = await (supabase as any).from("resumes").select("role_label, file_url").order("display_order");
+      const { data } = await (supabase as any).from("resumes").select("role_label, file_url, summary, tags").order("display_order");
       if (data) setResumeCards(data);
     };
     fetchResumes();
@@ -467,6 +467,16 @@ const HeroSection = () => {
               <h3 className="font-display font-bold text-sm text-foreground group-hover:text-secondary transition-colors duration-300">
                 {card.role_label}
               </h3>
+              {card.summary && (
+                <p className="text-[11px] text-muted-foreground leading-snug line-clamp-2">{card.summary}</p>
+              )}
+              {(card.tags || []).length > 0 && (
+                <div className="flex flex-wrap gap-1 pt-0.5">
+                  {(card.tags || []).map((tag) => (
+                    <span key={tag} className="text-[9px] font-mono px-1.5 py-0.5 rounded border border-border/50 text-muted-foreground/80 bg-muted/30">{tag}</span>
+                  ))}
+                </div>
+              )}
               <div className="flex items-center gap-1.5 text-[10px] font-medium text-name-highlight/70 group-hover:text-name-highlight transition-colors pt-1">
                 <Download className="w-3 h-3" />
                 <span>Download Resume</span>
