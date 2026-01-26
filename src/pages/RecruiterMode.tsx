@@ -255,6 +255,9 @@ const RecruiterMode = () => {
                           </div>
                           <h3 className="text-lg font-display font-bold" style={{ color: typeColor }}>{exp.role}</h3>
                           <p className="text-sm font-medium" style={{ color: '#34d399' }}>{exp.company}</p>
+                          {exp.description && (
+                            <p className="text-xs text-muted-foreground mt-1 line-clamp-1">{exp.description}</p>
+                          )}
                         </div>
                         <motion.div
                           animate={{ rotate: isOpen ? 180 : 0 }}
@@ -263,6 +266,17 @@ const RecruiterMode = () => {
                           <ChevronDown className="w-5 h-5 text-muted-foreground" />
                         </motion.div>
                       </div>
+
+                      {(exp.tech_stack || []).length > 0 && (
+                        <div className="flex flex-wrap gap-1.5 px-6 pb-3">
+                          {(exp.tech_stack || []).slice(0, 6).map((tech) => (
+                            <span key={tech} className="badge-tech text-[10px] px-2 py-0.5">{tech}</span>
+                          ))}
+                          {(exp.tech_stack || []).length > 6 && (
+                            <span className="text-[10px] text-muted-foreground font-mono">+{(exp.tech_stack || []).length - 6} more</span>
+                          )}
+                        </div>
+                      )}
 
                       {stats.length > 0 && (
                         <div className="flex flex-wrap gap-8 px-6 pb-5">
