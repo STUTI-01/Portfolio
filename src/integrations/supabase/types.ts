@@ -327,6 +327,8 @@ export type Database = {
           file_url: string
           id: string
           role_label: string
+          summary: string | null
+          tags: string[] | null
         }
         Insert: {
           created_at?: string
@@ -334,6 +336,8 @@ export type Database = {
           file_url: string
           id?: string
           role_label: string
+          summary?: string | null
+          tags?: string[] | null
         }
         Update: {
           created_at?: string
@@ -341,6 +345,8 @@ export type Database = {
           file_url?: string
           id?: string
           role_label?: string
+          summary?: string | null
+          tags?: string[] | null
         }
         Relationships: []
       }
