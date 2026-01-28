@@ -483,27 +483,27 @@ const RecruiterMode = () => {
                         <span key={tech} className="badge-tech">{tech}</span>
                       ))}
                     </div>
-                    <div className="flex gap-3 pt-2">
-                      {project.demo_url && project.demo_url !== "#" && (
-                        <a
-                          href={project.demo_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-1.5 text-xs font-medium text-primary hover:underline transition-colors"
-                        >
-                          <ExternalLink className="w-3.5 h-3.5" />
-                          View Demo
-                        </a>
-                      )}
+                    <div className="flex gap-2 pt-2">
                       {project.github_url && project.github_url !== "#" && (
                         <a
                           href={project.github_url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
+                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium border border-border/60 bg-muted/30 text-muted-foreground hover:text-foreground hover:border-secondary/40 hover:bg-secondary/10 transition-all duration-200"
                         >
                           <Github className="w-3.5 h-3.5" />
                           GitHub
+                        </a>
+                      )}
+                      {project.demo_url && project.demo_url !== "#" && (
+                        <a
+                          href={project.demo_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium border border-primary/40 bg-primary/10 text-primary hover:bg-primary/20 hover:border-primary/60 transition-all duration-200"
+                        >
+                          <ExternalLink className="w-3.5 h-3.5" />
+                          Live Demo
                         </a>
                       )}
                     </div>
