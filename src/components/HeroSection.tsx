@@ -452,35 +452,48 @@ const HeroSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.9 }}
         >
-          {resumeCards.map((card, i) => (
+        {resumeCards.map((card, i) => (
             <motion.a
               key={card.role_label}
               href={card.file_url}
               target="_blank"
               rel="noopener noreferrer"
-              className="group glass-card p-4 space-y-2 cursor-pointer transition-all duration-300 hover:border-secondary/30"
-              whileHover={{ y: -4 }}
+              className="group relative glass-card p-4 space-y-2.5 cursor-pointer transition-all duration-300 hover:border-secondary/40 overflow-hidden"
+              whileHover={{ y: -5, scale: 1.02 }}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.0 + i * 0.1 }}
             >
-              <h3 className="font-display font-bold text-sm text-foreground group-hover:text-secondary transition-colors duration-300">
-                {card.role_label}
-              </h3>
+              {/* Hover glow accent */}
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{
+                background: "radial-gradient(ellipse at top left, hsla(217, 91%, 60%, 0.06) 0%, transparent 70%)"
+              }} />
+
+              <div className="flex items-start justify-between gap-2 relative z-10">
+                <h3 className="font-display font-bold text-sm text-foreground group-hover:text-secondary transition-colors duration-300 leading-tight">
+                  {card.role_label}
+                </h3>
+                <ArrowRight className="w-3.5 h-3.5 text-muted-foreground/40 group-hover:text-secondary group-hover:translate-x-0.5 transition-all duration-300 flex-shrink-0 mt-0.5" />
+              </div>
+
               {card.summary && (
-                <p className="text-[11px] text-muted-foreground leading-snug line-clamp-2">{card.summary}</p>
+                <p className="text-[11px] text-muted-foreground/90 leading-relaxed line-clamp-2 relative z-10">{card.summary}</p>
               )}
+
               {(card.tags || []).length > 0 && (
-                <div className="flex flex-wrap gap-1 pt-0.5">
-                  {(card.tags || []).map((tag) => (
-                    <span key={tag} className="text-[9px] font-mono px-1.5 py-0.5 rounded border border-border/50 text-muted-foreground/80 bg-muted/30">{tag}</span>
+                <div className="flex flex-wrap gap-1 relative z-10">
+                  {(card.tags || []).slice(0, 4).map((tag) => (
+                    <span key={tag} className="text-[9px] font-mono px-1.5 py-0.5 rounded-md border border-secondary/20 text-secondary/70 bg-secondary/5 group-hover:border-secondary/30 group-hover:text-secondary/90 transition-colors duration-300">{tag}</span>
                   ))}
+                  {(card.tags || []).length > 4 && (
+                    <span className="text-[9px] font-mono px-1.5 py-0.5 text-muted-foreground/50">+{(card.tags || []).length - 4}</span>
+                  )}
                 </div>
               )}
-              <div className="flex items-center gap-1.5 text-[10px] font-medium text-name-highlight/70 group-hover:text-name-highlight transition-colors pt-1">
+
+              <div className="flex items-center gap-1.5 text-[10px] font-medium text-name-highlight/60 group-hover:text-name-highlight transition-colors pt-0.5 relative z-10">
                 <Download className="w-3 h-3" />
                 <span>Download Resume</span>
-                <ArrowRight className="w-2.5 h-2.5 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
               </div>
             </motion.a>
           ))}
