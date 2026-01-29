@@ -329,7 +329,7 @@ const RecruiterMode = () => {
               <GraduationCap className="w-7 h-7 text-accent" />
               <h2 className="section-heading">Academic Milestones</h2>
             </div>
-            <div className="grid gap-4 md:grid-cols-3">
+            <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
               {educationList.map((edu, i) => (
                 <motion.div
                   key={edu.id}
@@ -361,7 +361,7 @@ const RecruiterMode = () => {
               <Wrench className="w-7 h-7 text-secondary" />
               <h2 className="section-heading">Technical Arsenal</h2>
             </div>
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
               {skillCategories.map((cat, i) => (
                 <motion.div
                   key={cat.id}
@@ -461,7 +461,7 @@ const RecruiterMode = () => {
             <AnimatePresence mode="wait">
               <motion.div
                 key={`${activeFilters.join(",")}-${projectPage}`}
-                className="grid gap-4 md:grid-cols-2"
+                className="grid gap-4 grid-cols-1 sm:grid-cols-2"
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -15 }}

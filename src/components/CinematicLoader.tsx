@@ -251,10 +251,18 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
                       textShadow: "0 0 24px hsla(217, 91%, 70%, 0.5)",
                     }}
                   >
-                    Choose yours.
+                    Choose your version.
+                  </motion.p>
+                  <motion.p
+                    className="text-sm md:text-base font-poetry italic text-muted-foreground/60 mt-3"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 1, delay: 0.8 }}
+                  >
+                    Every version of me tells a different story.
                   </motion.p>
                   <motion.div
-                    className="w-16 h-[1px] mx-auto mt-3"
+                    className="w-16 h-[1px] mx-auto mt-4"
                     style={{
                       background: "linear-gradient(90deg, transparent, hsla(217, 91%, 70%, 0.6), transparent)",
                     }}
