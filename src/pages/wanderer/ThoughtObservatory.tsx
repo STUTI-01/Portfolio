@@ -5,6 +5,8 @@ import Navbar from "@/components/Navbar";
 import PageTransition from "@/components/PageTransition";
 import { supabase } from "@/integrations/supabase/client";
 import { BookOpen, ArrowLeft, Tag } from "lucide-react";
+import ContentSkeletonLoader from "@/components/ContentSkeleton";
+import EmptyState from "@/components/EmptyState";
 
 interface Thought {
   id: string;
@@ -74,7 +76,9 @@ const ThoughtObservatory = () => {
         </div>
 
         {loading ? (
-          <div className="text-center text-muted-foreground/50 py-20 font-mono text-sm">Loading thoughts...</div>
+          <ContentSkeletonLoader variant="list" count={4} />
+        ) : filtered.length === 0 ? (
+          <EmptyState icon={BookOpen} title="No thoughts yet" subtitle="The observatory awaits its first observation." />
         ) : (
           <div className="space-y-8">
             {filtered.map((thought, i) => (

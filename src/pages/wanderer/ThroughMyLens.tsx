@@ -5,6 +5,8 @@ import Navbar from "@/components/Navbar";
 import PageTransition from "@/components/PageTransition";
 import { supabase } from "@/integrations/supabase/client";
 import { Camera, ArrowLeft, MapPin } from "lucide-react";
+import ContentSkeletonLoader from "@/components/ContentSkeleton";
+import EmptyState from "@/components/EmptyState";
 
 interface Photo {
   id: string;
@@ -68,7 +70,9 @@ const ThroughMyLens = () => {
         </div>
 
         {loading ? (
-          <div className="text-center text-muted-foreground/50 py-20 font-mono text-sm">Loading gallery...</div>
+          <ContentSkeletonLoader variant="card" count={6} />
+        ) : filtered.length === 0 ? (
+          <EmptyState icon={Camera} title="No photos yet" subtitle="The gallery is empty — come back when new moments are captured." />
         ) : (
           <div className="columns-1 md:columns-2 lg:columns-3 gap-4 space-y-4">
             {filtered.map((photo, i) => (
