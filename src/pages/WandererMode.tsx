@@ -271,7 +271,7 @@ const WandererMode = () => {
           <div className="w-16 h-[1px] mx-auto mt-4 bg-gradient-to-r from-transparent via-accent/30 to-transparent" />
         </motion.div>
 
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 sm:gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           {sections.map((section, i) => (
             <motion.div
               key={section.title}
@@ -302,7 +302,10 @@ const WandererMode = () => {
         >
           <div className="w-12 h-[1px] mx-auto mb-8 bg-gradient-to-r from-transparent via-accent/30 to-transparent" />
           <p className="font-poetry text-2xl md:text-3xl text-foreground/70 italic max-w-xl mx-auto leading-relaxed">
-            "Deep Dive Into,<br />The World of Poetry"
+            "Thanks for taking a moment<br />to visit my world."
+          </p>
+          <p className="text-sm font-mono text-muted-foreground/40 tracking-[0.3em] uppercase mt-4">
+            Hope to see you again, mate ✦
           </p>
         </motion.div>
       </div>

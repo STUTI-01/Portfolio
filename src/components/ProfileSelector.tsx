@@ -42,7 +42,7 @@ const ProfileSelector = () => {
   return (
     <section className="min-h-screen flex flex-col items-center justify-center relative px-6 py-20">
       <motion.h2
-        className="text-5xl md:text-7xl font-display font-bold mb-24 text-foreground tracking-tight"
+        className="text-4xl sm:text-5xl md:text-7xl font-display font-bold mb-16 sm:mb-24 text-foreground tracking-tight"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
@@ -50,7 +50,7 @@ const ProfileSelector = () => {
         Who's Watching?
       </motion.h2>
 
-      <div className="flex flex-col sm:flex-row gap-16 md:gap-28">
+      <div className="flex flex-col sm:flex-row gap-10 sm:gap-16 md:gap-28">
         {profiles.map((profile, i) => (
           <motion.button
             key={profile.id}
@@ -63,7 +63,8 @@ const ProfileSelector = () => {
             whileTap={{ scale: 0.95 }}
           >
             <div
-              className={`relative w-36 h-36 md:w-44 md:h-44 rounded-full bg-gradient-to-br ${profile.gradient} flex items-center justify-center transition-shadow duration-500 group-hover:${profile.glowColor}`}
+              className={`relative w-28 h-28 sm:w-36 sm:h-36 md:w-44 md:h-44 rounded-full bg-gradient-to-br ${profile.gradient} flex items-center justify-center transition-shadow duration-500 group-hover:${profile.glowColor}`}
+            >
             >
               {selectedProfile === profile.id && (
                 <motion.div
@@ -73,7 +74,7 @@ const ProfileSelector = () => {
                   transition={{ duration: 0.6 }}
                 />
               )}
-              <profile.Icon className="w-14 h-14 md:w-16 md:h-16 text-white drop-shadow-lg" strokeWidth={1.5} />
+              <profile.Icon className="w-10 h-10 sm:w-14 sm:h-14 md:w-16 md:h-16 text-white drop-shadow-lg" strokeWidth={1.5} />
             </div>
             <span className="text-xl font-display font-medium text-foreground/70 group-hover:text-foreground transition-colors duration-300">
               {profile.label}

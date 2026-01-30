@@ -444,9 +444,9 @@ const HeroSection = () => {
         <motion.div
           className={`grid gap-3 max-w-7xl mx-auto w-full mt-10 relative z-10 ${
             resumeCards.length === 1 ? 'grid-cols-1 max-w-sm' :
-            resumeCards.length === 2 ? 'grid-cols-2 max-w-2xl' :
-            resumeCards.length === 3 ? 'grid-cols-3 max-w-4xl' :
-            'grid-cols-2 md:grid-cols-4'
+            resumeCards.length === 2 ? 'grid-cols-1 sm:grid-cols-2 max-w-2xl' :
+            resumeCards.length === 3 ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 max-w-4xl' :
+            'grid-cols-1 sm:grid-cols-2 md:grid-cols-4'
           }`}
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
