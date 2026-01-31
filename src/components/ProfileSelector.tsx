@@ -65,7 +65,6 @@ const ProfileSelector = () => {
             <div
               className={`relative w-28 h-28 sm:w-36 sm:h-36 md:w-44 md:h-44 rounded-full bg-gradient-to-br ${profile.gradient} flex items-center justify-center transition-shadow duration-500 group-hover:${profile.glowColor}`}
             >
-            >
               {selectedProfile === profile.id && (
                 <motion.div
                   className="absolute inset-0 rounded-full bg-white/20"
