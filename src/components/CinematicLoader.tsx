@@ -29,25 +29,37 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
     <AnimatePresence>
       {phase < 3 && (
         <motion.div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-background overflow-hidden"
+          className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden"
+          style={{
+            background: "radial-gradient(ellipse 120% 80% at 50% 40%, hsla(217, 91%, 8%, 1), hsla(220, 30%, 4%, 1))",
+          }}
           exit={{ opacity: 0 }}
           transition={{ duration: 1 }}
         >
+          {/* Subtle noise texture overlay */}
+          <div
+            className="absolute inset-0 pointer-events-none opacity-[0.03]"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E")`,
+              backgroundSize: "128px 128px",
+            }}
+          />
+
           {/* Animated grid lines */}
           <motion.div
             className="absolute inset-0 pointer-events-none"
             initial={{ opacity: 0 }}
-            animate={{ opacity: 0.04 }}
+            animate={{ opacity: 0.03 }}
             transition={{ duration: 2 }}
             style={{
-              backgroundImage: `linear-gradient(hsla(217, 91%, 60%, 0.5) 1px, transparent 1px), linear-gradient(90deg, hsla(217, 91%, 60%, 0.5) 1px, transparent 1px)`,
+              backgroundImage: `linear-gradient(hsla(217, 91%, 60%, 0.4) 1px, transparent 1px), linear-gradient(90deg, hsla(217, 91%, 60%, 0.4) 1px, transparent 1px)`,
               backgroundSize: "60px 60px",
             }}
           />
 
           {/* Pulsing corner accents */}
           <motion.div
-            className="absolute top-12 left-12 w-16 h-16 pointer-events-none"
+            className="absolute top-8 left-8 sm:top-12 sm:left-12 w-12 h-12 sm:w-16 sm:h-16 pointer-events-none"
             initial={{ opacity: 0 }}
             animate={{ opacity: [0, 0.4, 0] }}
             transition={{ duration: 3, repeat: Infinity, delay: 0.5 }}
@@ -56,7 +68,7 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
             <div className="absolute top-0 left-0 h-full w-[1px] bg-gradient-to-b from-secondary to-transparent" />
           </motion.div>
           <motion.div
-            className="absolute bottom-12 right-12 w-16 h-16 pointer-events-none"
+            className="absolute bottom-8 right-8 sm:bottom-12 sm:right-12 w-12 h-12 sm:w-16 sm:h-16 pointer-events-none"
             initial={{ opacity: 0 }}
             animate={{ opacity: [0, 0.4, 0] }}
             transition={{ duration: 3, repeat: Infinity, delay: 1.5 }}
@@ -66,55 +78,69 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
           </motion.div>
 
           {/* Floating particles */}
-          {[...Array(6)].map((_, i) => (
+          {[...Array(8)].map((_, i) => (
             <motion.div
               key={i}
-              className="absolute w-1 h-1 rounded-full bg-secondary/40 pointer-events-none"
+              className="absolute w-1 h-1 rounded-full bg-secondary/30 pointer-events-none"
               style={{
-                left: `${15 + i * 14}%`,
-                top: `${20 + (i % 3) * 25}%`,
+                left: `${10 + i * 11}%`,
+                top: `${15 + (i % 4) * 20}%`,
               }}
               animate={{
-                y: [0, -20, 0],
-                opacity: [0.2, 0.6, 0.2],
+                y: [0, -30, 0],
+                opacity: [0.1, 0.5, 0.1],
               }}
               transition={{
-                duration: 3 + i * 0.5,
+                duration: 4 + i * 0.6,
                 repeat: Infinity,
-                delay: i * 0.4,
+                delay: i * 0.3,
               }}
             />
           ))}
 
-          {/* Ambient glow - blue */}
+          {/* Ambient glow - deep blue */}
           <motion.div
             className="absolute inset-0 pointer-events-none"
             initial={{ opacity: 0 }}
-            animate={phase >= 1 ? { opacity: 0.5 } : {}}
+            animate={phase >= 1 ? { opacity: 0.6 } : {}}
             transition={{ duration: 2.5 }}
           >
             <div
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-[150px]"
-              style={{ background: "radial-gradient(circle, hsla(217, 91%, 60%, 0.12), hsla(217, 91%, 60%, 0.04), transparent)" }}
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] sm:w-[700px] sm:h-[700px] rounded-full blur-[180px]"
+              style={{ background: "radial-gradient(circle, hsla(217, 91%, 60%, 0.15), hsla(217, 91%, 60%, 0.05), transparent)" }}
             />
           </motion.div>
 
-          {/* Second glow - golden accent */}
+          {/* Second glow - warm golden accent */}
           <motion.div
             className="absolute pointer-events-none"
-            style={{ top: "30%", right: "20%" }}
+            style={{ top: "25%", right: "15%" }}
             initial={{ opacity: 0 }}
-            animate={phase >= 1 ? { opacity: [0, 0.3, 0.15] } : {}}
+            animate={phase >= 1 ? { opacity: [0, 0.4, 0.2] } : {}}
             transition={{ duration: 3, delay: 0.5 }}
           >
             <div
-              className="w-[300px] h-[300px] rounded-full blur-[120px]"
-              style={{ background: "radial-gradient(circle, hsla(45, 97%, 64%, 0.08), transparent)" }}
+              className="w-[250px] h-[250px] sm:w-[350px] sm:h-[350px] rounded-full blur-[140px]"
+              style={{ background: "radial-gradient(circle, hsla(45, 97%, 64%, 0.1), transparent)" }}
             />
           </motion.div>
 
-          {/* Earth Glow Arc — full-width curved line below content */}
-          <div className="absolute left-0 right-0 bottom-[22%] h-[120px] md:h-[160px] pointer-events-none z-10">
+          {/* Third glow - subtle purple bottom-left */}
+          <motion.div
+            className="absolute pointer-events-none"
+            style={{ bottom: "20%", left: "10%" }}
+            initial={{ opacity: 0 }}
+            animate={phase >= 1 ? { opacity: [0, 0.25, 0.12] } : {}}
+            transition={{ duration: 4, delay: 1 }}
+          >
+            <div
+              className="w-[200px] h-[200px] sm:w-[300px] sm:h-[300px] rounded-full blur-[120px]"
+              style={{ background: "radial-gradient(circle, hsla(260, 70%, 50%, 0.08), transparent)" }}
+            />
+          </motion.div>
+
+          {/* Earth Glow Arc */}
+          <div className="absolute left-0 right-0 bottom-[18%] sm:bottom-[22%] h-[100px] sm:h-[120px] md:h-[160px] pointer-events-none z-10">
             <svg
               viewBox="0 0 1200 160"
               fill="none"
@@ -137,7 +163,6 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
                 </filter>
               </defs>
 
-              {/* Soft outer glow */}
               <motion.path
                 d="M 0 150 Q 600 -30 1200 150"
                 stroke="url(#arcGlow)"
@@ -149,8 +174,6 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
                 animate={phase >= 1 ? { pathLength: 1, opacity: 0.5 } : {}}
                 transition={{ duration: 2.5, ease: "easeInOut", delay: 0.3 }}
               />
-
-              {/* Main arc line */}
               <motion.path
                 d="M 0 150 Q 600 -30 1200 150"
                 stroke="url(#arcGlow)"
@@ -162,7 +185,6 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
                 transition={{ duration: 2.5, ease: "easeInOut", delay: 0.2 }}
               />
 
-              {/* Traveling spark — goes once left to right then stops */}
               {phase >= 1 && (
                 <>
                   <motion.circle
@@ -193,14 +215,17 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
             </svg>
           </div>
 
-          {/* Content */}
-          <div className="relative text-center z-20">
+          {/* Content — title pushes up when CTA appears */}
+          <div className="relative text-center z-20 px-4">
             <motion.div
               initial={{ opacity: 0, scale: 0.85 }}
-              animate={phase >= 1 ? { opacity: 1, scale: 1 } : {}}
-              transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
+              animate={phase >= 1
+                ? { opacity: 1, scale: 1, y: phase >= 2 ? -30 : 0 }
+                : {}
+              }
+              transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
             >
-              <h1 className="text-3xl md:text-5xl lg:text-6xl font-display font-bold text-foreground leading-tight">
+              <h1 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-display font-bold text-foreground leading-tight">
                 {"My world has different stories.".split(" ").map((word, i) => (
                   <motion.span
                     key={i}
@@ -217,62 +242,62 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
                   </motion.span>
                 ))}
               </h1>
-
-              {phase >= 2 && (
-                <motion.button
-                  onClick={handleChooseClick}
-                  className="mt-10 cursor-pointer bg-transparent border-none outline-none group"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.8 }}
-                >
-                  <motion.p
-                    className="text-lg md:text-2xl tracking-widest uppercase font-mono"
-                    initial={{ 
-                      opacity: 0, 
-                      letterSpacing: "0.6em",
-                      color: "hsla(0, 0%, 50%, 1)",
-                      scale: 0.9,
-                    }}
-                    animate={{
-                      opacity: 1,
-                      letterSpacing: "0.3em",
-                      color: "hsla(217, 91%, 70%, 1)",
-                      scale: 1,
-                    }}
-                    transition={{
-                      opacity: { duration: 0.6 },
-                      letterSpacing: { duration: 1.2 },
-                      color: { duration: 2.5, ease: "easeOut" },
-                      scale: { duration: 2.5, ease: "easeOut" },
-                    }}
-                    whileHover={{
-                      scale: 1.08,
-                      textShadow: "0 0 24px hsla(217, 91%, 70%, 0.5)",
-                    }}
-                  >
-                    Choose your version.
-                  </motion.p>
-                  <motion.p
-                    className="text-sm md:text-base font-poetry italic text-muted-foreground/60 mt-3"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 1, delay: 0.8 }}
-                  >
-                    Every version of me tells a different story.
-                  </motion.p>
-                  <motion.div
-                    className="w-16 h-[1px] mx-auto mt-4"
-                    style={{
-                      background: "linear-gradient(90deg, transparent, hsla(217, 91%, 70%, 0.6), transparent)",
-                    }}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 1.5, delay: 0.5 }}
-                  />
-                </motion.button>
-              )}
             </motion.div>
+
+            {phase >= 2 && (
+              <motion.button
+                onClick={handleChooseClick}
+                className="mt-6 sm:mt-10 cursor-pointer bg-transparent border-none outline-none group"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <motion.p
+                  className="text-base sm:text-lg md:text-2xl tracking-widest uppercase font-mono"
+                  initial={{
+                    opacity: 0,
+                    letterSpacing: "0.6em",
+                    color: "hsla(0, 0%, 50%, 1)",
+                    scale: 0.9,
+                  }}
+                  animate={{
+                    opacity: 1,
+                    letterSpacing: "0.3em",
+                    color: "hsla(217, 91%, 70%, 1)",
+                    scale: 1,
+                  }}
+                  transition={{
+                    opacity: { duration: 0.6 },
+                    letterSpacing: { duration: 1.2 },
+                    color: { duration: 2.5, ease: "easeOut" },
+                    scale: { duration: 2.5, ease: "easeOut" },
+                  }}
+                  whileHover={{
+                    scale: 1.08,
+                    textShadow: "0 0 24px hsla(217, 91%, 70%, 0.5)",
+                  }}
+                >
+                  Choose your version.
+                </motion.p>
+                <motion.p
+                  className="text-xs sm:text-sm md:text-base font-poetry italic text-muted-foreground/60 mt-3"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 1, delay: 0.8 }}
+                >
+                  Every version of me tells a different story.
+                </motion.p>
+                <motion.div
+                  className="w-12 sm:w-16 h-[1px] mx-auto mt-4"
+                  style={{
+                    background: "linear-gradient(90deg, transparent, hsla(217, 91%, 70%, 0.6), transparent)",
+                  }}
+                  initial={{ opacity: 0, scaleX: 0 }}
+                  animate={{ opacity: 1, scaleX: 1 }}
+                  transition={{ duration: 1.5, delay: 0.5 }}
+                />
+              </motion.button>
+            )}
           </div>
         </motion.div>
       )}

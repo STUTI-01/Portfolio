@@ -1,9 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Lock, ArrowLeft, Loader2 } from "lucide-react";
+import { Lock, ArrowLeft } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-
-const PASSCODE = "282108";
 
 const AdminLogin = () => {
   const [code, setCode] = useState("");
@@ -11,14 +9,36 @@ const AdminLogin = () => {
   const [shake, setShake] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // If already authenticated this session, skip straight to admin
+  useEffect(() => {
+    if (sessionStorage.getItem("admin_auth") === "true") {
+      navigate("/admin", { replace: true });
+    }
+  }, [navigate]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (code === PASSCODE) {
-      sessionStorage.setItem("admin_auth", "true");
-      sessionStorage.setItem("admin_passcode", code);
-      navigate("/admin");
-    } else {
-      setError("Incorrect passcode");
+    // Validate against the edge function by making a lightweight list call
+    try {
+      const res = await fetch(
+        `https://${import.meta.env.VITE_SUPABASE_PROJECT_ID}.supabase.co/functions/v1/wanderer-admin`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ passcode: code, action: "list", table: "site_content" }),
+        }
+      );
+      if (res.ok) {
+        sessionStorage.setItem("admin_auth", "true");
+        sessionStorage.setItem("admin_passcode", code);
+        navigate("/admin");
+      } else {
+        setError("Incorrect passcode");
+        setShake(true);
+        setTimeout(() => setShake(false), 500);
+      }
+    } catch {
+      setError("Connection error — try again");
       setShake(true);
       setTimeout(() => setShake(false), 500);
     }
@@ -27,15 +47,20 @@ const AdminLogin = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-background px-6">
       <motion.div
-        className="glass-card p-10 w-full max-w-sm space-y-8 text-center"
+        className="glass-card p-8 sm:p-10 w-full max-w-sm space-y-8 text-center"
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
       >
         <div className="flex flex-col items-center gap-3">
-          <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center">
+          <motion.div
+            className="w-16 h-16 rounded-full bg-muted flex items-center justify-center"
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
+          >
             <Lock className="w-7 h-7 text-primary" />
-          </div>
+          </motion.div>
           <h1 className="font-display font-bold text-2xl">Enter Passcode</h1>
           <p className="text-sm text-muted-foreground">Enter your admin passcode to continue</p>
         </div>
@@ -55,7 +80,15 @@ const AdminLogin = () => {
             transition={{ duration: 0.4 }}
             autoFocus
           />
-          {error && <p className="text-destructive text-sm">{error}</p>}
+          {error && (
+            <motion.p
+              className="text-destructive text-sm"
+              initial={{ opacity: 0, y: -5 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
+              {error}
+            </motion.p>
+          )}
           <button
             type="submit"
             className="w-full py-3 rounded-lg bg-primary text-primary-foreground font-display font-semibold transition-all hover:brightness-110"
