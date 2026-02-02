@@ -5,6 +5,8 @@ import Navbar from "@/components/Navbar";
 import PageTransition from "@/components/PageTransition";
 import { supabase } from "@/integrations/supabase/client";
 import { Gem, ArrowLeft, Sparkles } from "lucide-react";
+import ContentSkeletonLoader from "@/components/ContentSkeleton";
+import EmptyState from "@/components/EmptyState";
 
 interface Adornment {
   id: string;
@@ -76,7 +78,9 @@ const AdornmentArchive = () => {
 
         {/* Grid */}
         {loading ? (
-          <div className="text-center text-muted-foreground/50 py-20 font-mono text-sm">Loading treasures...</div>
+          <ContentSkeletonLoader variant="card" count={6} />
+        ) : filtered.length === 0 ? (
+          <EmptyState icon={Gem} title="No adornments yet" subtitle="The archive awaits its first piece." />
         ) : (
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             {filtered.map((item, i) => (

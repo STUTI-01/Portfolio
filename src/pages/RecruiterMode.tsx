@@ -136,8 +136,21 @@ const RecruiterMode = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+      <div className="min-h-screen bg-background">
+        <Navbar />
+        <div className="max-w-5xl mx-auto px-6 py-32 space-y-10">
+          {[...Array(3)].map((_, i) => (
+            <div key={i} className="glass-card p-6 relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/5 before:to-transparent">
+              <div className="space-y-3">
+                <div className="h-5 bg-muted/20 rounded w-2/3" />
+                <div className="h-3 bg-muted/10 rounded w-1/3" />
+                <div className="flex gap-2 mt-2">
+                  {[...Array(4)].map((_, j) => <div key={j} className="h-5 bg-muted/10 rounded-full w-16" />)}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     );
   }

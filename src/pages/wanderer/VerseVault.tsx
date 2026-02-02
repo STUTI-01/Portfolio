@@ -5,6 +5,8 @@ import Navbar from "@/components/Navbar";
 import PageTransition from "@/components/PageTransition";
 import { supabase } from "@/integrations/supabase/client";
 import { PenTool, ArrowLeft, Sparkles } from "lucide-react";
+import ContentSkeletonLoader from "@/components/ContentSkeleton";
+import EmptyState from "@/components/EmptyState";
 
 interface Poem {
   id: string;
@@ -69,7 +71,9 @@ const VerseVault = () => {
         </div>
 
         {loading ? (
-          <div className="text-center text-muted-foreground/50 py-20 font-mono text-sm">Loading verses...</div>
+          <ContentSkeletonLoader variant="poem" count={3} />
+        ) : filtered.length === 0 ? (
+          <EmptyState icon={PenTool} title="No verses found" subtitle="Try a different language filter or check back soon." />
         ) : (
           <div className="space-y-12">
             {filtered.map((poem, i) => (

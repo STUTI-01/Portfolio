@@ -5,6 +5,8 @@ import Navbar from "@/components/Navbar";
 import PageTransition from "@/components/PageTransition";
 import { supabase } from "@/integrations/supabase/client";
 import { Bird, ArrowLeft, MapPin, TreePine } from "lucide-react";
+import ContentSkeletonLoader from "@/components/ContentSkeleton";
+import EmptyState from "@/components/EmptyState";
 
 interface BirdLog {
   id: string;
@@ -50,7 +52,9 @@ const FieldNotes = () => {
         </motion.div>
 
         {loading ? (
-          <div className="text-center text-muted-foreground/50 py-20 font-mono text-sm">Loading field notes...</div>
+          <ContentSkeletonLoader variant="list" count={4} />
+        ) : logs.length === 0 ? (
+          <EmptyState icon={Bird} title="No sightings logged" subtitle="The field journal is waiting for its first entry." />
         ) : (
           <div className="space-y-6">
             {logs.map((log, i) => (
