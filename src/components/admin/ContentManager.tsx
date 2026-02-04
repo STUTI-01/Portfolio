@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Plus, Pencil, Trash2, Loader2, Save, X, Image as ImageIcon } from "lucide-react";
 import { adminApi } from "@/lib/adminApi";
@@ -35,6 +35,19 @@ const ContentManager = ({ table, fields, title, displayField, imageField, hasGal
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState<string | null>(null);
   const [galleryImages, setGalleryImages] = useState<Record<string, any[]>>({});
+  const editFormRef = useRef<HTMLDivElement>(null);
+
+  // Click outside to cancel editing
+  useEffect(() => {
+    if (!editing) return;
+    const handler = (e: MouseEvent) => {
+      if (editFormRef.current && !editFormRef.current.contains(e.target as Node)) {
+        setEditing(null);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [editing]);
 
   const fetchItems = async () => {
     setLoading(true);
@@ -240,6 +253,7 @@ const ContentManager = ({ table, fields, title, displayField, imageField, hasGal
       <AnimatePresence>
         {editing && (
           <motion.div
+            ref={editFormRef}
             className="mb-8 border border-accent/20 rounded-sm p-6 space-y-4"
             style={{ background: "hsla(30, 15%, 12%, 0.3)" }}
             initial={{ opacity: 0, height: 0 }}
