@@ -96,7 +96,9 @@ const ThoughtObservatory = () => {
                     <span className={`text-[10px] font-mono uppercase tracking-wider ${categoryColors[thought.category || ""] || "text-muted-foreground/50"}`}>
                       {thought.category}
                     </span>
-                    <h2 className="font-poetry text-xl md:text-2xl font-bold text-foreground mt-1">{thought.title}</h2>
+                    <Link to={`/wanderer/thoughts/${thought.id}`} className="hover:text-accent transition-colors">
+                      <h2 className="font-poetry text-xl md:text-2xl font-bold text-foreground mt-1">{thought.title}</h2>
+                    </Link>
                   </div>
                   <span className="text-[10px] font-mono text-muted-foreground/40 whitespace-nowrap">
                     {new Date(thought.created_at).toLocaleDateString("en-IN", { month: "short", year: "numeric" })}

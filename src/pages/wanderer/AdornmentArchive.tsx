@@ -93,6 +93,7 @@ const AdornmentArchive = () => {
                 viewport={{ once: true, margin: "-50px" }}
                 transition={{ delay: i * 0.08, duration: 0.5 }}
               >
+                <Link to={`/wanderer/adornments/${item.id}`} className="block">
                 {item.image_url && item.image_url !== "/placeholder.svg" ? (
                   <div className="aspect-square overflow-hidden">
                     <img src={item.image_url} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
@@ -102,6 +103,7 @@ const AdornmentArchive = () => {
                     <Gem className="w-12 h-12 text-accent/20" />
                   </div>
                 )}
+                </Link>
                 <div className="p-5 space-y-2">
                   <div className="flex items-center justify-between">
                     <h3 className="font-poetry font-bold text-foreground group-hover:text-accent transition-colors">{item.title}</h3>

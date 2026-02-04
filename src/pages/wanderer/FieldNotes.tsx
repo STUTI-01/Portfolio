@@ -71,13 +71,15 @@ const FieldNotes = () => {
                 <div className="absolute -left-2 top-8 w-4 h-4 rounded-full border-2 border-accent/30 bg-background" />
 
                 <div className="flex flex-col md:flex-row md:items-start gap-4">
+                  <Link to={`/wanderer/birds/${log.id}`} className="flex-shrink-0">
                   {log.image_url && log.image_url !== "/placeholder.svg" ? (
-                    <img src={log.image_url} alt={log.common_name || log.species_name} className="w-24 h-24 object-cover rounded-sm flex-shrink-0" />
+                    <img src={log.image_url} alt={log.common_name || log.species_name} className="w-24 h-24 object-cover rounded-sm" />
                   ) : (
-                    <div className="w-24 h-24 flex items-center justify-center rounded-sm flex-shrink-0" style={{ background: "hsla(30, 15%, 15%, 0.4)" }}>
+                    <div className="w-24 h-24 flex items-center justify-center rounded-sm" style={{ background: "hsla(30, 15%, 15%, 0.4)" }}>
                       <Bird className="w-8 h-8 text-accent/20" />
                     </div>
                   )}
+                  </Link>
 
                   <div className="flex-1 space-y-2">
                     <div className="flex items-start justify-between">
