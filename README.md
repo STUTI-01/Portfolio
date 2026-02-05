@@ -1,73 +1,92 @@
-# Welcome to your Lovable project
+# 🌌 Stuti Mohanty — Digital Universe
 
-## Project info
+This is not just a portfolio.  
+This is a multi-dimensional identity platform.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+Welcome to the official website of **Stuti Mohanty** — Software Engineer, AI enthusiast, and multidisciplinary creative.
 
-## How can I edit this code?
+---
 
-There are several ways of editing your application.
+## 🚀 About The Platform
 
-**Use Lovable**
+This website is built as a cinematic, interactive experience designed to showcase both technical depth and creative exploration.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+It features three distinct modes:
 
-Changes made via Lovable will be committed automatically to this repo.
+### 🟢 Recruiter Mode
+A structured, long-scroll professional showcase including:
+- Experience roadmap
+- Quantified achievements
+- Technical skills
+- Filterable projects
+- Demo-based project previews
 
-**Use your preferred IDE**
+### 🟠 Curious Wanderer Mode
+An immersive creative archive featuring:
+- Scientific & CS technical articles
+- Spiritual and philosophical reflections
+- Bird photography logs
+- Jewellery collections
+- Multilingual poetry (Hindi | English | Odia)
+- Technical projects (demo view)
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### 🔵 Me Mode (Admin Dashboard)
+Secure dashboard allowing:
+- Project uploads
+- Blog publishing
+- Poetry & photography management
+- Experience updates
+- Live content control
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+---
 
-Follow these steps:
+## 🛠 Tech Stack
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+- **Next.js (App Router)**
+- **TypeScript**
+- **TailwindCSS**
+- **Framer Motion**
+- **PostgreSQL / Supabase**
+- Secure authentication
+- Fully dynamic database-driven content
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+---
 
-# Step 3: Install the necessary dependencies.
-npm i
+## ✨ Key Features
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+- Cinematic loader animation
+- Typewriter hero text with rotating taglines
+- Animated roadmap timeline
+- Skill-based project filtering
+- Paginated project grid
+- Glassmorphism UI
+- Parallax effects
+- Demo-only project previews (no source exposure)
+- Secure admin access
 
-**Edit a file directly in GitHub**
+---
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## 🎯 Purpose
 
-**Use GitHub Codespaces**
+This platform reflects:
+- Engineering precision
+- System design thinking
+- Performance optimization mindset
+- Creative depth
+- Continuous evolution
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+It is designed to impress in 10 seconds — and reward deeper exploration.
 
-## What technologies are used for this project?
+---
 
-This project is built with:
+## 📬 Contact
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+For professional inquiries, collaborations, or opportunities:
 
-## How can I deploy this project?
+- Email: (your email)
+- LinkedIn: (your LinkedIn link)
+- GitHub: (your GitHub link)
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+---
 
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+© Stuti Mohanty — All Rights Reserved
