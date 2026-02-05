@@ -56,6 +56,7 @@ const RecruiterMode = () => {
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const [projectPage, setProjectPage] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [skillsExpanded, setSkillsExpanded] = useState(false);
 
   const [experiences, setExperiences] = useState<Experience[]>([]);
   const [projects, setProjects] = useState<Project[]>([]);
@@ -441,7 +442,7 @@ const RecruiterMode = () => {
 
             <div className="mb-8">
               <p className="text-xs font-mono text-muted-foreground/60 tracking-wider uppercase mb-3">Filter by tech stack</p>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2 items-center">
                 <button
                   onClick={clearFilters}
                   className={`px-4 py-1.5 rounded-full text-xs font-medium border transition-all duration-200 ${
@@ -452,7 +453,7 @@ const RecruiterMode = () => {
                 >
                   All
                 </button>
-                {allSkillTags.map((skill) => {
+                {(skillsExpanded ? allSkillTags : allSkillTags.slice(0, 8)).map((skill) => {
                   const isActive = activeFilters.includes(skill);
                   return (
                     <button
@@ -468,7 +469,26 @@ const RecruiterMode = () => {
                     </button>
                   );
                 })}
+                {allSkillTags.length > 8 && (
+                  <button
+                    onClick={() => setSkillsExpanded(!skillsExpanded)}
+                    className="px-4 py-1.5 rounded-full text-xs font-medium border border-dashed border-primary/30 text-primary/70 hover:text-primary hover:border-primary/50 transition-all duration-200 flex items-center gap-1"
+                  >
+                    {skillsExpanded ? "Show less" : `+${allSkillTags.length - 8} more`}
+                    <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${skillsExpanded ? "rotate-180" : ""}`} />
+                  </button>
+                )}
               </div>
+              {activeFilters.length > 0 && (
+                <motion.p
+                  className="mt-3 text-sm text-primary/80 font-medium"
+                  initial={{ opacity: 0, y: -5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  ↓ Showing {filteredProjects.length} project{filteredProjects.length !== 1 ? "s" : ""} matching your selection — scroll down to explore
+                </motion.p>
+              )}
             </div>
 
             <AnimatePresence mode="wait">
