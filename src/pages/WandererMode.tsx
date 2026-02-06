@@ -153,7 +153,7 @@ const WandererMode = () => {
         <FloatingCircle x="40%" y="35%" size={50} delay={0.9} color="hsla(200, 40%, 60%, 0.12)" />
 
         {/* ── Layout: Left text + Right photo ── */}
-        <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-12 lg:gap-16 py-20">
+        <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-12 lg:gap-16 pt-32 md:pt-20 pb-20">
 
           {/* Left — Text */}
           <motion.div
