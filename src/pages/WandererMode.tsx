@@ -93,16 +93,16 @@ const WandererMode = () => {
 
         {/* "Beyond the Code" — top center */}
         <motion.div
-          className="absolute top-24 md:top-28 left-0 right-0 z-20 flex items-center justify-center gap-3"
+          className="absolute top-24 md:top-28 left-0 right-0 z-20 flex items-center justify-center gap-2 sm:gap-3 px-4"
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.8 }}
         >
-          <div className="w-12 h-[1px] bg-gradient-to-r from-transparent to-accent/50" />
-          <Sparkles className="w-4 h-4 text-accent/60" />
-          <p className="text-sm font-mono text-accent/70 tracking-[0.4em] uppercase whitespace-nowrap">Beyond the code</p>
-          <Sparkles className="w-4 h-4 text-accent/60" />
-          <div className="w-12 h-[1px] bg-gradient-to-l from-transparent to-accent/50" />
+          <div className="hidden sm:block w-12 h-[1px] bg-gradient-to-r from-transparent to-accent/50" />
+          <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 text-accent/60 flex-shrink-0" />
+          <p className="text-[10px] sm:text-sm font-mono text-accent/70 tracking-[0.2em] sm:tracking-[0.4em] uppercase whitespace-nowrap">Beyond the code</p>
+          <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 text-accent/60 flex-shrink-0" />
+          <div className="hidden sm:block w-12 h-[1px] bg-gradient-to-l from-transparent to-accent/50" />
         </motion.div>
 
         {/* Twinkling stars */}
