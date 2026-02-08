@@ -177,6 +177,8 @@ Deno.serve(async (req) => {
       "resumes",
       "site_content",
       "site_stats",
+      "contact_submissions",
+      "page_visits",
     ];
     if (!allowedTables.includes(table)) {
       return new Response(JSON.stringify({ error: "Invalid table" }), {

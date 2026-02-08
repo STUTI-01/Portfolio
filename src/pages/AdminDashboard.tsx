@@ -3,7 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import ContentManager, { FieldConfig } from "@/components/admin/ContentManager";
-import { LogOut, Gem, PenTool, Camera, BookOpen, Bird, Image, Briefcase, FolderOpen, GraduationCap, Award, Wrench, FileText, Settings, BarChart3 } from "lucide-react";
+import { LogOut, Gem, PenTool, Camera, BookOpen, Bird, Image, Briefcase, FolderOpen, GraduationCap, Award, Wrench, FileText, Settings, BarChart3, MessageSquare, Eye, Loader2 } from "lucide-react";
+import { adminApi } from "@/lib/adminApi";
+
+const ADMIN_PASSCODE = () => sessionStorage.getItem("admin_passcode") || "";
 
 const wandererTabs = [
   { key: "adornments", label: "Jewellery", icon: Gem },
@@ -23,6 +26,11 @@ const recruiterTabs = [
   { key: "resumes", label: "Resumes", icon: FileText },
   { key: "site_content", label: "Site Content", icon: Settings },
   { key: "site_stats", label: "Stats", icon: BarChart3 },
+];
+
+const analyticsTabs = [
+  { key: "contact_submissions", label: "Messages", icon: MessageSquare },
+  { key: "page_visits", label: "Page Visits", icon: Eye },
 ];
 
 const fieldConfigs: Record<string, { fields: FieldConfig[]; displayField: string; imageField?: string; hasGallery?: boolean; galleryEntityType?: string }> = {
@@ -190,10 +198,152 @@ const fieldConfigs: Record<string, { fields: FieldConfig[]; displayField: string
   },
 };
 
+interface ContactSubmission {
+  id: string;
+  name: string;
+  email: string | null;
+  message: string;
+  page_source: string;
+  created_at: string;
+}
+
+interface PageVisit {
+  id: string;
+  page_path: string;
+  referrer: string | null;
+  user_agent: string | null;
+  screen_width: number | null;
+  created_at: string;
+}
+
+const AnalyticsView = ({ table }: { table: string }) => {
+  const [data, setData] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const result = await adminApi({ action: "list", table });
+        if (result) setData(result);
+      } catch (e) {
+        console.error("Failed to fetch analytics:", e);
+      }
+      setLoading(false);
+    };
+    fetchData();
+  }, [table]);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+
+  if (table === "contact_submissions") {
+    const submissions = data as ContactSubmission[];
+    return (
+      <div className="space-y-4">
+        <p className="text-sm text-muted-foreground">{submissions.length} message{submissions.length !== 1 ? "s" : ""} received</p>
+        {submissions.length === 0 ? (
+          <div className="glass-card p-10 text-center text-muted-foreground">No messages yet.</div>
+        ) : (
+          submissions.map((sub) => (
+            <div key={sub.id} className="glass-card p-5 space-y-2">
+              <div className="flex items-center justify-between">
+                <h3 className="font-display font-bold text-foreground">{sub.name}</h3>
+                <span className="text-xs text-muted-foreground font-mono">
+                  {new Date(sub.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", hour: "2-digit", minute: "2-digit" })}
+                </span>
+              </div>
+              {sub.email && <p className="text-xs text-primary">{sub.email}</p>}
+              <p className="text-sm text-muted-foreground">{sub.message}</p>
+              <span className="inline-block text-[10px] font-mono text-muted-foreground/50 bg-muted/20 px-2 py-0.5 rounded">
+                from: {sub.page_source}
+              </span>
+            </div>
+          ))
+        )}
+      </div>
+    );
+  }
+
+  if (table === "page_visits") {
+    const visits = data as PageVisit[];
+
+    // Group by page path
+    const pageCounts: Record<string, number> = {};
+    visits.forEach((v) => {
+      pageCounts[v.page_path] = (pageCounts[v.page_path] || 0) + 1;
+    });
+    const sortedPages = Object.entries(pageCounts).sort((a, b) => b[1] - a[1]);
+
+    // Group by date
+    const dailyCounts: Record<string, number> = {};
+    visits.forEach((v) => {
+      const day = new Date(v.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric" });
+      dailyCounts[day] = (dailyCounts[day] || 0) + 1;
+    });
+
+    return (
+      <div className="space-y-6">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="glass-card p-5 text-center">
+            <p className="text-3xl font-display font-bold text-primary">{visits.length}</p>
+            <p className="text-xs text-muted-foreground mt-1">Total Page Views</p>
+          </div>
+          <div className="glass-card p-5 text-center">
+            <p className="text-3xl font-display font-bold text-accent">{sortedPages.length}</p>
+            <p className="text-xs text-muted-foreground mt-1">Unique Pages</p>
+          </div>
+          <div className="glass-card p-5 text-center">
+            <p className="text-3xl font-display font-bold text-secondary">{Object.keys(dailyCounts).length}</p>
+            <p className="text-xs text-muted-foreground mt-1">Active Days</p>
+          </div>
+        </div>
+
+        <div>
+          <h3 className="font-display font-semibold text-sm text-foreground mb-3">Most Visited Pages</h3>
+          <div className="space-y-2">
+            {sortedPages.map(([path, count]) => (
+              <div key={path} className="glass-card px-4 py-3 flex items-center justify-between">
+                <span className="text-sm font-mono text-foreground">{path}</span>
+                <span className="text-sm font-display font-bold text-primary">{count}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <h3 className="font-display font-semibold text-sm text-foreground mb-3">Recent Visits</h3>
+          <div className="space-y-1 max-h-96 overflow-y-auto">
+            {visits.slice(0, 50).map((v) => (
+              <div key={v.id} className="flex items-center gap-4 text-xs py-2 border-b border-border/20">
+                <span className="font-mono text-foreground w-32 shrink-0">{v.page_path}</span>
+                <span className="text-muted-foreground truncate flex-1">{v.referrer || "direct"}</span>
+                <span className="text-muted-foreground/50 shrink-0">
+                  {v.screen_width && `${v.screen_width}px`}
+                </span>
+                <span className="text-muted-foreground/50 font-mono shrink-0">
+                  {new Date(v.created_at).toLocaleString("en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return null;
+};
+
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("adornments");
-  const [activeSection, setActiveSection] = useState<"wanderer" | "recruiter">("wanderer");
+  const [activeSection, setActiveSection] = useState<"wanderer" | "recruiter" | "analytics">("wanderer");
 
   useEffect(() => {
     if (sessionStorage.getItem("admin_auth") !== "true") {
@@ -203,16 +353,18 @@ const AdminDashboard = () => {
 
   const handleLogout = () => {
     sessionStorage.removeItem("admin_auth");
+    sessionStorage.removeItem("admin_passcode");
     navigate("/");
   };
 
-  const tabs = activeSection === "wanderer" ? wandererTabs : recruiterTabs;
+  const tabs = activeSection === "wanderer" ? wandererTabs : activeSection === "recruiter" ? recruiterTabs : analyticsTabs;
   const config = fieldConfigs[activeTab];
 
-  const handleSectionChange = (section: "wanderer" | "recruiter") => {
+  const handleSectionChange = (section: "wanderer" | "recruiter" | "analytics") => {
     setActiveSection(section);
-    const firstTab = section === "wanderer" ? wandererTabs[0].key : recruiterTabs[0].key;
-    setActiveTab(firstTab);
+    if (section === "wanderer") setActiveTab(wandererTabs[0].key);
+    else if (section === "recruiter") setActiveTab(recruiterTabs[0].key);
+    else setActiveTab(analyticsTabs[0].key);
   };
 
   return (
@@ -258,6 +410,16 @@ const AdminDashboard = () => {
           >
             Recruiter
           </button>
+          <button
+            onClick={() => handleSectionChange("analytics")}
+            className={`px-5 py-2 text-sm font-mono rounded-sm transition-all duration-200 ${
+              activeSection === "analytics"
+                ? "bg-secondary/15 text-secondary border border-secondary/30"
+                : "text-muted-foreground hover:text-foreground border border-transparent"
+            }`}
+          >
+            Analytics
+          </button>
         </div>
 
         {/* Tabs */}
@@ -281,17 +443,23 @@ const AdminDashboard = () => {
           })}
         </div>
 
-        {/* Content Manager */}
-        <ContentManager
-          key={activeTab}
-          table={activeTab}
-          fields={config.fields}
-          title={tabs.find((t) => t.key === activeTab)?.label || ""}
-          displayField={config.displayField}
-          imageField={config.imageField}
-          hasGallery={config.hasGallery}
-          galleryEntityType={config.galleryEntityType}
-        />
+        {/* Content */}
+        {activeSection === "analytics" ? (
+          <AnalyticsView key={activeTab} table={activeTab} />
+        ) : (
+          config && (
+            <ContentManager
+              key={activeTab}
+              table={activeTab}
+              fields={config.fields}
+              title={tabs.find((t) => t.key === activeTab)?.label || ""}
+              displayField={config.displayField}
+              imageField={config.imageField}
+              hasGallery={config.hasGallery}
+              galleryEntityType={config.galleryEntityType}
+            />
+          )
+        )}
       </div>
     </div>
   );

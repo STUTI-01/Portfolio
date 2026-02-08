@@ -92,6 +92,33 @@ export type Database = {
         }
         Relationships: []
       }
+      contact_submissions: {
+        Row: {
+          created_at: string
+          email: string | null
+          id: string
+          message: string
+          name: string
+          page_source: string | null
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          message: string
+          name: string
+          page_source?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          message?: string
+          name?: string
+          page_source?: string | null
+        }
+        Relationships: []
+      }
       detail_images: {
         Row: {
           caption: string | null
@@ -251,6 +278,33 @@ export type Database = {
           display_order?: number | null
           id?: string
           title?: string
+        }
+        Relationships: []
+      }
+      page_visits: {
+        Row: {
+          created_at: string
+          id: string
+          page_path: string
+          referrer: string | null
+          screen_width: number | null
+          user_agent: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          page_path: string
+          referrer?: string | null
+          screen_width?: number | null
+          user_agent?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          page_path?: string
+          referrer?: string | null
+          screen_width?: number | null
+          user_agent?: string | null
         }
         Relationships: []
       }
