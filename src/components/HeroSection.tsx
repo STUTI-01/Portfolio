@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import TypewriterText from "./TypewriterText";
-import profilePhoto from "@/assets/profile-photo.png";
+import profilePhoto from "@/assets/profile-pic.jpg";
 import { Github, Linkedin, Mail, Phone, Download, ArrowRight, ChevronDown } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { supabase } from "@/integrations/supabase/client";
