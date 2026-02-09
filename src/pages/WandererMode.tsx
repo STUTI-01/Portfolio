@@ -91,69 +91,25 @@ const WandererMode = () => {
           backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E")`,
         }} />
 
-        {/* "Beyond the Code" — top center */}
-        <motion.div
-          className="absolute top-24 md:top-28 left-0 right-0 z-30 flex items-center justify-center gap-2 sm:gap-3 px-4"
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.8 }}
-        >
-          <div className="hidden sm:block w-12 h-[1px] bg-gradient-to-r from-transparent to-accent/50" />
-          <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 text-accent/60 flex-shrink-0" />
-          <p className="text-[10px] sm:text-sm font-mono text-accent/70 tracking-[0.2em] sm:tracking-[0.4em] uppercase whitespace-nowrap">Beyond the code</p>
-          <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 text-accent/60 flex-shrink-0" />
-          <div className="hidden sm:block w-12 h-[1px] bg-gradient-to-l from-transparent to-accent/50" />
-        </motion.div>
+        {/* ── Main content wrapper (in flow, not absolute) ── */}
+        <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col pt-20 md:pt-24 pb-20">
 
-        {/* Twinkling stars */}
-        {stars.map((s, i) => <TwinklingStar key={i} {...s} />)}
-
-        {/* White glowing sparkles */}
-        {[
-          { x: "10%", y: "12%", size: 2, delay: 0 }, { x: "25%", y: "30%", size: 2, delay: 0.5 },
-          { x: "45%", y: "8%", size: 1.5, delay: 1.0 }, { x: "60%", y: "25%", size: 2, delay: 0.3 },
-          { x: "80%", y: "10%", size: 2, delay: 0.8 }, { x: "90%", y: "40%", size: 1.5, delay: 1.3 },
-          { x: "15%", y: "55%", size: 2, delay: 0.6 }, { x: "35%", y: "70%", size: 1.5, delay: 1.1 },
-          { x: "55%", y: "60%", size: 2, delay: 0.2 }, { x: "70%", y: "80%", size: 1.5, delay: 1.5 },
-          { x: "88%", y: "70%", size: 2, delay: 0.9 }, { x: "30%", y: "90%", size: 1.5, delay: 1.7 },
-          { x: "65%", y: "45%", size: 2, delay: 0.4 }, { x: "50%", y: "85%", size: 1.5, delay: 1.2 },
-          { x: "20%", y: "42%", size: 2, delay: 0.7 }, { x: "75%", y: "55%", size: 1.5, delay: 1.4 },
-        ].map((s, i) => (
+          {/* "Beyond the Code" — always on top in flow */}
           <motion.div
-            key={`sparkle-${i}`}
-            className="absolute rounded-full pointer-events-none"
-            style={{
-              left: s.x, top: s.y, width: s.size, height: s.size,
-              background: "white",
-              boxShadow: `0 0 ${s.size * 3}px ${s.size}px rgba(255,255,255,0.6)`,
-            }}
-            animate={{ opacity: [0.1, 0.7, 0.1] }}
-            transition={{ duration: 2.5 + s.delay * 0.5, repeat: Infinity, ease: "easeInOut", delay: s.delay }}
-          />
-        ))}
+            className="flex items-center justify-center gap-2 sm:gap-3 px-4 mb-10 md:mb-14"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.8 }}
+          >
+            <div className="hidden sm:block w-12 h-[1px] bg-gradient-to-r from-transparent to-accent/50" />
+            <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 text-accent/60 flex-shrink-0" />
+            <p className="text-[10px] sm:text-sm font-mono text-accent/70 tracking-[0.2em] sm:tracking-[0.4em] uppercase whitespace-nowrap">Beyond the code</p>
+            <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 text-accent/60 flex-shrink-0" />
+            <div className="hidden sm:block w-12 h-[1px] bg-gradient-to-l from-transparent to-accent/50" />
+          </motion.div>
 
-        {/* Floating icons — sunflowers, flowers, suns */}
-        <FloatingIcon Icon={Flower2} x="8%" y="15%" size={22} delay={0} rotate={-15} color="hsla(45, 70%, 60%, 0.2)" />
-        <FloatingIcon Icon={Sun} x="18%" y="70%" size={20} delay={1.2} rotate={10} color="hsla(40, 65%, 55%, 0.15)" />
-        <FloatingIcon Icon={Flower2} x="8%" y="15%" size={26} delay={0} rotate={-15} color="hsla(45, 80%, 65%, 0.45)" />
-        <FloatingIcon Icon={Sun} x="18%" y="70%" size={24} delay={1.2} rotate={10} color="hsla(40, 75%, 60%, 0.4)" />
-        <FloatingIcon Icon={Flower2} x="80%" y="75%" size={22} delay={0.8} rotate={20} color="hsla(330, 50%, 65%, 0.35)" />
-        <FloatingIcon Icon={Sparkles} x="88%" y="18%" size={20} delay={1.5} rotate={-8} color="hsla(45, 70%, 70%, 0.4)" />
-        <FloatingIcon Icon={Flower2} x="70%" y="90%" size={24} delay={0.4} rotate={-12} color="hsla(45, 80%, 65%, 0.3)" />
-        <FloatingIcon Icon={Sun} x="5%" y="45%" size={22} delay={2} rotate={5} color="hsla(35, 70%, 60%, 0.35)" />
-        <FloatingIcon Icon={Flower2} x="50%" y="5%" size={20} delay={1} rotate={15} color="hsla(330, 45%, 60%, 0.25)" />
-        <FloatingIcon Icon={Sun} x="92%" y="45%" size={18} delay={0.6} rotate={-5} color="hsla(40, 75%, 60%, 0.3)" />
-
-        {/* Floating circles */}
-        <FloatingCircle x="12%" y="30%" size={45} delay={0.3} color="hsla(45, 60%, 65%, 0.25)" />
-        <FloatingCircle x="75%" y="15%" size={65} delay={1} color="hsla(270, 40%, 65%, 0.18)" />
-        <FloatingCircle x="85%" y="65%" size={40} delay={0.6} color="hsla(35, 60%, 60%, 0.22)" />
-        <FloatingCircle x="25%" y="80%" size={55} delay={1.4} color="hsla(330, 40%, 60%, 0.16)" />
-        <FloatingCircle x="60%" y="50%" size={32} delay={1.8} color="hsla(45, 50%, 65%, 0.14)" />
-        <FloatingCircle x="40%" y="35%" size={50} delay={0.9} color="hsla(200, 40%, 60%, 0.12)" />
-
-        {/* ── Layout: Left text + Right photo ── */}
-        <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-12 lg:gap-16 pt-32 md:pt-20 pb-20">
+          {/* Left text + Right photo */}
+          <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
 
           {/* Left — Text */}
           <motion.div
@@ -241,6 +197,7 @@ const WandererMode = () => {
               }} />
             </div>
           </motion.div>
+        </div>
         </div>
 
         {/* Explore — centered bottom */}
