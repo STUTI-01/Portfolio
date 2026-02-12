@@ -1,92 +1,123 @@
-# 🌌 Stuti Mohanty — Digital Universe
+# 🌌 Enter The System
 
-This is not just a portfolio.  
-This is a multi-dimensional identity platform.
-
-Welcome to the official website of **Stuti Mohanty** — Software Engineer, AI enthusiast, and multidisciplinary creative.
-
----
-
-## 🚀 About The Platform
-
-This website is built as a cinematic, interactive experience designed to showcase both technical depth and creative exploration.
-
-It features three distinct modes:
-
-### 🟢 Recruiter Mode
-A structured, long-scroll professional showcase including:
-- Experience roadmap
-- Quantified achievements
-- Technical skills
-- Filterable projects
-- Demo-based project previews
-
-### 🟠 Curious Wanderer Mode
-An immersive creative archive featuring:
-- Scientific & CS technical articles
-- Spiritual and philosophical reflections
-- Bird photography logs
-- Jewellery collections
-- Multilingual poetry (Hindi | English | Odia)
-- Technical projects (demo view)
-
-### 🔵 Me Mode (Admin Dashboard)
-Secure dashboard allowing:
-- Project uploads
-- Blog publishing
-- Poetry & photography management
-- Experience updates
-- Live content control
+<p align="center">
+  <b>This is not just a portfolio.</b><br/>
+  <b>This is a digital universe.</b>
+</p>
 
 ---
 
-## 🛠 Tech Stack
-
-- **Next.js (App Router)**
-- **TypeScript**
-- **TailwindCSS**
-- **Framer Motion**
-- **PostgreSQL / Supabase**
-- Secure authentication
-- Fully dynamic database-driven content
+<p align="center">
+  <img src="https://img.shields.io/badge/Next.js-Black?style=for-the-badge&logo=nextdotjs&logoColor=white" />
+  <img src="https://img.shields.io/badge/TypeScript-Blue?style=for-the-badge&logo=typescript&logoColor=white" />
+  <img src="https://img.shields.io/badge/TailwindCSS-38B2AC?style=for-the-badge&logo=tailwindcss&logoColor=white" />
+  <img src="https://img.shields.io/badge/FramerMotion-Black?style=for-the-badge&logo=framer&logoColor=white" />
+  <img src="https://img.shields.io/badge/PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white" />
+</p>
 
 ---
 
-## ✨ Key Features
+# 👩‍💻 Stuti Mohanty
 
-- Cinematic loader animation
-- Typewriter hero text with rotating taglines
-- Animated roadmap timeline
-- Skill-based project filtering
-- Paginated project grid
-- Glassmorphism UI
-- Parallax effects
-- Demo-only project previews (no source exposure)
-- Secure admin access
+> *I turn coffee into code.*  
+> *I turn chaos into systems.*  
+> *I turn complexity into clarity.*
+
+Welcome to the official digital identity platform of **Stuti Mohanty** —  
+Software Engineer. Distributed Systems Enthusiast. AI Explorer. Creative Architect.
 
 ---
 
-## 🎯 Purpose
+# 🧭 The Three Universes
 
-This platform reflects:
-- Engineering precision
-- System design thinking
-- Performance optimization mindset
-- Creative depth
-- Continuous evolution
-
-It is designed to impress in 10 seconds — and reward deeper exploration.
+This platform operates in three distinct modes.
 
 ---
 
-## 📬 Contact
+## 🟢 Recruiter Mode — Precision
 
-For professional inquiries, collaborations, or opportunities:
+A long-scroll, structured professional showcase featuring:
 
-- Email: (your email)
-- LinkedIn: (your LinkedIn link)
-- GitHub: (your GitHub link)
+- Animated experience roadmap  
+- Quantified engineering impact  
+- Skill-based project filtering  
+- Paginated demo-driven projects  
+- Technical arsenal grid  
+- Education milestones  
+
+Built to impress in 10 seconds.
 
 ---
 
-© Stuti Mohanty — All Rights Reserved
+## 🟠 Curious Wanderer — Depth
+
+A cinematic creative archive including:
+
+- Scientific explorations  
+- CS technical essays  
+- Bird field logs  
+- Jewellery archives  
+- Multilingual poetry  
+- Medium-style long-form writing  
+- Glassmorphism & parallax storytelling  
+
+Designed to be explored.
+
+---
+
+## 🔵 Me Mode — Control
+
+Secure admin dashboard enabling:
+
+- Project uploads  
+- Live content updates  
+- Poetry & photography management  
+- Experience editing  
+- Dynamic database-driven publishing  
+
+Built for evolution.
+
+---
+
+# ⚙️ Architecture
+
+This platform is engineered using:
+
+- Next.js (App Router)
+- TypeScript
+- TailwindCSS
+- Framer Motion
+- PostgreSQL / Supabase
+- Secure Authentication
+- Modular dynamic routing
+
+Every animation is intentional.  
+Every section is structured.  
+Every detail is deliberate.
+
+---
+
+# 🎯 Philosophy
+
+This is not a static resume.
+
+It is:
+
+- A performance-driven engineering showcase  
+- A creative archive  
+- A living, evolving digital system  
+
+Built with the same precision used to design distributed systems.
+
+---
+
+# 📡 Connect
+
+- LinkedIn: https://www.linkedin.com/in/stuti-mohanty-817a231aa/
+- Email: stutimohanty01@gmail.com
+- GitHub: https://github.com/STUTI-01/stuti-mohanty-portfolio/
+---
+
+<p align="center">
+  <i>© Stuti Mohanty — Digital Universe</i>
+</p>
