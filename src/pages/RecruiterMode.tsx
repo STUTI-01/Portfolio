@@ -409,19 +409,29 @@ const RecruiterMode = () => {
             </div>
             {activeFilters.length > 0 && (
               <motion.div
-                className="mt-4 flex items-center gap-3"
+                className="mt-4 space-y-2"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
               >
-                <span className="text-xs text-muted-foreground">
-                  Filtering by: {activeFilters.join(", ")}
-                </span>
-                <button
-                  onClick={clearFilters}
-                  className="text-xs text-primary hover:underline"
+                <motion.p
+                  className="text-sm text-primary/80 font-medium"
+                  initial={{ opacity: 0, y: -5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
                 >
-                  Clear all
-                </button>
+                  ↓ Showing {filteredProjects.length} project{filteredProjects.length !== 1 ? "s" : ""} matching your selection — scroll down to explore
+                </motion.p>
+                <div className="flex items-center gap-3">
+                  <span className="text-xs text-muted-foreground">
+                    Filtering by: {activeFilters.join(", ")}
+                  </span>
+                  <button
+                    onClick={clearFilters}
+                    className="text-xs text-primary hover:underline"
+                  >
+                    Clear all
+                  </button>
+                </div>
               </motion.div>
             )}
           </motion.section>
