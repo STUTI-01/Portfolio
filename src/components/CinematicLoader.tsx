@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import profilePhoto from "@/assets/profile-photo.png";
+import profilePhoto from "@/assets/profile-pic.jpg";
 
 interface CinematicLoaderProps {
   onComplete: () => void;
