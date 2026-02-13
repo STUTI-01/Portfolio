@@ -115,7 +115,7 @@ Built with the same precision used to design distributed systems.
 
 - LinkedIn: https://www.linkedin.com/in/stuti-mohanty-817a231aa/
 - Email: stutimohanty01@gmail.com
-- GitHub: https://github.com/STUTI-01/stuti-mohanty-portfolio/
+- GitHub: https://github.com/STUTI-01/
 ---
 
 <p align="center">
