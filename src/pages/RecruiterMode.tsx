@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import EngineeringAtScale from "@/components/EngineeringAtScale";
 import AnimatedCounter from "@/components/AnimatedCounter";
+import ContactForm from "@/components/ContactForm";
 import { supabase } from "@/integrations/supabase/client";
 import {
   Briefcase, GraduationCap, Wrench, FolderOpen, Award,
@@ -612,6 +613,9 @@ const RecruiterMode = () => {
             </div>
           </motion.section>
         )}
+
+        {/* ── CONTACT FORM ── */}
+        <ContactForm />
 
         {/* ── ENGINEERING MINDSET (terminal) ── */}
         <motion.div
