@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSearchParams } from "react-router-dom";
 import Navbar from "@/components/Navbar";
@@ -102,11 +102,16 @@ const RecruiterMode = () => {
     new Set(skillCategories.flatMap((c) => c.skills || []))
   );
 
+  const projectsSectionRef = useRef<HTMLDivElement>(null);
+
   const toggleFilter = (skill: string) => {
     setActiveFilters((prev) =>
       prev.includes(skill) ? prev.filter((s) => s !== skill) : [...prev, skill]
     );
     setProjectPage(0);
+    setTimeout(() => {
+      projectsSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 100);
   };
 
   const clearFilters = () => {
@@ -441,10 +446,12 @@ const RecruiterMode = () => {
         {/* ── PROJECTS ── */}
         {projects.length > 0 && (
           <motion.section
+            ref={projectsSectionRef}
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.6 }}
+            style={{ scrollMarginTop: "5rem" }}
           >
             <div className="flex items-center gap-3 mb-4">
               <FolderOpen className="w-7 h-7 text-[hsl(142,71%,45%)]" />

@@ -218,24 +218,24 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
           {/* Content — title pushes up when CTA appears */}
           <div className="relative text-center z-20 px-4">
             <motion.div
-              initial={{ opacity: 0, scale: 0.85 }}
+              initial={{ opacity: 0, scale: 0.92 }}
               animate={phase >= 1
                 ? { opacity: 1, scale: 1, y: phase >= 2 ? -30 : 0 }
                 : {}
               }
-              transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 1.5, ease: [0.25, 0.46, 0.45, 0.94] }}
             >
-              <h1 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-display font-bold text-foreground leading-tight">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-display font-bold text-foreground leading-tight">
                 {"My world has different stories.".split(" ").map((word, i) => (
                   <motion.span
                     key={i}
                     className="inline-block mr-[0.3em]"
-                    initial={{ opacity: 0, y: 25, filter: "blur(4px)" }}
+                    initial={{ opacity: 0, y: 20, filter: "blur(6px)" }}
                     animate={phase >= 1 ? { opacity: 1, y: 0, filter: "blur(0px)" } : {}}
                     transition={{
-                      duration: 0.7,
-                      delay: 0.2 + i * 0.12,
-                      ease: [0.22, 1, 0.36, 1],
+                      duration: 1,
+                      delay: 0.3 + i * 0.1,
+                      ease: [0.25, 0.46, 0.45, 0.94],
                     }}
                   >
                     {word}
@@ -280,10 +280,10 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
                   Choose your version.
                 </motion.p>
                 <motion.p
-                  className="text-xs sm:text-sm md:text-base font-poetry italic text-muted-foreground/60 mt-3"
+                  className="text-sm sm:text-base md:text-lg lg:text-xl font-poetry italic text-muted-foreground/70 mt-4"
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 1, delay: 0.8 }}
+                  transition={{ duration: 1.2, delay: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
                 >
                   Every version of me tells a different story.
                 </motion.p>
