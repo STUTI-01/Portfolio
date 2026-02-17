@@ -1,24 +1,61 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface CinematicLoaderProps {
   onComplete: () => void;
 }
 
+const TypewriterOnce = ({ text, delay = 0, speed = 35 }: { text: string; delay?: number; speed?: number }) => {
+  const [displayed, setDisplayed] = useState("");
+  const [started, setStarted] = useState(false);
+  const [done, setDone] = useState(false);
+
+  useEffect(() => {
+    const t = setTimeout(() => setStarted(true), delay);
+    return () => clearTimeout(t);
+  }, [delay]);
+
+  const tick = useCallback(() => {
+    if (!started || done) return;
+    setDisplayed((prev) => {
+      const next = text.slice(0, prev.length + 1);
+      if (next.length === text.length) setDone(true);
+      return next;
+    });
+  }, [started, done, text]);
+
+  useEffect(() => {
+    if (!started || done) return;
+    const timer = setTimeout(tick, speed);
+    return () => clearTimeout(timer);
+  }, [tick, started, done, displayed, speed]);
+
+  if (!started) return null;
+
+  return (
+    <span>
+      {displayed}
+      {!done && (
+        <span className="border-r-2 border-primary animate-cursor-blink ml-0.5">&nbsp;</span>
+      )}
+    </span>
+  );
+};
+
 const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
   const [phase, setPhase] = useState(0);
 
   useEffect(() => {
     const timers = [
-      setTimeout(() => setPhase(1), 500),
-      setTimeout(() => setPhase(2), 3200),
+      setTimeout(() => setPhase(1), 600),
+      setTimeout(() => setPhase(2), 3500),
     ];
     return () => timers.forEach(clearTimeout);
   }, []);
 
   const handleChooseClick = () => {
     setPhase(3);
-    setTimeout(() => onComplete(), 800);
+    setTimeout(() => onComplete(), 900);
   };
 
   return (
@@ -28,7 +65,7 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
           className="fixed inset-0 z-50 flex flex-col items-center justify-center overflow-hidden"
           style={{ background: "hsl(220 30% 4%)" }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 1 }}
+          transition={{ duration: 1.2, ease: "easeOut" }}
         >
           {/* ── Mesh gradient blobs ── */}
           <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -78,7 +115,7 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
             className="absolute inset-0 pointer-events-none"
             initial={{ opacity: 0 }}
             animate={{ opacity: 0.02 }}
-            transition={{ duration: 3 }}
+            transition={{ duration: 4 }}
             style={{
               backgroundImage: `repeating-linear-gradient(135deg, hsla(217, 91%, 60%, 0.5) 0px, transparent 1px, transparent 80px)`,
             }}
@@ -89,7 +126,7 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
             className="absolute top-6 left-6 sm:top-10 sm:left-10 w-10 h-10 sm:w-14 sm:h-14 pointer-events-none"
             initial={{ opacity: 0 }}
             animate={{ opacity: [0, 0.4, 0] }}
-            transition={{ duration: 3, repeat: Infinity, delay: 0.5 }}
+            transition={{ duration: 4, repeat: Infinity, delay: 0.5 }}
           >
             <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-secondary to-transparent" />
             <div className="absolute top-0 left-0 h-full w-[1px] bg-gradient-to-b from-secondary to-transparent" />
@@ -98,7 +135,7 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
             className="absolute bottom-6 right-6 sm:bottom-10 sm:right-10 w-10 h-10 sm:w-14 sm:h-14 pointer-events-none"
             initial={{ opacity: 0 }}
             animate={{ opacity: [0, 0.4, 0] }}
-            transition={{ duration: 3, repeat: Infinity, delay: 1.5 }}
+            transition={{ duration: 4, repeat: Infinity, delay: 2 }}
           >
             <div className="absolute bottom-0 right-0 w-full h-[1px] bg-gradient-to-l from-secondary to-transparent" />
             <div className="absolute bottom-0 right-0 h-full w-[1px] bg-gradient-to-t from-secondary to-transparent" />
@@ -111,11 +148,11 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
               className="absolute w-1 h-1 rounded-full bg-secondary/30 pointer-events-none"
               style={{ left: `${12 + i * 14}%`, top: `${18 + (i % 3) * 22}%` }}
               animate={{ y: [0, -25, 0], opacity: [0.1, 0.5, 0.1] }}
-              transition={{ duration: 4 + i * 0.5, repeat: Infinity, delay: i * 0.4 }}
+              transition={{ duration: 5 + i * 0.5, repeat: Infinity, delay: i * 0.4 }}
             />
           ))}
 
-          {/* ── Earth Glow Arc — more circular, higher up ── */}
+          {/* ── Earth Glow Arc ── */}
           <div className="absolute left-0 right-0 bottom-[6%] sm:bottom-[8%] pointer-events-none z-10" style={{ height: "clamp(160px, 25vh, 280px)" }}>
             <svg viewBox="-100 -40 1600 320" fill="none" className="w-full h-full" preserveAspectRatio="xMidYMax slice" style={{ overflow: "visible" }}>
               <defs>
@@ -148,7 +185,7 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
                 fill="url(#earthGlow)"
                 initial={{ opacity: 0 }}
                 animate={phase >= 1 ? { opacity: 1 } : {}}
-                transition={{ duration: 3, delay: 0.5 }}
+                transition={{ duration: 4, ease: "easeOut", delay: 0.5 }}
               />
 
               {/* Wide soft glow */}
@@ -157,7 +194,7 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
                 stroke="url(#arcGlow)" strokeWidth="22" strokeLinecap="round" fill="none" filter="url(#arcBlurWide)"
                 initial={{ pathLength: 0, opacity: 0 }}
                 animate={phase >= 1 ? { pathLength: 1, opacity: 0.35 } : {}}
-                transition={{ duration: 2.5, ease: "easeInOut", delay: 0.2 }}
+                transition={{ duration: 3.5, ease: [0.25, 0.1, 0.25, 1], delay: 0.2 }}
               />
 
               {/* Main arc */}
@@ -166,7 +203,7 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
                 stroke="url(#arcGlow)" strokeWidth="6" strokeLinecap="round" fill="none" filter="url(#arcBlur)"
                 initial={{ pathLength: 0, opacity: 0 }}
                 animate={phase >= 1 ? { pathLength: 1, opacity: 0.6 } : {}}
-                transition={{ duration: 2.5, ease: "easeInOut", delay: 0.3 }}
+                transition={{ duration: 3.5, ease: [0.25, 0.1, 0.25, 1], delay: 0.3 }}
               />
 
               {/* Crisp thin arc */}
@@ -175,10 +212,10 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
                 stroke="url(#arcGlow)" strokeWidth="1.5" strokeLinecap="round" fill="none"
                 initial={{ pathLength: 0, opacity: 0 }}
                 animate={phase >= 1 ? { pathLength: 1, opacity: 1 } : {}}
-                transition={{ duration: 2.5, ease: "easeInOut", delay: 0.2 }}
+                transition={{ duration: 3.5, ease: [0.25, 0.1, 0.25, 1], delay: 0.2 }}
               />
 
-              {/* Star — bright round dot, travels once slowly to 85% */}
+              {/* Star — bright round dot, slow travel once to 85% */}
               {phase >= 1 && (
                 <motion.circle
                   cx="0" cy="0" r="6"
@@ -188,26 +225,26 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
                     offsetRotate: "0deg",
                   }}
                   initial={{ offsetDistance: "0%", opacity: 0 }}
-                  animate={{ offsetDistance: "85%", opacity: [0, 1, 1, 0.9] }}
-                  transition={{ duration: 6, ease: [0.25, 0.46, 0.45, 0.94], delay: 0.8 }}
+                  animate={{ offsetDistance: "85%", opacity: [0, 0.8, 1, 1, 0.9] }}
+                  transition={{ duration: 8, ease: [0.25, 0.1, 0.25, 1], delay: 1 }}
                 />
               )}
             </svg>
           </div>
 
-          {/* ── Content — reordered: title → subtitle → CTA → hint ── */}
+          {/* ── Content ── */}
           <div className="relative z-20 px-6 sm:px-8 max-w-3xl w-full text-center flex flex-col items-center" style={{ marginBottom: "clamp(120px, 18vh, 220px)" }}>
             {/* Title */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.92 }}
+              initial={{ opacity: 0, scale: 0.94 }}
               animate={phase >= 1
                 ? { opacity: 1, scale: 1, y: phase >= 2 ? -20 : 0 }
                 : {}
               }
               transition={{
-                duration: 2,
-                ease: [0.16, 1, 0.3, 1],
-                y: { duration: 1.4, ease: [0.16, 1, 0.3, 1] },
+                opacity: { duration: 2, ease: "easeOut" },
+                scale: { duration: 2.5, ease: [0.16, 1, 0.3, 1] },
+                y: { duration: 1.8, ease: [0.16, 1, 0.3, 1] },
               }}
             >
               <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-display font-bold text-foreground leading-tight">
@@ -215,11 +252,11 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
                   <motion.span
                     key={i}
                     className="inline-block mr-[0.3em]"
-                    initial={{ opacity: 0, y: 20, filter: "blur(6px)" }}
+                    initial={{ opacity: 0, y: 15, filter: "blur(4px)" }}
                     animate={phase >= 1 ? { opacity: 1, y: 0, filter: "blur(0px)" } : {}}
                     transition={{
-                      duration: 1,
-                      delay: 0.3 + i * 0.1,
+                      duration: 1.2,
+                      delay: 0.4 + i * 0.12,
                       ease: [0.25, 0.46, 0.45, 0.94],
                     }}
                   >
@@ -232,19 +269,14 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
             {phase >= 2 && (
               <motion.div
                 className="mt-5 sm:mt-7 flex flex-col items-center"
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
               >
-                {/* Subtitle — plain text, no typewriter */}
-                <motion.p
-                  className="text-xs sm:text-sm md:text-base lg:text-lg font-poetry italic text-muted-foreground/70"
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 1, delay: 0.2 }}
-                >
-                  Every version of me tells a different story.
-                </motion.p>
+                {/* Subtitle — typewriter, fast, types once */}
+                <p className="text-sm sm:text-base md:text-lg lg:text-xl font-poetry italic text-muted-foreground/70">
+                  <TypewriterOnce text="Every version of me tells a different story." delay={300} speed={30} />
+                </p>
 
                 {/* CTA button */}
                 <button
@@ -262,10 +294,10 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
                       color: "hsla(217, 91%, 70%, 1)", scale: 1,
                     }}
                     transition={{
-                      opacity: { duration: 0.6 },
-                      letterSpacing: { duration: 1.2 },
-                      color: { duration: 2.5, ease: "easeOut" },
-                      scale: { duration: 2.5, ease: "easeOut" },
+                      opacity: { duration: 1, delay: 1.5 },
+                      letterSpacing: { duration: 1.8, delay: 1.5 },
+                      color: { duration: 3, ease: "easeOut", delay: 1.5 },
+                      scale: { duration: 3, ease: "easeOut", delay: 1.5 },
                     }}
                     whileHover={{
                       scale: 1.08,
@@ -282,7 +314,7 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
                   style={{ color: "hsla(0, 0%, 85%, 0.7)" }}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: [0, 0.9, 0.7] }}
-                  transition={{ duration: 2, delay: 1.5 }}
+                  transition={{ duration: 2.5, delay: 3 }}
                 >
                   ↑ click above to explore ↑
                 </motion.p>
@@ -294,7 +326,7 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
                   }}
                   initial={{ opacity: 0, scaleX: 0 }}
                   animate={{ opacity: 1, scaleX: 1 }}
-                  transition={{ duration: 1.5, delay: 0.5 }}
+                  transition={{ duration: 2, delay: 2, ease: "easeOut" }}
                 />
               </motion.div>
             )}
