@@ -1,46 +1,9 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface CinematicLoaderProps {
   onComplete: () => void;
 }
-
-const TypewriterOnce = ({ text, delay = 0 }: { text: string; delay?: number }) => {
-  const [displayed, setDisplayed] = useState("");
-  const [started, setStarted] = useState(false);
-  const [done, setDone] = useState(false);
-
-  useEffect(() => {
-    const t = setTimeout(() => setStarted(true), delay);
-    return () => clearTimeout(t);
-  }, [delay]);
-
-  const tick = useCallback(() => {
-    if (!started || done) return;
-    setDisplayed((prev) => {
-      const next = text.slice(0, prev.length + 1);
-      if (next.length === text.length) setDone(true);
-      return next;
-    });
-  }, [started, done, text]);
-
-  useEffect(() => {
-    if (!started || done) return;
-    const timer = setTimeout(tick, 55);
-    return () => clearTimeout(timer);
-  }, [tick, started, done, displayed]);
-
-  if (!started) return null;
-
-  return (
-    <span>
-      {displayed}
-      {!done && (
-        <span className="border-r-2 border-primary animate-cursor-blink ml-0.5">&nbsp;</span>
-      )}
-    </span>
-  );
-};
 
 const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
   const [phase, setPhase] = useState(0);
@@ -67,7 +30,7 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
           exit={{ opacity: 0 }}
           transition={{ duration: 1 }}
         >
-          {/* ── Mesh gradient blobs — more visible ── */}
+          {/* ── Mesh gradient blobs ── */}
           <div className="absolute inset-0 pointer-events-none overflow-hidden">
             <motion.div
               className="absolute rounded-full blur-[120px] sm:blur-[160px]"
@@ -152,57 +115,120 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
             />
           ))}
 
-          {/* ── Earth Glow Arc — pinned to bottom ── */}
-          <div className="absolute left-0 right-0 bottom-0 h-[80px] sm:h-[100px] md:h-[130px] pointer-events-none z-10">
-            <svg viewBox="0 0 1200 130" fill="none" className="w-full h-full" preserveAspectRatio="none">
+          {/* ── Earth Glow Arc — more circular, higher up ── */}
+          <div className="absolute left-0 right-0 bottom-[8%] sm:bottom-[10%] h-[140px] sm:h-[180px] md:h-[220px] pointer-events-none z-10">
+            <svg viewBox="0 0 1400 220" fill="none" className="w-full h-full" preserveAspectRatio="none">
               <defs>
                 <linearGradient id="arcGlow" x1="0%" y1="0%" x2="100%" y2="0%">
                   <stop offset="0%" stopColor="hsla(217, 91%, 60%, 0)" />
-                  <stop offset="15%" stopColor="hsla(217, 91%, 60%, 0.3)" />
-                  <stop offset="50%" stopColor="hsla(45, 97%, 64%, 0.5)" />
-                  <stop offset="85%" stopColor="hsla(217, 91%, 60%, 0.3)" />
+                  <stop offset="10%" stopColor="hsla(217, 91%, 55%, 0.2)" />
+                  <stop offset="30%" stopColor="hsla(200, 80%, 60%, 0.4)" />
+                  <stop offset="50%" stopColor="hsla(45, 97%, 64%, 0.6)" />
+                  <stop offset="70%" stopColor="hsla(200, 80%, 60%, 0.4)" />
+                  <stop offset="90%" stopColor="hsla(217, 91%, 55%, 0.2)" />
                   <stop offset="100%" stopColor="hsla(217, 91%, 60%, 0)" />
                 </linearGradient>
-                <filter id="arcBlur"><feGaussianBlur stdDeviation="4" /></filter>
-                <filter id="sparkGlow"><feGaussianBlur stdDeviation="5" /></filter>
+                <radialGradient id="earthGlow" cx="50%" cy="100%" r="60%">
+                  <stop offset="0%" stopColor="hsla(200, 80%, 50%, 0.15)" />
+                  <stop offset="50%" stopColor="hsla(217, 91%, 40%, 0.05)" />
+                  <stop offset="100%" stopColor="transparent" />
+                </radialGradient>
+                <filter id="arcBlur"><feGaussianBlur stdDeviation="5" /></filter>
+                <filter id="arcBlurWide"><feGaussianBlur stdDeviation="12" /></filter>
+                <filter id="sparkGlow"><feGaussianBlur stdDeviation="4" /></filter>
+                <filter id="sparkGlowBright"><feGaussianBlur stdDeviation="8" /></filter>
               </defs>
+
+              {/* Subtle atmospheric glow behind the arc */}
+              <motion.ellipse
+                cx="700" cy="220" rx="650" ry="180"
+                fill="url(#earthGlow)"
+                initial={{ opacity: 0 }}
+                animate={phase >= 1 ? { opacity: 1 } : {}}
+                transition={{ duration: 3, delay: 0.5 }}
+              />
+
+              {/* Wide soft glow arc */}
               <motion.path
-                d="M 0 125 Q 600 -10 1200 125"
-                stroke="url(#arcGlow)" strokeWidth="8" strokeLinecap="round" fill="none" filter="url(#arcBlur)"
+                d="M -50 220 Q 700 20 1450 220"
+                stroke="url(#arcGlow)" strokeWidth="20" strokeLinecap="round" fill="none" filter="url(#arcBlurWide)"
                 initial={{ pathLength: 0, opacity: 0 }}
-                animate={phase >= 1 ? { pathLength: 1, opacity: 0.5 } : {}}
+                animate={phase >= 1 ? { pathLength: 1, opacity: 0.3 } : {}}
+                transition={{ duration: 2.5, ease: "easeInOut", delay: 0.2 }}
+              />
+
+              {/* Main arc line */}
+              <motion.path
+                d="M -50 220 Q 700 20 1450 220"
+                stroke="url(#arcGlow)" strokeWidth="6" strokeLinecap="round" fill="none" filter="url(#arcBlur)"
+                initial={{ pathLength: 0, opacity: 0 }}
+                animate={phase >= 1 ? { pathLength: 1, opacity: 0.6 } : {}}
                 transition={{ duration: 2.5, ease: "easeInOut", delay: 0.3 }}
               />
+
+              {/* Crisp thin arc */}
               <motion.path
-                d="M 0 125 Q 600 -10 1200 125"
+                d="M -50 220 Q 700 20 1450 220"
                 stroke="url(#arcGlow)" strokeWidth="1.5" strokeLinecap="round" fill="none"
                 initial={{ pathLength: 0, opacity: 0 }}
                 animate={phase >= 1 ? { pathLength: 1, opacity: 1 } : {}}
                 transition={{ duration: 2.5, ease: "easeInOut", delay: 0.2 }}
               />
+
+              {/* Twinkling star traveling along the curve — repeating */}
               {phase >= 1 && (
                 <>
+                  {/* Outer glow */}
                   <motion.circle
-                    r="5" fill="white" filter="url(#sparkGlow)"
-                    style={{ offsetPath: `path("M 0 125 Q 600 -10 1200 125")`, offsetRotate: "0deg" }}
+                    r="8" fill="white" filter="url(#sparkGlowBright)"
+                    style={{
+                      offsetPath: `path("M -50 220 Q 700 20 1450 220")`,
+                      offsetRotate: "0deg",
+                    }}
                     initial={{ offsetDistance: "0%", opacity: 0 }}
-                    animate={{ offsetDistance: "100%", opacity: [0, 1, 1, 0.8] }}
-                    transition={{ duration: 3, ease: "easeInOut", delay: 0.5 }}
+                    animate={{
+                      offsetDistance: ["0%", "100%"],
+                      opacity: [0, 0.6, 1, 1, 0.6, 0],
+                    }}
+                    transition={{ duration: 4, ease: "easeInOut", delay: 0.5, repeat: Infinity, repeatDelay: 2 }}
                   />
+                  {/* Bright core */}
                   <motion.circle
-                    r="2.5" fill="hsla(45, 97%, 74%, 1)"
-                    style={{ offsetPath: `path("M 0 125 Q 600 -10 1200 125")`, offsetRotate: "0deg" }}
+                    r="3" fill="white"
+                    style={{
+                      offsetPath: `path("M -50 220 Q 700 20 1450 220")`,
+                      offsetRotate: "0deg",
+                    }}
                     initial={{ offsetDistance: "0%", opacity: 0 }}
-                    animate={{ offsetDistance: "100%", opacity: [0, 1, 1, 0] }}
-                    transition={{ duration: 3, ease: "easeInOut", delay: 0.5 }}
+                    animate={{
+                      offsetDistance: ["0%", "100%"],
+                      opacity: [0, 1, 1, 1, 1, 0],
+                    }}
+                    transition={{ duration: 4, ease: "easeInOut", delay: 0.5, repeat: Infinity, repeatDelay: 2 }}
+                  />
+                  {/* Golden twinkle */}
+                  <motion.circle
+                    r="2" fill="hsla(45, 97%, 74%, 1)"
+                    style={{
+                      offsetPath: `path("M -50 220 Q 700 20 1450 220")`,
+                      offsetRotate: "0deg",
+                    }}
+                    initial={{ offsetDistance: "0%", opacity: 0 }}
+                    animate={{
+                      offsetDistance: ["0%", "100%"],
+                      opacity: [0, 0, 1, 1, 0, 0],
+                      r: [1.5, 2.5, 1.5, 2.5, 1.5],
+                    }}
+                    transition={{ duration: 4, ease: "easeInOut", delay: 0.5, repeat: Infinity, repeatDelay: 2 }}
                   />
                 </>
               )}
             </svg>
           </div>
 
-          {/* ── Content — centered with proper spacing above arc ── */}
-          <div className="relative z-20 px-6 sm:px-8 max-w-3xl w-full text-center flex flex-col items-center" style={{ marginBottom: "clamp(100px, 15vh, 180px)" }}>
+          {/* ── Content — reordered: title → subtitle → CTA → hint ── */}
+          <div className="relative z-20 px-6 sm:px-8 max-w-3xl w-full text-center flex flex-col items-center" style={{ marginBottom: "clamp(120px, 18vh, 220px)" }}>
+            {/* Title */}
             <motion.div
               initial={{ opacity: 0, scale: 0.92 }}
               animate={phase >= 1
@@ -236,14 +262,25 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
 
             {phase >= 2 && (
               <motion.div
-                className="mt-6 sm:mt-8 flex flex-col items-center"
+                className="mt-5 sm:mt-7 flex flex-col items-center"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
               >
+                {/* Subtitle — plain text, no typewriter */}
+                <motion.p
+                  className="text-xs sm:text-sm md:text-base lg:text-lg font-poetry italic text-muted-foreground/70"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 1, delay: 0.2 }}
+                >
+                  Every version of me tells a different story.
+                </motion.p>
+
+                {/* CTA button */}
                 <button
                   onClick={handleChooseClick}
-                  className="cursor-pointer bg-transparent border-none outline-none group"
+                  className="cursor-pointer bg-transparent border-none outline-none group mt-6 sm:mt-8"
                 >
                   <motion.p
                     className="text-sm sm:text-base md:text-xl tracking-widest uppercase font-mono"
@@ -270,19 +307,13 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
                   </motion.p>
                 </button>
 
-                {/* Typewriter subtitle */}
-                <div className="mt-6 sm:mt-8">
-                  <p className="text-xs sm:text-sm md:text-base lg:text-lg font-poetry italic text-muted-foreground/70">
-                    <TypewriterOnce text="Every version of me tells a different story." delay={800} />
-                  </p>
-                </div>
-
-                {/* Click hint */}
+                {/* Click hint — brighter white */}
                 <motion.p
-                  className="mt-4 sm:mt-5 text-[10px] sm:text-xs tracking-[0.2em] uppercase text-muted-foreground/40 font-mono"
+                  className="mt-5 sm:mt-6 text-[10px] sm:text-xs tracking-[0.2em] uppercase font-mono"
+                  style={{ color: "hsla(0, 0%, 85%, 0.7)" }}
                   initial={{ opacity: 0 }}
-                  animate={{ opacity: [0, 0.6, 0.4] }}
-                  transition={{ duration: 2, delay: 2.5 }}
+                  animate={{ opacity: [0, 0.9, 0.7] }}
+                  transition={{ duration: 2, delay: 1.5 }}
                 >
                   ↑ click above to explore ↑
                 </motion.p>
