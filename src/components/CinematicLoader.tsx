@@ -116,8 +116,8 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
           ))}
 
           {/* ── Earth Glow Arc — more circular, higher up ── */}
-          <div className="absolute left-0 right-0 bottom-[8%] sm:bottom-[10%] h-[140px] sm:h-[180px] md:h-[220px] pointer-events-none z-10">
-            <svg viewBox="0 0 1400 220" fill="none" className="w-full h-full" preserveAspectRatio="none">
+          <div className="absolute left-0 right-0 bottom-[6%] sm:bottom-[8%] pointer-events-none z-10" style={{ height: "clamp(160px, 25vh, 280px)" }}>
+            <svg viewBox="-100 -40 1600 320" fill="none" className="w-full h-full" preserveAspectRatio="xMidYMax slice" style={{ overflow: "visible" }}>
               <defs>
                 <linearGradient id="arcGlow" x1="0%" y1="0%" x2="100%" y2="0%">
                   <stop offset="0%" stopColor="hsla(217, 91%, 60%, 0)" />
@@ -128,38 +128,41 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
                   <stop offset="90%" stopColor="hsla(217, 91%, 55%, 0.2)" />
                   <stop offset="100%" stopColor="hsla(217, 91%, 60%, 0)" />
                 </linearGradient>
-                <radialGradient id="earthGlow" cx="50%" cy="100%" r="60%">
-                  <stop offset="0%" stopColor="hsla(200, 80%, 50%, 0.15)" />
-                  <stop offset="50%" stopColor="hsla(217, 91%, 40%, 0.05)" />
+                <radialGradient id="earthGlow" cx="50%" cy="100%" r="70%">
+                  <stop offset="0%" stopColor="hsla(200, 80%, 50%, 0.18)" />
+                  <stop offset="50%" stopColor="hsla(217, 91%, 40%, 0.06)" />
                   <stop offset="100%" stopColor="transparent" />
                 </radialGradient>
                 <filter id="arcBlur"><feGaussianBlur stdDeviation="5" /></filter>
-                <filter id="arcBlurWide"><feGaussianBlur stdDeviation="12" /></filter>
-                <filter id="sparkGlow"><feGaussianBlur stdDeviation="4" /></filter>
-                <filter id="sparkGlowBright"><feGaussianBlur stdDeviation="8" /></filter>
+                <filter id="arcBlurWide"><feGaussianBlur stdDeviation="14" /></filter>
+                <radialGradient id="starDot" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stopColor="white" />
+                  <stop offset="40%" stopColor="hsla(45, 97%, 80%, 0.9)" />
+                  <stop offset="100%" stopColor="hsla(217, 91%, 70%, 0)" />
+                </radialGradient>
               </defs>
 
-              {/* Subtle atmospheric glow behind the arc */}
+              {/* Atmospheric glow */}
               <motion.ellipse
-                cx="700" cy="220" rx="650" ry="180"
+                cx="700" cy="260" rx="700" ry="200"
                 fill="url(#earthGlow)"
                 initial={{ opacity: 0 }}
                 animate={phase >= 1 ? { opacity: 1 } : {}}
                 transition={{ duration: 3, delay: 0.5 }}
               />
 
-              {/* Wide soft glow arc */}
+              {/* Wide soft glow */}
               <motion.path
-                d="M -50 220 Q 700 20 1450 220"
-                stroke="url(#arcGlow)" strokeWidth="20" strokeLinecap="round" fill="none" filter="url(#arcBlurWide)"
+                d="M -50 260 Q 700 40 1450 260"
+                stroke="url(#arcGlow)" strokeWidth="22" strokeLinecap="round" fill="none" filter="url(#arcBlurWide)"
                 initial={{ pathLength: 0, opacity: 0 }}
-                animate={phase >= 1 ? { pathLength: 1, opacity: 0.3 } : {}}
+                animate={phase >= 1 ? { pathLength: 1, opacity: 0.35 } : {}}
                 transition={{ duration: 2.5, ease: "easeInOut", delay: 0.2 }}
               />
 
-              {/* Main arc line */}
+              {/* Main arc */}
               <motion.path
-                d="M -50 220 Q 700 20 1450 220"
+                d="M -50 260 Q 700 40 1450 260"
                 stroke="url(#arcGlow)" strokeWidth="6" strokeLinecap="round" fill="none" filter="url(#arcBlur)"
                 initial={{ pathLength: 0, opacity: 0 }}
                 animate={phase >= 1 ? { pathLength: 1, opacity: 0.6 } : {}}
@@ -168,60 +171,26 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
 
               {/* Crisp thin arc */}
               <motion.path
-                d="M -50 220 Q 700 20 1450 220"
+                d="M -50 260 Q 700 40 1450 260"
                 stroke="url(#arcGlow)" strokeWidth="1.5" strokeLinecap="round" fill="none"
                 initial={{ pathLength: 0, opacity: 0 }}
                 animate={phase >= 1 ? { pathLength: 1, opacity: 1 } : {}}
                 transition={{ duration: 2.5, ease: "easeInOut", delay: 0.2 }}
               />
 
-              {/* Twinkling star traveling along the curve — repeating */}
+              {/* Star — bright round dot, travels once slowly to 85% */}
               {phase >= 1 && (
-                <>
-                  {/* Outer glow */}
-                  <motion.circle
-                    r="8" fill="white" filter="url(#sparkGlowBright)"
-                    style={{
-                      offsetPath: `path("M -50 220 Q 700 20 1450 220")`,
-                      offsetRotate: "0deg",
-                    }}
-                    initial={{ offsetDistance: "0%", opacity: 0 }}
-                    animate={{
-                      offsetDistance: ["0%", "100%"],
-                      opacity: [0, 0.6, 1, 1, 0.6, 0],
-                    }}
-                    transition={{ duration: 4, ease: "easeInOut", delay: 0.5, repeat: Infinity, repeatDelay: 2 }}
-                  />
-                  {/* Bright core */}
-                  <motion.circle
-                    r="3" fill="white"
-                    style={{
-                      offsetPath: `path("M -50 220 Q 700 20 1450 220")`,
-                      offsetRotate: "0deg",
-                    }}
-                    initial={{ offsetDistance: "0%", opacity: 0 }}
-                    animate={{
-                      offsetDistance: ["0%", "100%"],
-                      opacity: [0, 1, 1, 1, 1, 0],
-                    }}
-                    transition={{ duration: 4, ease: "easeInOut", delay: 0.5, repeat: Infinity, repeatDelay: 2 }}
-                  />
-                  {/* Golden twinkle */}
-                  <motion.circle
-                    r="2" fill="hsla(45, 97%, 74%, 1)"
-                    style={{
-                      offsetPath: `path("M -50 220 Q 700 20 1450 220")`,
-                      offsetRotate: "0deg",
-                    }}
-                    initial={{ offsetDistance: "0%", opacity: 0 }}
-                    animate={{
-                      offsetDistance: ["0%", "100%"],
-                      opacity: [0, 0, 1, 1, 0, 0],
-                      r: [1.5, 2.5, 1.5, 2.5, 1.5],
-                    }}
-                    transition={{ duration: 4, ease: "easeInOut", delay: 0.5, repeat: Infinity, repeatDelay: 2 }}
-                  />
-                </>
+                <motion.circle
+                  cx="0" cy="0" r="6"
+                  fill="url(#starDot)"
+                  style={{
+                    offsetPath: `path("M -50 260 Q 700 40 1450 260")`,
+                    offsetRotate: "0deg",
+                  }}
+                  initial={{ offsetDistance: "0%", opacity: 0 }}
+                  animate={{ offsetDistance: "85%", opacity: [0, 1, 1, 0.9] }}
+                  transition={{ duration: 6, ease: [0.25, 0.46, 0.45, 0.94], delay: 0.8 }}
+                />
               )}
             </svg>
           </div>
