@@ -215,19 +215,50 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
                 transition={{ duration: 3.5, ease: [0.25, 0.1, 0.25, 1], delay: 0.2 }}
               />
 
-              {/* Star — bright round dot, slow travel once to 85% */}
+              {/* Star — grows slightly as it travels, stops at 85% with twinkle */}
               {phase >= 1 && (
-                <motion.circle
-                  cx="0" cy="0" r="6"
-                  fill="url(#starDot)"
+                <motion.g
                   style={{
                     offsetPath: `path("M -50 260 Q 700 40 1450 260")`,
                     offsetRotate: "0deg",
                   }}
                   initial={{ offsetDistance: "0%", opacity: 0 }}
-                  animate={{ offsetDistance: "85%", opacity: [0, 0.8, 1, 1, 0.9] }}
+                  animate={{ offsetDistance: "85%", opacity: [0, 0.8, 1, 1, 1] }}
                   transition={{ duration: 8, ease: [0.25, 0.1, 0.25, 1], delay: 1 }}
-                />
+                >
+                  {/* Core dot — grows from 4 to 7 */}
+                  <motion.circle
+                    cx="0" cy="0"
+                    fill="url(#starDot)"
+                    initial={{ r: 4 }}
+                    animate={{ r: [4, 5, 6, 7, 7] }}
+                    transition={{ duration: 8, ease: [0.25, 0.1, 0.25, 1], delay: 1 }}
+                  />
+                  {/* 4-point star lines */}
+                  {[0, 90, 45, 135].map((angle) => (
+                    <motion.line
+                      key={angle}
+                      x1="0" y1="0" x2="0" y2="-12"
+                      stroke="white"
+                      strokeWidth="0.8"
+                      strokeLinecap="round"
+                      transform={`rotate(${angle})`}
+                      initial={{ opacity: 0, y2: -6 }}
+                      animate={{ opacity: [0, 0.3, 0.6, 0.8], y2: [-6, -8, -10, -12] }}
+                      transition={{ duration: 8, ease: [0.25, 0.1, 0.25, 1], delay: 1 }}
+                    />
+                  ))}
+                  {/* Twinkle pulse after resting */}
+                  <motion.circle
+                    cx="0" cy="0" r="10"
+                    fill="none"
+                    stroke="white"
+                    strokeWidth="0.5"
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{ opacity: [0, 0, 0, 0, 0.6, 0.2, 0.5, 0.15, 0.4, 0.1], scale: [0.5, 0.5, 0.5, 0.5, 1.2, 0.8, 1.1, 0.9, 1.15, 0.85] }}
+                    transition={{ duration: 16, ease: "easeInOut", delay: 1, repeat: Infinity }}
+                  />
+                </motion.g>
               )}
             </svg>
           </div>
@@ -274,8 +305,8 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
                 transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
               >
                 {/* Subtitle — typewriter, fast, types once */}
-                <p className="text-sm sm:text-base md:text-lg lg:text-xl font-poetry italic text-muted-foreground/70">
-                  <TypewriterOnce text="Every version of me tells a different story." delay={300} speed={30} />
+                <p className="text-sm sm:text-base md:text-lg lg:text-xl font-poetry italic text-muted-foreground/70 min-h-[1.5em]">
+                  <TypewriterOnce text="Every version of me tells a different story." delay={200} speed={18} />
                 </p>
 
                 {/* CTA button */}
