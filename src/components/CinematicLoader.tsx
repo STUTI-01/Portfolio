@@ -215,7 +215,7 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
                 transition={{ duration: 3.5, ease: [0.25, 0.1, 0.25, 1], delay: 0.2 }}
               />
 
-              {/* Star — grows slightly as it travels, stops at 85% with twinkle */}
+              {/* Star — dot morphs into 4-point sparkle, twinkles at rest */}
               {phase >= 1 && (
                 <motion.g
                   style={{
@@ -226,38 +226,44 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
                   animate={{ offsetDistance: "85%", opacity: [0, 0.8, 1, 1, 1] }}
                   transition={{ duration: 8, ease: [0.25, 0.1, 0.25, 1], delay: 1 }}
                 >
-                  {/* Core dot — grows from 4 to 7 */}
+                  {/* Soft glow behind sparkle */}
                   <motion.circle
                     cx="0" cy="0"
                     fill="url(#starDot)"
-                    initial={{ r: 4 }}
-                    animate={{ r: [4, 5, 6, 7, 7] }}
+                    initial={{ r: 3 }}
+                    animate={{ r: [3, 4, 6, 8] }}
                     transition={{ duration: 8, ease: [0.25, 0.1, 0.25, 1], delay: 1 }}
                   />
-                  {/* 4-point star lines */}
-                  {[0, 90, 45, 135].map((angle) => (
-                    <motion.line
-                      key={angle}
-                      x1="0" y1="0" x2="0" y2="-12"
-                      stroke="white"
-                      strokeWidth="0.8"
-                      strokeLinecap="round"
-                      transform={`rotate(${angle})`}
-                      initial={{ opacity: 0, y2: -6 }}
-                      animate={{ opacity: [0, 0.3, 0.6, 0.8], y2: [-6, -8, -10, -12] }}
-                      transition={{ duration: 8, ease: [0.25, 0.1, 0.25, 1], delay: 1 }}
-                    />
-                  ))}
-                  {/* Twinkle pulse after resting */}
-                  <motion.circle
-                    cx="0" cy="0" r="10"
-                    fill="none"
-                    stroke="white"
-                    strokeWidth="0.5"
-                    initial={{ opacity: 0, scale: 0.5 }}
-                    animate={{ opacity: [0, 0, 0, 0, 0.6, 0.2, 0.5, 0.15, 0.4, 0.1], scale: [0.5, 0.5, 0.5, 0.5, 1.2, 0.8, 1.1, 0.9, 1.15, 0.85] }}
-                    transition={{ duration: 16, ease: "easeInOut", delay: 1, repeat: Infinity }}
+                  {/* 4-point sparkle: starts as tiny dot, morphs into sparkle */}
+                  <motion.path
+                    fill="white"
+                    initial={{
+                      d: "M 0 -2 C 0.8 -0.8 0.8 -0.8 2 0 C 0.8 0.8 0.8 0.8 0 2 C -0.8 0.8 -0.8 0.8 -2 0 C -0.8 -0.8 -0.8 -0.8 0 -2 Z",
+                    }}
+                    animate={{
+                      d: [
+                        "M 0 -2 C 0.8 -0.8 0.8 -0.8 2 0 C 0.8 0.8 0.8 0.8 0 2 C -0.8 0.8 -0.8 0.8 -2 0 C -0.8 -0.8 -0.8 -0.8 0 -2 Z",
+                        "M 0 -6 C 1.2 -1.2 1.2 -1.2 6 0 C 1.2 1.2 1.2 1.2 0 6 C -1.2 1.2 -1.2 1.2 -6 0 C -1.2 -1.2 -1.2 -1.2 0 -6 Z",
+                        "M 0 -10 C 1.8 -1.8 1.8 -1.8 10 0 C 1.8 1.8 1.8 1.8 0 10 C -1.8 1.8 -1.8 1.8 -10 0 C -1.8 -1.8 -1.8 -1.8 0 -10 Z",
+                        "M 0 -12 C 2 -2 2 -2 12 0 C 2 2 2 2 0 12 C -2 2 -2 2 -12 0 C -2 -2 -2 -2 0 -12 Z",
+                      ],
+                    }}
+                    transition={{ duration: 8, ease: [0.25, 0.1, 0.25, 1], delay: 1 }}
                   />
+                  {/* Twinkle pulse at rest — gentle scale breathe */}
+                  <motion.g
+                    initial={{ scale: 1, opacity: 0 }}
+                    animate={{
+                      scale: [1, 1, 1, 1, 1, 1.12, 0.92, 1.08, 0.95, 1.05],
+                      opacity: [0, 0, 0, 0, 0, 0.5, 0.9, 0.5, 0.8, 0.4],
+                    }}
+                    transition={{ duration: 18, ease: "easeInOut", delay: 1, repeat: Infinity }}
+                  >
+                    <path
+                      fill="white"
+                      d="M 0 -12 C 2 -2 2 -2 12 0 C 2 2 2 2 0 12 C -2 2 -2 2 -12 0 C -2 -2 -2 -2 0 -12 Z"
+                    />
+                  </motion.g>
                 </motion.g>
               )}
             </svg>
