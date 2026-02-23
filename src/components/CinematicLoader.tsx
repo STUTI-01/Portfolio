@@ -1,46 +1,45 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface CinematicLoaderProps {
   onComplete: () => void;
 }
 
-const TypewriterOnce = ({ text, delay = 0, speed = 35 }: { text: string; delay?: number; speed?: number }) => {
+const TypewriterOnce = ({ text, delay = 0, speed = 12 }: { text: string; delay?: number; speed?: number }) => {
   const [displayed, setDisplayed] = useState("");
   const [started, setStarted] = useState(false);
-  const [done, setDone] = useState(false);
+  const indexRef = useRef(0);
 
   useEffect(() => {
     const t = setTimeout(() => setStarted(true), delay);
     return () => clearTimeout(t);
   }, [delay]);
 
-  const tick = useCallback(() => {
-    if (!started || done) return;
-    setDisplayed((prev) => {
-      const next = text.slice(0, prev.length + 1);
-      if (next.length === text.length) setDone(true);
-      return next;
-    });
-  }, [started, done, text]);
-
   useEffect(() => {
-    if (!started || done) return;
-    const timer = setTimeout(tick, speed);
-    return () => clearTimeout(timer);
-  }, [tick, started, done, displayed, speed]);
+    if (!started || indexRef.current >= text.length) return;
+    const timer = setInterval(() => {
+      indexRef.current += 1;
+      setDisplayed(text.slice(0, indexRef.current));
+      if (indexRef.current >= text.length) clearInterval(timer);
+    }, speed);
+    return () => clearInterval(timer);
+  }, [started, text, speed]);
 
   if (!started) return null;
 
   return (
     <span>
       {displayed}
-      {!done && (
+      {displayed.length < text.length && (
         <span className="border-r-2 border-primary animate-cursor-blink ml-0.5">&nbsp;</span>
       )}
     </span>
   );
 };
+
+/* 4-point sparkle SVG path — pointy elongated tips with narrow waist */
+const sparkle = (s: number) =>
+  `M 0 ${-s} C ${s * 0.08} ${-s * 0.08} ${s * 0.08} ${-s * 0.08} ${s} 0 C ${s * 0.08} ${s * 0.08} ${s * 0.08} ${s * 0.08} 0 ${s} C ${-s * 0.08} ${s * 0.08} ${-s * 0.08} ${s * 0.08} ${-s} 0 C ${-s * 0.08} ${-s * 0.08} ${-s * 0.08} ${-s * 0.08} 0 ${-s} Z`;
 
 const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
   const [phase, setPhase] = useState(0);
@@ -67,39 +66,47 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
           exit={{ opacity: 0 }}
           transition={{ duration: 1.2, ease: "easeOut" }}
         >
-          {/* ── Mesh gradient blobs ── */}
+          {/* ── Background blobs — CSS only, no framer-motion ── */}
           <div className="absolute inset-0 pointer-events-none overflow-hidden">
-            <motion.div
-              className="absolute rounded-full blur-[120px] sm:blur-[160px]"
+            <div
+              className="absolute rounded-full"
               style={{
-                width: "60vw", height: "60vw", maxWidth: 750, maxHeight: 750,
+                width: "55vw", height: "55vw", maxWidth: 700, maxHeight: 700,
                 top: "-15%", left: "-20%",
-                background: "hsla(217, 91%, 30%, 0.45)",
+                background: "hsla(217, 91%, 30%, 0.4)",
+                filter: "blur(100px)",
+                animation: "blob1 12s ease-in-out infinite",
               }}
-              animate={{ x: [0, 50, 0], y: [0, 40, 0], scale: [1, 1.12, 1] }}
-              transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
             />
-            <motion.div
-              className="absolute rounded-full blur-[100px] sm:blur-[140px]"
+            <div
+              className="absolute rounded-full"
               style={{
-                width: "50vw", height: "50vw", maxWidth: 650, maxHeight: 650,
+                width: "45vw", height: "45vw", maxWidth: 600, maxHeight: 600,
                 bottom: "-10%", right: "-15%",
-                background: "hsla(260, 60%, 35%, 0.35)",
+                background: "hsla(260, 60%, 35%, 0.3)",
+                filter: "blur(100px)",
+                animation: "blob2 14s ease-in-out infinite",
               }}
-              animate={{ x: [0, -40, 0], y: [0, -30, 0], scale: [1, 1.08, 1] }}
-              transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
             />
-            <motion.div
-              className="absolute rounded-full blur-[100px] sm:blur-[120px]"
+            <div
+              className="absolute rounded-full"
               style={{
-                width: "40vw", height: "40vw", maxWidth: 500, maxHeight: 500,
+                width: "35vw", height: "35vw", maxWidth: 450, maxHeight: 450,
                 top: "35%", right: "20%",
-                background: "hsla(45, 90%, 55%, 0.12)",
+                background: "hsla(45, 90%, 55%, 0.1)",
+                filter: "blur(90px)",
+                animation: "blob3 16s ease-in-out infinite",
               }}
-              animate={{ x: [0, 25, -15, 0], y: [0, -20, 15, 0], scale: [1, 1.15, 0.95, 1] }}
-              transition={{ duration: 14, repeat: Infinity, ease: "easeInOut", delay: 3 }}
             />
           </div>
+
+          {/* CSS keyframes for blobs */}
+          <style>{`
+            @keyframes blob1 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(40px,30px) scale(1.1); } }
+            @keyframes blob2 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-30px,-20px) scale(1.06); } }
+            @keyframes blob3 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(15px,-12px) scale(1.08); } }
+            @keyframes twinkle { 0%,100% { transform: scale(1); opacity: 0.85; } 50% { transform: scale(1.18); opacity: 1; } }
+          `}</style>
 
           {/* Noise texture */}
           <div
@@ -107,17 +114,6 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
             style={{
               backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E")`,
               backgroundSize: "128px 128px",
-            }}
-          />
-
-          {/* Subtle diagonal lines */}
-          <motion.div
-            className="absolute inset-0 pointer-events-none"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.02 }}
-            transition={{ duration: 4 }}
-            style={{
-              backgroundImage: `repeating-linear-gradient(135deg, hsla(217, 91%, 60%, 0.5) 0px, transparent 1px, transparent 80px)`,
             }}
           />
 
@@ -141,17 +137,6 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
             <div className="absolute bottom-0 right-0 h-full w-[1px] bg-gradient-to-t from-secondary to-transparent" />
           </motion.div>
 
-          {/* Floating particles */}
-          {[...Array(6)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute w-1 h-1 rounded-full bg-secondary/30 pointer-events-none"
-              style={{ left: `${12 + i * 14}%`, top: `${18 + (i % 3) * 22}%` }}
-              animate={{ y: [0, -25, 0], opacity: [0.1, 0.5, 0.1] }}
-              transition={{ duration: 5 + i * 0.5, repeat: Infinity, delay: i * 0.4 }}
-            />
-          ))}
-
           {/* ── Earth Glow Arc ── */}
           <div className="absolute left-0 right-0 bottom-[6%] sm:bottom-[8%] pointer-events-none z-10" style={{ height: "clamp(160px, 25vh, 280px)" }}>
             <svg viewBox="-100 -40 1600 320" fill="none" className="w-full h-full" preserveAspectRatio="xMidYMax slice" style={{ overflow: "visible" }}>
@@ -171,12 +156,7 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
                   <stop offset="100%" stopColor="transparent" />
                 </radialGradient>
                 <filter id="arcBlur"><feGaussianBlur stdDeviation="5" /></filter>
-                <filter id="arcBlurWide"><feGaussianBlur stdDeviation="14" /></filter>
-                <radialGradient id="starDot" cx="50%" cy="50%" r="50%">
-                  <stop offset="0%" stopColor="white" />
-                  <stop offset="40%" stopColor="hsla(45, 97%, 80%, 0.9)" />
-                  <stop offset="100%" stopColor="hsla(217, 91%, 70%, 0)" />
-                </radialGradient>
+                <filter id="arcBlurWide"><feGaussianBlur stdDeviation="12" /></filter>
               </defs>
 
               {/* Atmospheric glow */}
@@ -191,7 +171,7 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
               {/* Wide soft glow */}
               <motion.path
                 d="M -50 260 Q 700 40 1450 260"
-                stroke="url(#arcGlow)" strokeWidth="22" strokeLinecap="round" fill="none" filter="url(#arcBlurWide)"
+                stroke="url(#arcGlow)" strokeWidth="20" strokeLinecap="round" fill="none" filter="url(#arcBlurWide)"
                 initial={{ pathLength: 0, opacity: 0 }}
                 animate={phase >= 1 ? { pathLength: 1, opacity: 0.35 } : {}}
                 transition={{ duration: 3.5, ease: [0.25, 0.1, 0.25, 1], delay: 0.2 }}
@@ -200,7 +180,7 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
               {/* Main arc */}
               <motion.path
                 d="M -50 260 Q 700 40 1450 260"
-                stroke="url(#arcGlow)" strokeWidth="6" strokeLinecap="round" fill="none" filter="url(#arcBlur)"
+                stroke="url(#arcGlow)" strokeWidth="5" strokeLinecap="round" fill="none" filter="url(#arcBlur)"
                 initial={{ pathLength: 0, opacity: 0 }}
                 animate={phase >= 1 ? { pathLength: 1, opacity: 0.6 } : {}}
                 transition={{ duration: 3.5, ease: [0.25, 0.1, 0.25, 1], delay: 0.3 }}
@@ -215,55 +195,20 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
                 transition={{ duration: 3.5, ease: [0.25, 0.1, 0.25, 1], delay: 0.2 }}
               />
 
-              {/* Star — dot morphs into 4-point sparkle, twinkles at rest */}
+              {/* Star sparkle — travels along arc, grows via scale, twinkles at rest */}
               {phase >= 1 && (
                 <motion.g
                   style={{
                     offsetPath: `path("M -50 260 Q 700 40 1450 260")`,
                     offsetRotate: "0deg",
                   }}
-                  initial={{ offsetDistance: "0%", opacity: 0 }}
-                  animate={{ offsetDistance: "85%", opacity: [0, 0.8, 1, 1, 1] }}
+                  initial={{ offsetDistance: "0%", opacity: 0, scale: 0.15 }}
+                  animate={{ offsetDistance: "85%", opacity: [0, 0.9, 1, 1, 1], scale: [0.15, 0.4, 0.7, 1] }}
                   transition={{ duration: 8, ease: [0.25, 0.1, 0.25, 1], delay: 1 }}
                 >
-                  {/* Soft glow behind sparkle */}
-                  <motion.circle
-                    cx="0" cy="0"
-                    fill="url(#starDot)"
-                    initial={{ r: 3 }}
-                    animate={{ r: [3, 4, 6, 8] }}
-                    transition={{ duration: 8, ease: [0.25, 0.1, 0.25, 1], delay: 1 }}
-                  />
-                  {/* 4-point sparkle: starts as tiny dot, morphs into sparkle */}
-                  <motion.path
-                    fill="white"
-                    initial={{
-                      d: "M 0 -2 C 0.8 -0.8 0.8 -0.8 2 0 C 0.8 0.8 0.8 0.8 0 2 C -0.8 0.8 -0.8 0.8 -2 0 C -0.8 -0.8 -0.8 -0.8 0 -2 Z",
-                    }}
-                    animate={{
-                      d: [
-                        "M 0 -2 C 0.8 -0.8 0.8 -0.8 2 0 C 0.8 0.8 0.8 0.8 0 2 C -0.8 0.8 -0.8 0.8 -2 0 C -0.8 -0.8 -0.8 -0.8 0 -2 Z",
-                        "M 0 -6 C 1.2 -1.2 1.2 -1.2 6 0 C 1.2 1.2 1.2 1.2 0 6 C -1.2 1.2 -1.2 1.2 -6 0 C -1.2 -1.2 -1.2 -1.2 0 -6 Z",
-                        "M 0 -10 C 1.8 -1.8 1.8 -1.8 10 0 C 1.8 1.8 1.8 1.8 0 10 C -1.8 1.8 -1.8 1.8 -10 0 C -1.8 -1.8 -1.8 -1.8 0 -10 Z",
-                        "M 0 -12 C 2 -2 2 -2 12 0 C 2 2 2 2 0 12 C -2 2 -2 2 -12 0 C -2 -2 -2 -2 0 -12 Z",
-                      ],
-                    }}
-                    transition={{ duration: 8, ease: [0.25, 0.1, 0.25, 1], delay: 1 }}
-                  />
-                  {/* Twinkle pulse at rest — gentle scale breathe */}
-                  <motion.g
-                    initial={{ scale: 1, opacity: 0 }}
-                    animate={{
-                      scale: [1, 1, 1, 1, 1, 1.12, 0.92, 1.08, 0.95, 1.05],
-                      opacity: [0, 0, 0, 0, 0, 0.5, 0.9, 0.5, 0.8, 0.4],
-                    }}
-                    transition={{ duration: 18, ease: "easeInOut", delay: 1, repeat: Infinity }}
-                  >
-                    <path
-                      fill="white"
-                      d="M 0 -12 C 2 -2 2 -2 12 0 C 2 2 2 2 0 12 C -2 2 -2 2 -12 0 C -2 -2 -2 -2 0 -12 Z"
-                    />
-                  </motion.g>
+                  <g style={{ animation: "twinkle 2.5s ease-in-out infinite", animationDelay: "9s" }}>
+                    <path fill="white" d={sparkle(16)} />
+                  </g>
                 </motion.g>
               )}
             </svg>
@@ -289,8 +234,8 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
                   <motion.span
                     key={i}
                     className="inline-block mr-[0.3em]"
-                    initial={{ opacity: 0, y: 15, filter: "blur(4px)" }}
-                    animate={phase >= 1 ? { opacity: 1, y: 0, filter: "blur(0px)" } : {}}
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={phase >= 1 ? { opacity: 1, y: 0 } : {}}
                     transition={{
                       duration: 1.2,
                       delay: 0.4 + i * 0.12,
@@ -310,9 +255,9 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
               >
-                {/* Subtitle — typewriter, fast, types once */}
+                {/* Subtitle — fast typewriter, types once */}
                 <p className="text-sm sm:text-base md:text-lg lg:text-xl font-poetry italic text-muted-foreground/70 min-h-[1.5em]">
-                  <TypewriterOnce text="Every version of me tells a different story." delay={200} speed={18} />
+                  <TypewriterOnce text="Every version of me tells a different story." delay={200} speed={12} />
                 </p>
 
                 {/* CTA button */}
@@ -345,7 +290,7 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
                   </motion.p>
                 </button>
 
-                {/* Click hint — brighter white */}
+                {/* Click hint */}
                 <motion.p
                   className="mt-5 sm:mt-6 text-[10px] sm:text-xs tracking-[0.2em] uppercase font-mono"
                   style={{ color: "hsla(0, 0%, 85%, 0.7)" }}
