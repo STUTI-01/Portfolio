@@ -107,22 +107,22 @@ const CinematicLoader = ({ onComplete }: CinematicLoaderProps) => {
             @keyframes blob3 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(15px,-12px) scale(1.08); } }
             @keyframes twinkle { 0%,100% { transform: scale(1); opacity: 0.85; } 50% { transform: scale(1.18); opacity: 1; } }
             @keyframes starFloat { 0% { transform: translateY(0); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateY(-100vh); opacity: 0; } }
-            @keyframes starTwinkle { 0%,100% { opacity: 0.3; } 50% { opacity: 1; } }
+            @keyframes starTwinkle { 0%,100% { opacity: 0.08; } 40% { opacity: 0.35; } 70% { opacity: 0.12; } }
           `}</style>
 
-          {/* Twinkling floating stars */}
+          {/* Twinkling star dots — subtle, soft circles */}
           <div className="absolute inset-0 pointer-events-none overflow-hidden z-[1]">
-            {[...Array(20)].map((_, i) => (
+            {[...Array(30)].map((_, i) => (
               <div
                 key={i}
-                className="absolute rounded-full bg-white"
+                className="absolute rounded-full"
                 style={{
-                  width: `${1 + (i % 3)}px`,
-                  height: `${1 + (i % 3)}px`,
-                  left: `${(i * 17 + 3) % 97}%`,
-                  top: `${(i * 23 + 10) % 90}%`,
-                  animation: `starTwinkle ${2 + (i % 3) * 0.8}s ease-in-out infinite ${i * 0.4}s, starFloat ${12 + (i % 5) * 3}s linear infinite ${i * 1.2}s`,
-                  opacity: 0.3,
+                  width: `${1 + (i % 2)}px`,
+                  height: `${1 + (i % 2)}px`,
+                  left: `${(i * 13 + 5) % 95}%`,
+                  top: `${(i * 19 + 7) % 92}%`,
+                  backgroundColor: "hsla(0, 0%, 100%, 0.25)",
+                  animation: `starTwinkle ${3 + (i % 4) * 1.2}s ease-in-out infinite ${i * 0.6}s`,
                 }}
               />
             ))}</div>
